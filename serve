@@ -1,0 +1,87 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const config = require(__dirname + '/config.js');
+const fs = require('fs')
+const path = require('path');
+const Server = require(__dirname + '/server.js');
+const Logger = require(__dirname + '/logger.js');
+const log = new Logger('main');
+
+function onUnhandledRejection(e) {
+    log.error('Abort due to unhandledRejection!');
+    log.error(e);
+    process.exit(99);
+}
+
+function onUncaughtException(e) {
+    log.error('Abort due to uncaughtException!');
+    log.error(e);
+    process.exit(99);
+}
+
+process.on('unhandledRejection', onUnhandledRejection);
+process.on('uncaughtException', onUncaughtException);
+
+function exitUsage(code) {
+    code = code || 0;
+    var stream = code ? process.stderr : process.stdout;
+    stream.write('Usage: ' + path.basename(process.argv[1]) + ' [OPTION]...\n' +
+        'Nbrain, a brain for Nscan, aka Network Analyze\n' +
+        '\n' +
+        'Available options:\n' +
+        '  -f, --config FILE        Set configuration file\n' +
+        '  -v, --verbose            Increase verbosity\n');
+    process.exit(1);
+}
+
+var opts = { log: { } }
+for (let i = 2; i < process.argv.length; i++) {
+    if ((process.argv[i] == '-f' ||
+         process.argv[i] == '--config') && i < process.argv.length - 1)
+        opts.config = process.argv[++i];
+    else if (process.argv[i] == '-v' ||
+             process.argv[i] == '--verbose')
+        opts.log.verbose = (opts.log.verbose || 0) + 1;
+    else if (process.argv[i].charAt(0) == '-') {
+        for (let j = 1; j < process.argv[i].length; j++) {
+            let c = process.argv[i].charAt(j);
+            switch (c) {
+                case 'v': opts.log.verbose = (opts.log.verbose || 0) + 1; break;
+                default: exitUsage(1);
+            }
+        }
+    }
+    else
+        exitUsage(1);
+}
+config.reload(opts);
+
+const handlers = {};
+fs.readdirSync(__dirname, { withFileTypes: true }).forEach((entry) => {
+    if (entry.isFile() && /^handler_.+\.js$/.test(entry.name)) {
+        let name = entry.name.substr(8, entry.name.length - 8 - 3);
+        handlers[name] = require(__dirname + '/' + entry.name);
+    }
+});
+
+var srv = new Server(config.options.server);
+srv.setHandler('GET', '/time', new handlers.time());
+
+function onTermSignal(signal) {
+    log.info(`Caught ${signal}`)
+    srv.stop();
+}
+
+function onHupSignal(signal) {
+    log.info(`Caught ${signal}, reloading configuration`);
+    log.info('Please note, server socket will not be restarted');
+    config.reload();
+}
+
+process.once('SIGTERM', onTermSignal);
+process.once('SIGINT', onTermSignal);
+process.on('SIGHUP', onHupSignal);
+
+srv.start();
