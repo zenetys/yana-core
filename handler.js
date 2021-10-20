@@ -50,12 +50,13 @@ class Handler extends EventEmitter {
     async handle(ctx) {
         ctx.rawData = '';
         return new Promise((resolve, reject) => {
-            this.debugRequest(ctx);
             ctx.req.on('data', (chunk) => {
                 if (this.rulesData)
                     ctx.rawData += chunk
             });
             ctx.req.on('end', async () => {
+                this.debugRequest(ctx);
+
                 if (util.isObject(this.rulesUrlParams)) {
                     let result = util.checkData(ctx.urlParams, this.rulesUrlParams);
                     if (result.error) {
