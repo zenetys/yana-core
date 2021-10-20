@@ -83,6 +83,12 @@ function Server(options) {
     }
 
     function onClientError(err, sock) {
+        /* Some clients may send RST instead of a "clean" FIN. This may be
+         * to avoid time waits (port starvation on proxies).
+         * It produces annoying logs so ignore ECONNRESET until we
+         * find something better. */
+        if (err.code == 'ECONNRESET')
+            return;
         sock[SOCK_ERR]++;
         log.error(`${sock[SOCK_NAME]}, client error:`,
                   `${sock[SOCK_ERR]}/${options.maxClientErrors}, ${err.code}`);
