@@ -89,6 +89,10 @@ function clone(x) {
     return x;
 }
 
+function cmpDefault(a, b) {
+    return a > b ? 1 : (a < b ? -1 : 0);
+}
+
 function isObject(value) {
     return value !== null && typeof value == 'object' &&
         value.constructor === Object;
@@ -143,6 +147,11 @@ function lsDirSync(dir, options) {
     return ls;
 }
 
+function makeCmpKey(key, asc /* -1 or 1 */, cmpFn) {
+    cmpFn ||= cmpDefault;
+    return (a, b) => cmpFn(a[key], b[key]) * (asc || 1);
+}
+
 function omerge(...o) {
     function _(o1 = {}, o2 = {}) {
         Object.keys(o2).forEach((k) => {
@@ -190,8 +199,10 @@ util.inspect.defaultOptions.maxArrayLength = null;
 Object.assign(module.exports, util, {
     checkData,
     clone,
+    cmpDefault,
     isObject,
     lsDirSync,
+    makeCmpKey,
     omerge,
     safePromise,
     sleep,
