@@ -125,9 +125,11 @@ class Logger {
         return true; /* printed */
     }
 
-    dump(data) {
+    dump(...args) {
         let oc = this.getOpenClose();
-        process.stderr.write(oc.dump.open + data + oc.dump.close);
+        process.stderr.write(oc.dump.open);
+        console.error(...args);
+        process.stderr.write(oc.dump.close);
     }
 
     error(...args) { return this.log('ERROR', ...args); }

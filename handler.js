@@ -26,12 +26,10 @@ class Handler extends EventEmitter {
     debugRequest(ctx) {
         if (!this.log.debug2('Print client request'))
             return; /* verbosity too low */
-        this.log.dump(`${ctx.req.method} ${ctx.req.url} HTTP/${ctx.req.httpVersion}\n`);
+        this.log.dump(`${ctx.req.method} ${ctx.req.url} HTTP/${ctx.req.httpVersion}`);
         for (let i = 0; i < ctx.req.rawHeaders.length; i += 2)
-            this.log.dump(`${ctx.req.rawHeaders[i]}: ${ctx.req.rawHeaders[i+1]}\n`);
-        this.log.dump('\n' + ctx.rawData);
-        if (ctx.rawData.length > 1 && ctx.rawData.substr(-1) != '\n')
-            this.log.dump('\n');
+            this.log.dump(`${ctx.req.rawHeaders[i]}: ${ctx.req.rawHeaders[i+1]}`);
+        this.log.dump(ctx.rawData.length > 1 ? '\n' + ctx.rawData : '');
     }
 
     checkData(ctx) {
