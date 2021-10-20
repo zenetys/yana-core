@@ -105,6 +105,13 @@ function isObject(value) {
  *      object associated to that entry depending on the (l)stat option. The
  *      stat argument will be undefined if the (l)stat option is not enabled.
  *      The entry callback must return true to accept an entry.
+ *  - apply: Callback function that can be used to filter or modify elements.
+ *      It takes 4 arguments. The first argument is the output array to push
+ *      into in order to keep the element. The other 3 arguments are the same
+ *      as for the filter callback.
+ *
+ * If both filter and apply options are used, the filter callback is executed
+ * before the apply callback.
  *
  * @throws Error as thrown by fs.readdirSync() or fs.[l]statSync().
  * @return The list of entries found in the directory and matching the options.
@@ -115,8 +122,8 @@ function lsDirSync(dir, options) {
 
     var ls = fs.readdirSync(dir);
 
-    if (options.filter) {
-        ls = ls.filter((child) => {
+    if (options.filter || options.apply) {
+        ls = ls.reduce((out, child) => {
             let entry = dir + '/' + child;
             let st = undefined;
 
@@ -125,8 +132,12 @@ function lsDirSync(dir, options) {
             else if (options.lstat)
                 st = fs.lstatSync(entry);
 
-            return options.filter(dir, child, st);
-        });
+            if (options.filter && options.filter(dir, child, st))
+                out.push(child);
+            if (options.apply)
+                options.apply(out, dir, child, st);
+            return out;
+        }, /* initial reduced out */ []);
     }
 
     return ls;
