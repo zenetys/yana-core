@@ -69,6 +69,7 @@ fs.readdirSync(__dirname, { withFileTypes: true }).forEach((entry) => {
 var srv = new Server(config.options.server);
 srv.setHandler('GET', '/time', new handlers.time());
 srv.setHandler('GET', '/entities', new handlers.entities());
+srv.setHandler('GET', '/entity/*/databases', new handlers.databases());
 
 function onTermSignal(signal) {
     log.info(`Caught ${signal}`)
