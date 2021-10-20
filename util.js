@@ -1,5 +1,6 @@
 "use strict";
 
+const fs = require('fs');
 const util = require('util');
 
 function checkData(x, r, path = '$') {
@@ -93,6 +94,44 @@ function isObject(value) {
         value.constructor === Object;
 }
 
+/**
+ * List the content of a directory (synchronous).
+ *
+ * @param dir Path to the directory to list.
+ * @param options Object holding filtering options:
+ *  - [l]stat: If true performs a [l]stat on the entry
+ *  - filter: Callback allowing to filter entries to return. The callback
+ *      takes 3 arguments: the directory, the name of the entry and the (l)stat
+ *      object associated to that entry depending on the (l)stat option. The
+ *      stat argument will be undefined if the (l)stat option is not enabled.
+ *      The entry callback must return true to accept an entry.
+ *
+ * @throws Error as thrown by fs.readdirSync() or fs.[l]statSync().
+ * @return The list of entries found in the directory and matching the options.
+ */
+function lsDirSync(dir, options) {
+    if (!options)
+        options = {};
+
+    var ls = fs.readdirSync(dir);
+
+    if (options.filter) {
+        ls = ls.filter((child) => {
+            let entry = dir + '/' + child;
+            let st = undefined;
+
+            if (options.stat)
+                st = fs.statSync(entry);
+            else if (options.lstat)
+                st = fs.lstatSync(entry);
+
+            return options.filter(dir, child, st);
+        });
+    }
+
+    return ls;
+}
+
 function omerge(...o) {
     function _(o1 = {}, o2 = {}) {
         Object.keys(o2).forEach((k) => {
@@ -141,6 +180,7 @@ Object.assign(module.exports, util, {
     checkData,
     clone,
     isObject,
+    lsDirSync,
     omerge,
     safePromise,
     sleep,
