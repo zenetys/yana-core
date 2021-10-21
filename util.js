@@ -15,7 +15,7 @@ function checkData(x, r, path = '$') {
             return e(`string required at ${path}`);
     }
     else if (r.type == 'number') {
-        if (typeof x != 'number' && isNaN(x))
+        if (typeof x != 'number' && isNaN(x)) /* accept number as string */
             return e(`number required at ${path}`);
     }
     else if (r.type == 'boolean') {
