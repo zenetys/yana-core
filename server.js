@@ -10,7 +10,6 @@ const log = new Logger('server');
 const DEFAULTS = {
     listenAddress: '127.0.0.1',
     listenPort: 56789,
-    maxClientErrors: 3,
     clientTimeout: 20000,
     maxConnections: 20,
 }
@@ -32,11 +31,9 @@ const DEFAULTS = {
  * }
  */
 
-/* These are custom property symbols added to the client socket objects.
+/* Custom property Symbols added to the client socket objects.
  * ES6 Symbols are used to avoid naming conflicts. */
-const SOCK_NAME = Symbol('srvClientName');
-const SOCK_ERR = Symbol('srvClientErrors');
-const SOCK_DESTROY_REASON = Symbol('srvClientDestroyReason');
+const SOCK_NAME = Symbol('socketName');
 
 function Server(options) {
     options = util.omerge({}, DEFAULTS, options);
@@ -62,7 +59,6 @@ function Server(options) {
          * information isn't available anymore after close. */
         sock[SOCK_NAME] = sock.remoteAddress + ':' + sock.remotePort + ' ' +
             sock.localAddress + ':' + sock.localPort;
-        sock[SOCK_ERR] = 0;
         connections++;
         sockets[sock[SOCK_NAME]] = sock;
         sock.on('close', onConnectionClose);
@@ -71,13 +67,7 @@ function Server(options) {
     }
 
     function onConnectionClose() {
-        let that = this;
-        log.debug(() => {
-            let msg = 'connection closed';
-            if (this[SOCK_DESTROY_REASON])
-                msg += `, ${this[SOCK_DESTROY_REASON]}`;
-            return `${this[SOCK_NAME]}, ${msg}`;
-        });
+        log.debug(`${this[SOCK_NAME]}, connection closed`);
         connections--;
         delete sockets[this[SOCK_NAME]];
     }
@@ -87,21 +77,14 @@ function Server(options) {
          * to avoid time waits (port starvation on proxies).
          * It produces annoying logs so ignore ECONNRESET until we
          * find something better. */
-        if (err.code == 'ECONNRESET')
-            return;
-        sock[SOCK_ERR]++;
-        log.error(`${sock[SOCK_NAME]}, client error:`,
-                  `${sock[SOCK_ERR]}/${options.maxClientErrors}, ${err.code}`);
-        if (sock[SOCK_ERR] >= options.maxClientErrors) {
-            sock[SOCK_DESTROY_REASON] = 'too many errors';
-            sock.destroy();
-        }
+        if (err.code != 'ECONNRESET')
+            log.error(`${sock[SOCK_NAME]}, client error: ${err.code}`);
+        sock.destroy();
     }
 
     function onTimeout(sock) {
         log.debug(`${sock[SOCK_NAME]}, client timeout:`,
                   `${options.clientTimeout} ms`);
-        sock[SOCK_DESTROY_REASON] = 'client timeout';
         sock.destroy();
     }
 
