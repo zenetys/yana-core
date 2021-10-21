@@ -35,6 +35,20 @@ const DEFAULTS = {
  * ES6 Symbols are used to avoid naming conflicts. */
 const SOCK_NAME = Symbol('socketName');
 
+function parseUrl(url) {
+    var out = {}
+    var qmark = url.indexOf('?');
+    if (qmark > -1) {
+        out.path = url.substr(0, qmark);
+        out.qs = Object.fromEntries(new URLSearchParams(url.substr(qmark + 1)));
+    }
+    else {
+        out.path = url;
+        out.qs = {};
+    }
+    return out;
+}
+
 function Server(options) {
     options = util.omerge({}, DEFAULTS, options);
 
@@ -97,20 +111,13 @@ function Server(options) {
         req.on('error', onRequestError);
 
         let start = new Date().getTime(), elapsed = 0;
-        let urlPath, urlQs = req.url.indexOf('?');
-        if (urlQs > -1) {
-            urlPath = req.url.substr(0, urlQs);
-            urlQs = Object.fromEntries(
-                new URLSearchParams(req.url.substr(urlQs + 1)));
-        }
-        else {
-            urlPath = req.url;
-            urlQs = {};
-        }
-        let h = getHandler(req.method, urlPath);
+        let url = parseUrl(req.url);
+        let h = getHandler(req.method, url.path);
+
         if (h.handler) {
+            url.params = h.params;
+            let ctx = { req, res, url };
             /* assume request handlers are proper objects */
-            let ctx = { req, res, urlPath, urlParams: h.params, urlQs };
             let [e, result] = await util.safePromise(h.handler.handle(ctx));
             if (e)
                 log.error(`${req.socket[SOCK_NAME]}, handler error.`, e);

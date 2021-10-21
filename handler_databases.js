@@ -9,14 +9,16 @@ const util = require(__dirname + '/util.js');
 const OPTIONS = {
     log: new Logger('databases'),
     contentType: 'application/json',
-    rulesUrlParams: {
-        type: 'array',
-        min: 1,
-        max: 1,
-        elems: {
-            type: 'string',
-            check: (x) => x.length > 0 && x.indexOf('.') != 0,
-         },
+    inputRules: {
+        urlParams: {
+            type: 'array',
+            min: 1,
+            max: 1,
+            elems: {
+                type: 'string',
+                check: (x) => x.length > 0 && x.indexOf('.') != 0,
+             },
+        },
     },
 };
 
@@ -46,7 +48,7 @@ class HandlerDatabases extends Handler {
     }
 
     async process(ctx) {
-        var eDir = config.options.dataDir + '/' + ctx.urlParams[0];
+        var eDir = config.options.dataDir + '/' + ctx.url.params[0];
         var databases;
 
         try {
