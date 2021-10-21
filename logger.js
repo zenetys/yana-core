@@ -108,20 +108,19 @@ class Logger {
             args = [ args[0].message ];
         }
 
-        if (this.prefix) {
-            let prefix = (typeof this.prefix == 'function')
-                ? this.prefix() : this.prefix;
-            args.unshift(prefix + ':');
-        }
-
-        args.unshift(`[${this.name}]`);
-
         let oc = this.getOpenClose();
-        console.error(formatDate(), oc[severity].open + severity +
-            oc[severity].close, ...args);
-        if (err && err.stack && this.getOption('stack'))
-            console.error(oc.stack.open + err.stack + oc.stack.close);
+        let intro = formatDate() + ' ' + oc[severity].open + severity +
+             oc[severity].close + ' [' + this.name + '] ';
+        if (this.prefix)
+            intro += ((typeof this.prefix == 'function')
+                ? this.prefix() : this.prefix) + ': ';
 
+        process.stderr.write(intro);
+        console.error(...args);
+        if (err && err.stack && this.getOption('stack')) {
+            process.stderr.write(oc.stack.open + err.stack +
+                oc.stack.close + '\n');
+        }
         return true; /* printed */
     }
 
