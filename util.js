@@ -3,6 +3,21 @@
 const fs = require('fs');
 const util = require('util');
 
+function bufArr2str(bufArray, maxBytes, encoding) {
+    if (maxBytes === undefined)
+        return bufArray.reduce((str, buf) => str += buf.toString(encoding), '');
+
+    var out = '';
+    var copiedBytes = 0;
+    for (let b of bufArray) {
+        let neededBytes = Math.min(b.length, maxBytes - copiedBytes);
+        out += b.toString(encoding, 0, neededBytes);
+        copiedBytes += neededBytes;
+        if (copiedBytes >= maxBytes)
+            break;
+    }
+    return out;
+}
 function checkData(x, r, path = '$') {
     var out = { parsed: x };
     var e = (msg) => { out.error = msg; return out; };
@@ -197,6 +212,7 @@ util.inspect.defaultOptions.maxArrayLength = null;
 /* Extend the standard util library.
  * May be a bad idea... */
 Object.assign(module.exports, util, {
+    bufArr2str,
     checkData,
     clone,
     cmpDefault,
