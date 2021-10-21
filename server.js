@@ -105,7 +105,8 @@ function Server(options) {
             /* assume request handlers are proper objects */
             let ctx = { req, res, urlPath, urlParams: h.params, urlQs };
             let [e, result] = await util.safePromise(h.handler.handle(ctx));
-            if (e) log.error(e);
+            if (e)
+                log.error(e);
         }
         else {
             res.writeHead(404);
