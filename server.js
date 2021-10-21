@@ -107,22 +107,20 @@ function Server(options) {
             let [e, result] = await util.safePromise(h.handler.handle(ctx));
             if (e)
                 log.error(e);
+
+            /* try to cleanup */
+            if (res.headersSent) {
+                if (!res.writableEnded)
+                    res.end()
+            }
+            else {
+                res.writeHead(500);
+                res.end()
+            }
         }
         else {
             res.writeHead(404);
             res.end();
-        }
-
-        /* make sure the server knows the response is complete */
-        if (res.headersSent) {
-            if (!res.writableEnded)
-                res.end()
-        }
-        else {
-            /* error catched or bad implementation because status code must
-             * be implemented in handler */
-            res.writeHead(500);
-            res.end()
         }
 
         elapsed = new Date().getTime() - start;
