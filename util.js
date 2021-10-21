@@ -1,5 +1,6 @@
 "use strict";
 
+const crypto = require('crypto');
 const fs = require('fs');
 const util = require('util');
 
@@ -205,6 +206,15 @@ function safePromise(promise) {
         .catch(err => [ err, null ]);
 }
 
+function sha256(data) {
+    var h = crypto.createHash('sha256');
+    if (Array.isArray(data))
+        data.forEach((d) => h.update(d));
+    else
+        h.update(data);
+    return h.digest('hex');
+}
+
 function sleep(ms) {
     return new Promise(function (resolve) {
         return setTimeout(resolve, ms)
@@ -227,5 +237,6 @@ Object.assign(module.exports, util, {
     makeCmpKey,
     omerge,
     safePromise,
+    sha256,
     sleep,
 });
