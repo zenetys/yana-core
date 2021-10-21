@@ -18,6 +18,11 @@ function bufArr2str(bufArray, maxBytes, encoding) {
     }
     return out;
 }
+
+function bufArrLen(bufArray) {
+    return bufArray.reduce((len, buf) => len += buf.length, 0);
+}
+
 function checkData(x, r, path = '$') {
     var out = { parsed: x };
     var e = (msg) => { out.error = msg; return out; };
@@ -213,6 +218,7 @@ util.inspect.defaultOptions.maxArrayLength = null;
  * May be a bad idea... */
 Object.assign(module.exports, util, {
     bufArr2str,
+    bufArrLen,
     checkData,
     clone,
     cmpDefault,
