@@ -78,7 +78,7 @@ function Server(options) {
          * It produces annoying logs so ignore ECONNRESET until we
          * find something better. */
         if (err.code != 'ECONNRESET')
-            log.error(`${sock[SOCK_NAME]}, client error: ${err.code}`);
+            log.error(`${sock[SOCK_NAME]}, client error. ${util.err2str(err)}`);
         sock.destroy();
     }
 
@@ -88,7 +88,14 @@ function Server(options) {
         sock.destroy();
     }
 
+    function onRequestError(err) {
+        log.error(`${this.socket[SOCK_NAME]}, request error.`,
+            util.err2str(err));
+    }
+
     async function onRequest(req, res) {
+        req.on('error', onRequestError);
+
         let start = new Date().getTime(), elapsed = 0;
         let urlPath, urlQs = req.url.indexOf('?');
         if (urlQs > -1) {
@@ -106,7 +113,7 @@ function Server(options) {
             let ctx = { req, res, urlPath, urlParams: h.params, urlQs };
             let [e, result] = await util.safePromise(h.handler.handle(ctx));
             if (e)
-                log.error(e);
+                log.error(`${req.socket[SOCK_NAME]}, handler error.`, e);
 
             /* try to cleanup */
             if (res.headersSent) {
