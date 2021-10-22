@@ -84,12 +84,12 @@ class Logger {
 
     /* Supported signatures:
      * - log(severity, ...args)
-     * - log(severity, err)
+     * - log(severity, [...args,] err)
      * - log(severity, func)
      *
      * The "err" signature takes an Error object as value to print. In that
-     * case the function prints the message property. The stack trace of
-     * the error is printed if available and if the stack option is enabled.
+     * case the function prints the message property. When the stack option
+     * is enabled, the whole Error object is dumped with console.error.
      * The "func" signature prints the value returned by the function.
      */
     log(severity, ...args) {
@@ -103,9 +103,9 @@ class Logger {
         }
 
         var err = undefined;
-        if (args[0] instanceof Error) {
-            err = args[0];
-            args = [ args[0].message ];
+        if (args[args.length-1] instanceof Error) {
+            err = args.splice(-1)[0];
+            args.push(util.err2str(err));
         }
 
         let oc = this.getOpenClose();
@@ -117,10 +117,8 @@ class Logger {
 
         process.stderr.write(intro);
         console.error(...args);
-        if (err && err.stack && this.getOption('stack')) {
-            process.stderr.write(oc.stack.open + err.stack +
-                oc.stack.close + '\n');
-        }
+        if (err && err.stack && this.getOption('stack'))
+            console.error(err);
         return true; /* printed */
     }
 
