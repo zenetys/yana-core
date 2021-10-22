@@ -23,6 +23,7 @@ const fmtOpenClose = [
         INFO: { open: '', close: '' },
         DEBUG: { open: '', close: '' },
         DEBUG2: { open: '', close: '' },
+        DEBUG3: { open: '', close: '' },
         stack: { open: '', close: '' },
         dump: { open: '', close: '' },
     },
@@ -32,6 +33,7 @@ const fmtOpenClose = [
         INFO: { open: '', close: '' },
         DEBUG: { open: '\x1b[37;2m', close: '\x1b[0m' },
         DEBUG2: { open: '\x1b[37;2m', close: '\x1b[0m' },
+        DEBUG3: { open: '\x1b[37;2m', close: '\x1b[0m' },
         stack: { open: '\x1b[37;2m', close: '\x1b[0m' },
         dump: { open: '\x1b[37;2m', close: '\x1b[0m' },
     },
@@ -39,6 +41,7 @@ const fmtOpenClose = [
 
 /* minimum verbosity to print for a given severity */
 const minVerbosity = {
+    DEBUG3: 4,
     DEBUG2: 3,
     DEBUG: 2,
     INFO: 1,
@@ -134,6 +137,7 @@ class Logger {
     info(...args) { return this.log('INFO', ...args); }
     debug(...args) { return this.log('DEBUG', ...args); }
     debug2(...args) { return this.log('DEBUG2', ...args); }
+    debug3(...args) { return this.log('DEBUG3', ...args); }
 
     /* property: verbose, stack */
     getOption(property) {
