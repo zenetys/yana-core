@@ -114,6 +114,13 @@ function cmpDefault(a, b) {
     return a > b ? 1 : (a < b ? -1 : 0);
 }
 
+function err2str(err) {
+    var out = err.toString();
+    for (let i in err)
+        out += `, ${i}: ${err[i]}`;
+    return out;
+}
+
 function isObject(value) {
     return value !== null && typeof value == 'object' &&
         value.constructor === Object;
@@ -232,6 +239,7 @@ Object.assign(module.exports, util, {
     checkData,
     clone,
     cmpDefault,
+    err2str,
     isObject,
     lsDirSync,
     makeCmpKey,
