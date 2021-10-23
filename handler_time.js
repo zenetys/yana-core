@@ -5,7 +5,7 @@ const Logger = require(__dirname + '/logger.js');
 const util = require(__dirname + '/util.js');
 
 const OPTIONS = {
-    log: new Logger('time'),
+    log: new Logger('handler:time'),
     contentType: 'application/json',
     inputRules: {
         qs: {
