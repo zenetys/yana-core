@@ -6,7 +6,7 @@ const Logger = require(__dirname + '/logger.js');
 const util = require(__dirname + '/util.js');
 
 const OPTIONS = {
-    log: new Logger('entities'),
+    log: new Logger('handler:entities'),
     contentType: 'application/json',
 };
 
