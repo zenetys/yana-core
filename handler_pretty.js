@@ -5,7 +5,7 @@ const Logger = require(__dirname + '/logger.js');
 const util = require(__dirname + '/util.js');
 
 const OPTIONS = {
-    log: new Logger('pretty'),
+    log: new Logger('handler:pretty'),
     contentType: 'text/plain',
     inputData: {
         enabled: true,
