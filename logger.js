@@ -81,8 +81,9 @@ class Logger {
     }
 
     /* duplicate the Logger instance with an optional new name and prefix */
-    dup(name, prefix) {
-        return new Logger(name || this.name, prefix || this.prefix);
+    dup(options) {
+        return new Logger(options.name || this.name,
+            options.prefix || this.prefix);
     }
 
     /* Supported signatures:
