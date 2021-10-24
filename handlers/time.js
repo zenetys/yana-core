@@ -1,6 +1,6 @@
 'use strict';
 
-const Handler = require(__dirname + '/handler.js');
+const handler = require('./../handler.js');
 const Logger = require(__dirname + '/logger.js');
 const util = require(__dirname + '/util.js');
 
@@ -17,7 +17,7 @@ const OPTIONS = {
     },
 };
 
-class HandlerTime extends Handler {
+class HandlerTime extends handler.Handler {
 
     constructor() {
         super(OPTIONS);
@@ -35,4 +35,4 @@ class HandlerTime extends Handler {
     }
 }
 
-module.exports = HandlerTime;
+handler.register('GET', '/time', new HandlerTime());

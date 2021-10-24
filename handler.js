@@ -1,6 +1,8 @@
 'use strict';
 
+const config = require('./config');
 const EventEmitter = require('events');
+const log = new Logger('handler');
 const Logger = require(__dirname + '/logger.js');
 const util = require(__dirname + '/util.js');
 
@@ -28,6 +30,7 @@ class Handler extends EventEmitter {
     constructor(options) {
         super();
         Object.assign(this, util.omerge({}, DEFAULT_OPTIONS, options));
+        this.shared = {};
     }
 
     debugRequest(ctx) {
@@ -142,4 +145,64 @@ class Handler extends EventEmitter {
     }
 }
 
-module.exports = Handler;
+/* <REGISTRATIONS> is structured as follows, allowing override:
+ * { <method>: { <path>: <instance> } } */
+const REGISTRATIONS = {};
+
+function register(method, path, handlerInstance) {
+    if (!REGISTRATIONS[method])
+        REGISTRATIONS[method] = {};
+    REGISTRATIONS[method][path] = handlerInstance;
+}
+
+function share(method, path, shareName, shareValue) {
+    if (!REGISTRATIONS[method] || !REGISTRATIONS[method][path])
+        return false;
+    REGISTRATIONS[method][path].shared[shareName] = shareValue;
+    return true;
+}
+
+/* Load handlers, which fills <REGISTRATIONS> because handlers register
+ * themselves by calling register(). */
+function reload() {
+    var files = [];
+
+    for (let dir of config.options.handlerDirs) {
+        try {
+            files.push(... util.lsDirSync(dir, {
+                lstat: true,
+                apply: (out, d,n,s) => {
+                    if (s.isFile() && n.substr(-3) == '.js')
+                        out.push(d + '/' + n);
+                }
+            }));
+        }
+        catch (e) {
+            this.log.error(e);
+            this.log.error('Failed to list handlers in ' + dir);
+            return false;
+        }
+    }
+
+    /* assume exceptions are handled by caller */
+    for (let i of files) {
+        log.debug('Load ' + i);
+        delete require.cache[require.resolve(i)]; /* for reload */
+        require(i);
+    }
+}
+
+function attach(server) {
+    for (let method in REGISTRATIONS) {
+        for (let path in REGISTRATIONS[method])
+            server.setHandler(method, path, REGISTRATIONS[method][path]);
+    }
+}
+
+module.exports = {
+    attach,
+    Handler,
+    reload,
+    register,
+    share,
+};

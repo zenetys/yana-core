@@ -1,9 +1,9 @@
 "use strict";
 
+const handler = require('./handler.js');
 const http = require('http');
 const util = require(__dirname + '/util.js');
 
-const Handler = require(__dirname + '/handler.js');
 const Logger = require(__dirname + '/logger.js');
 const log = new Logger('server');
 
@@ -245,7 +245,7 @@ function Server(options) {
             pos = pos['.'];
         }
 
-        if (pos instanceof Handler)
+        if (pos instanceof handler.Handler)
             out.handler = pos; /* found handler */
         return out
     }

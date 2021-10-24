@@ -7,6 +7,7 @@ const util = require(__dirname + '/util.js');
 const APP_DEFAULTS = {
     config: __dirname + '/config.json',
     dataDir: __dirname + '/data',
+    handlerDirs: [ __dirname + '/handlers' ],
 };
 
 class Config extends EventEmitter {

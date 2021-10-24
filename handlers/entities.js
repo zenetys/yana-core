@@ -1,7 +1,7 @@
 'use strict';
 
 const config = require(__dirname + '/config.js');
-const Handler = require(__dirname + '/handler.js');
+const handler = require('./../handler.js');
 const Logger = require(__dirname + '/logger.js');
 const util = require(__dirname + '/util.js');
 
@@ -10,7 +10,7 @@ const OPTIONS = {
     contentType: 'application/json',
 };
 
-class HandlerEntities extends Handler {
+class HandlerEntities extends handler.Handler {
 
     constructor() {
         super(OPTIONS);
@@ -36,4 +36,4 @@ class HandlerEntities extends Handler {
     }
 }
 
-module.exports = HandlerEntities;
+handler.register('GET', '/entities', new HandlerEntities());

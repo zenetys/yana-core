@@ -3,7 +3,7 @@
 'use strict';
 
 const config = require(__dirname + '/config.js');
-const fs = require('fs')
+const handler = require('./handler.js');
 const path = require('path');
 const Server = require(__dirname + '/server.js');
 const Logger = require(__dirname + '/logger.js');
@@ -56,21 +56,17 @@ for (let i = 2; i < process.argv.length; i++) {
     else
         exitUsage(1);
 }
+
 config.reload(opts);
 
-const handlers = {};
-fs.readdirSync(__dirname, { withFileTypes: true }).forEach((entry) => {
-    if (entry.isFile() && /^handler_.+\.js$/.test(entry.name)) {
-        let name = entry.name.substr(8, entry.name.length - 8 - 3);
-        handlers[name] = require(__dirname + '/' + entry.name);
-    }
-});
-
 var srv = new Server(config.options.server);
-srv.setHandler('POST', '/pretty', new handlers.pretty());
-srv.setHandler('GET', '/time', new handlers.time());
-srv.setHandler('GET', '/entities', new handlers.entities());
-srv.setHandler('GET', '/entity/*/databases', new handlers.databases());
+
+function reloadHandlers() {
+    handler.reload();
+    handler.attach(srv);
+}
+
+reloadHandlers();
 
 function onTermSignal(signal) {
     log.info(`Caught ${signal}`)
@@ -83,6 +79,7 @@ function onHupSignal(signal) {
     config.reload();
 }
 
+config.on('reload', reloadHandlers);
 process.once('SIGTERM', onTermSignal);
 process.once('SIGINT', onTermSignal);
 process.on('SIGHUP', onHupSignal);
