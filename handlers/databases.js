@@ -56,9 +56,13 @@ class HandlerDatabases extends handler.Handler {
                 { lstat: true, apply: lsDirApplyCb });
         }
         catch (e) {
-            this.log.error(e);
-            this.log.error('Failed to list databases');
-            ctx.res.writeHead(e.code == 'ENOENT' ? 404 : 500);
+            if (e.code == 'ENOENT')
+                ctx.res.writeHead(404);
+            else {
+                this.log.error(e);
+                this.log.error('Failed to list databases');
+                ctx.res.writeHead(500);
+            }
             return;
         }
 
