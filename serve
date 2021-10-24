@@ -2,11 +2,11 @@
 
 'use strict';
 
-const config = require(__dirname + '/config.js');
+const config = require('./config.js');
 const handler = require('./handler.js');
+const Logger = require('./logger.js');
+const Server = require('./server.js');
 const path = require('path');
-const Server = require(__dirname + '/server.js');
-const Logger = require(__dirname + '/logger.js');
 const log = new Logger('main');
 
 function onUnhandledRejection(e) {

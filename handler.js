@@ -1,10 +1,10 @@
 'use strict';
 
 const config = require('./config');
+const Logger = require('./logger.js');
+const util = require('./util.js');
 const EventEmitter = require('events');
 const log = new Logger('handler');
-const Logger = require(__dirname + '/logger.js');
-const util = require(__dirname + '/util.js');
 
 const DEFAULT_OPTIONS = {
     log: new Logger('handler'),

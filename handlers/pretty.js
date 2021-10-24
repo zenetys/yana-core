@@ -1,8 +1,8 @@
 'use strict';
 
-const handler = require('./../handler.js');
-const Logger = require(__dirname + '/logger.js');
-const util = require(__dirname + '/util.js');
+const handler = require('../handler.js');
+const Logger = require('../logger.js');
+const util = require('../util.js');
 
 const OPTIONS = {
     log: new Logger('handler:pretty'),

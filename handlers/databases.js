@@ -1,10 +1,10 @@
 'use strict';
 
-const config = require(__dirname + '/config.js');
+const config = require('../config.js');
+const handler = require('../handler.js');
+const Logger = require('../logger.js');
+const util = require('../util.js');
 const fs = require('fs');
-const handler = require('./../handler.js');
-const Logger = require(__dirname + '/logger.js');
-const util = require(__dirname + '/util.js');
 
 const OPTIONS = {
     log: new Logger('handler:databases'),

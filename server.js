@@ -1,10 +1,9 @@
 "use strict";
 
 const handler = require('./handler.js');
+const Logger = require('./logger.js');
+const util = require('./util.js');
 const http = require('http');
-const util = require(__dirname + '/util.js');
-
-const Logger = require(__dirname + '/logger.js');
 const log = new Logger('server');
 
 const DEFAULTS = {

@@ -1,8 +1,8 @@
 'use strict';
 
+const util = require('./util.js');
 const EventEmitter = require('events');
 const fs = require('fs');
-const util = require(__dirname + '/util.js');
 
 const APP_DEFAULTS = {
     config: __dirname + '/config.json',
@@ -44,5 +44,5 @@ class Config extends EventEmitter {
 module.exports = new Config();
 
 /* load logger after exporting module options to avoid circular issues */
-const Logger = require(__dirname + '/logger.js');
+const Logger = require('./logger.js');
 const log = new Logger('config');

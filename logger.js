@@ -1,7 +1,7 @@
 'use strict';
 
-const config = require(__dirname + '/config.js');
-const util = require(__dirname + '/util.js');
+const config = require('./config.js');
+const util = require('./util.js');
 
 const DEFAULTS = {
     verbose: 1,
