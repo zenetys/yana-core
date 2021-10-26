@@ -230,6 +230,9 @@ function sleep(ms) {
 
 util.inspect.defaultOptions.depth = null;
 util.inspect.defaultOptions.maxArrayLength = null;
+util.inspect.defaultOptions.maxStringLength = null;
+util.inspect.defaultOptions.breakLength = Infinity;
+util.inspect.defaultOptions.compact = 0;
 
 /* Extend the standard util library.
  * May be a bad idea... */
