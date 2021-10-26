@@ -17,13 +17,15 @@ class Config extends EventEmitter {
         this.options = {}
     }
 
-    reload(options) {
-        util.omerge(this.options, APP_DEFAULTS, options);
+    reload(manualOptions) {
+        util.omerge(this.options, APP_DEFAULTS, manualOptions);
+
         if (this.options.config) {
+            let configOptions;
             try {
-                options = fs.readFileSync(this.options.config);
-                options = JSON.parse(options);
-                if (!util.isObject(options)) {
+                configOptions = fs.readFileSync(this.options.config);
+                configOptions = JSON.parse(configOptions);
+                if (!util.isObject(configOptions)) {
                     log.error('Invalid data in config file, using defaults');
                     return false;
                 }
@@ -33,7 +35,9 @@ class Config extends EventEmitter {
                 log.error('Failed to load config file, using defaults');
                 return false;
             }
-            util.omerge(this.options, APP_DEFAULTS, options);
+
+            util.omerge(this.options, APP_DEFAULTS, configOptions,
+                manualOptions);
         }
 
         this.emit('reload');
