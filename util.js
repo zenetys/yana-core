@@ -207,6 +207,45 @@ function omerge(...o) {
     return out;
 }
 
+class Ranges {
+    constructor() {
+        this.ranges = [];
+        this.start = undefined;
+        this.last = undefined;
+        return this;
+    }
+    add(int) {
+        if (this.last === undefined) {
+            this.start = int;
+        }
+        else {
+            let diff = int - this.last;
+            if (diff <= 0)
+                throw Error('RangeArray value must be greater than previous');
+
+            if (diff > 1) {
+                this.ranges.push({ from: this.start, to: this.last });
+                this.start = int;
+            }
+        }
+        this.last = int;
+        return this;
+    }
+    done() {
+        if (this.last !== undefined) /* so is this.start */
+            this.ranges.push({ from: this.start, to: this.last });
+        return this.ranges;
+    }
+    static *iterator(ranges) {
+        for (let r of ranges) {
+            if (typeof r.from != 'number' || typeof r.to != 'number')
+                throw Error('invalid RangeArray iterator argument');
+            for (let i = r.from; i <= r.to; i++)
+                yield i;
+        }
+    }
+}
+
 function safePromise(promise) {
     return promise
         .then(result => [ null, result ])
@@ -247,6 +286,7 @@ Object.assign(module.exports, util, {
     lsDirSync,
     makeCmpKey,
     omerge,
+    Ranges,
     safePromise,
     sha256,
     sleep,
