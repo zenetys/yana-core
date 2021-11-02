@@ -1,0 +1,27 @@
+#!/bin/bash
+
+export LC_ALL=C
+PROGNAME=${0##*/}
+
+function usage() {
+    echo "Usage: $PROGNAME [-M DIR[:...]] [-m MIB[:...]]"
+    echo "Wrapper to snmptranslate -Tz to produce a JSON object"
+}
+
+snmpopts=()
+
+while (( $# > 0 )); do
+    case "$1" in
+        -M) snmpopts+=( -M "$2" ); shift ;;
+        -m) snmpopts+=( -m "$2" ); shift ;;
+        -h|--help) usage; exit 0 ;;
+        *) usage >/dev/stderr; exit 1 ;;
+    esac
+    shift
+done
+
+echo '{'
+snmptranslate "${snmpopts[@]}" -Tz |
+    sort -k 2V |
+    sed -re 's,^("[^"]+")\t+"([^"]+)".*,  ".\2": \1\,,' -e '$s,\,$,,'
+echo '}'
