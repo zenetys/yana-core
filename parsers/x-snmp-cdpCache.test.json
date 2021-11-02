@@ -1,0 +1,91 @@
+{
+  "x-snmp-cdpCache": {
+    "10.1.1.10": {
+      "0": {
+        "ifIndex": 51,
+        "cdpCacheAddressType": 1,
+        "cdpCacheAddress": "C0 A8 58 01 ",
+        "cdpCacheVersion": "6.42.1 (stable)",
+        "cdpCacheDeviceId": "MikroTik",
+        "cdpCacheDevicePort": "bridge",
+        "cdpCachePlatform": "MikroTik",
+        "cdpCacheCapabilities": 1,
+        "cdpCacheDuplex": 1,
+        "cdpCachePowerConsumption": 0,
+        "cdpCacheAddressDecoded": "192.168.88.1",
+        "cdpCacheCapabilitiesNames": [
+          "router"
+        ]
+      },
+      "1": {
+        "ifIndex": 56,
+        "cdpCacheAddressType": 1,
+        "cdpCacheAddress": "0A 01 01 8A ",
+        "cdpCacheVersion": "66.83.0.30",
+        "cdpCacheDeviceId": "T42S805EC0283ADB",
+        "cdpCacheDevicePort": "WAN PORT",
+        "cdpCachePlatform": "T42S",
+        "cdpCacheCapabilities": 144,
+        "cdpCacheDuplex": 3,
+        "cdpCachePowerConsumption": 9300,
+        "cdpCacheAddressDecoded": "10.1.1.138",
+        "cdpCacheCapabilitiesNames": [
+          "host",
+          "voip-phone"
+        ]
+      },
+      "2": {
+        "ifIndex": 60,
+        "cdpCacheAddressType": 1,
+        "cdpCacheAddress": "0A 01 03 D8 ",
+        "cdpCacheVersion": "36.73.193.50",
+        "cdpCacheDeviceId": "T41001565B717C5",
+        "cdpCacheDevicePort": "WAN PORT",
+        "cdpCachePlatform": "T41",
+        "cdpCacheCapabilities": 144,
+        "cdpCacheDuplex": 3,
+        "cdpCachePowerConsumption": 3200,
+        "cdpCacheAddressDecoded": "10.1.3.216",
+        "cdpCacheCapabilitiesNames": [
+          "host",
+          "voip-phone"
+        ]
+      },
+      "3": {
+        "ifIndex": 67,
+        "cdpCacheAddressType": 1,
+        "cdpCacheAddress": "0A 01 01 0B ",
+        "cdpCacheVersion": "Cisco IOS Software, C2960X Software (C2960X-UNIVERSALK9-M), Version 15.2(7)E2, RELEASE SOFTWARE (fc3)\r\nTechnical Support: http://www.cisco.com/techsupport\r\nCopy",
+        "cdpCacheDeviceId": "sw2.zenetys.loc",
+        "cdpCacheDevicePort": "GigabitEthernet1/0/1",
+        "cdpCachePlatform": "cisco WS-C2960X-24TD-L",
+        "cdpCacheCapabilities": 40,
+        "cdpCacheNativeVLAN": 1,
+        "cdpCacheDuplex": 3,
+        "cdpCachePowerConsumption": 0,
+        "cdpCacheAddressDecoded": "10.1.1.11",
+        "cdpCacheCapabilitiesNames": [
+          "switch",
+          "igmp-conditional-filtering"
+        ]
+      },
+      "4": {
+        "ifIndex": 69,
+        "cdpCacheAddressType": 1,
+        "cdpCacheAddress": "0A 01 03 4F ",
+        "cdpCacheVersion": "66.83.0.30",
+        "cdpCacheDeviceId": "T42S805EC052CC1D",
+        "cdpCacheDevicePort": "WAN PORT",
+        "cdpCachePlatform": "T42S",
+        "cdpCacheCapabilities": 144,
+        "cdpCacheDuplex": 3,
+        "cdpCachePowerConsumption": 9300,
+        "cdpCacheAddressDecoded": "10.1.3.79",
+        "cdpCacheCapabilitiesNames": [
+          "host",
+          "voip-phone"
+        ]
+      }
+    }
+  }
+}

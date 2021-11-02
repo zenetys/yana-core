@@ -1,0 +1,8 @@
+<<<< cb-ipv4-fping ipv4-allowed 10.109.11.26 >>>>
+10.109.11.26 is alive
+
+<<<< cb-ipv4-fping ipv4-network-allowed 192.168.1.0/24 >>>>
+192.168.1.1 is alive
+192.168.1.19 is alive
+192.168.1.20 is alive
+192.168.1.33 is alive

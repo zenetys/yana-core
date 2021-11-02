@@ -1,0 +1,75 @@
+{
+  "x-snmp-dot1dBasePort": {
+    "10.1.1.11": {
+      "1": {
+        "dot1dBasePort": 1,
+        "ifIndex": 10101
+      },
+      "6": {
+        "dot1dBasePort": 6,
+        "ifIndex": 10106
+      },
+      "9": {
+        "dot1dBasePort": 9,
+        "ifIndex": 10109
+      },
+      "10": {
+        "dot1dBasePort": 10,
+        "ifIndex": 10110
+      },
+      "11": {
+        "dot1dBasePort": 11,
+        "ifIndex": 10111
+      },
+      "12": {
+        "dot1dBasePort": 12,
+        "ifIndex": 10112
+      },
+      "13": {
+        "dot1dBasePort": 13,
+        "ifIndex": 10113
+      },
+      "14": {
+        "dot1dBasePort": 14,
+        "ifIndex": 10114
+      },
+      "29": {
+        "dot1dBasePort": 29,
+        "ifIndex": 10401
+      },
+      "30": {
+        "dot1dBasePort": 30,
+        "ifIndex": 10402
+      }
+    }
+  },
+  "cb-snmp-cisco-fdb": {
+    "10.1.1.11": {
+      "0": {
+        "vlan": 105,
+        "mac": "00:0d:b9:4b:1f:85",
+        "dot1dBasePort": 1
+      },
+      "1": {
+        "vlan": 105,
+        "mac": "1a:d2:ed:0a:5e:1c",
+        "dot1dBasePort": 13
+      },
+      "2": {
+        "vlan": 105,
+        "mac": "68:05:ca:24:d9:56",
+        "dot1dBasePort": 10
+      },
+      "3": {
+        "vlan": 105,
+        "mac": "92:83:fe:9c:41:a6",
+        "dot1dBasePort": 13
+      },
+      "4": {
+        "vlan": 105,
+        "mac": "f2:91:0c:ed:90:c7",
+        "dot1dBasePort": 13
+      }
+    }
+  }
+}

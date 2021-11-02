@@ -1,0 +1,86 @@
+#!/bin/bash
+
+export LC_ALL=C
+
+TEST_FILTER=()
+VERBOSE=
+if [[ -t 1 ]]; then
+    OK=$'\x1b[1;32mPASS\x1b[0m'
+    ERROR=$'\x1b[1;31mERROR\x1b[0m'
+else
+    OK=PASS
+    ERROR=ERROR
+fi
+if [[ -t 1 ]] && type -P colordiff >/dev/null 2>&1; then
+    colordiff() { command colordiff "$@"; }
+else
+    colordiff() { cat "$@"; }
+fi
+
+function usage() {
+    echo "Usage: ${0##*/} [-v] [test...]"
+}
+
+function pout() {
+    local nopt=
+    [[ $1 == -n ]] && { nopt=-n; shift; }
+    echo ${nopt:+"$nopt"} "${0##*/}: $*"
+}
+
+function filter() {
+    [[ -z $TEST_FILTER ]] && return 0
+    local i
+    for i in "${TEST_FILTER[@]}"; do
+        [[ "$1" == *$i* ]] && return 0
+    done
+    return 1
+}
+
+if [[ $0 == */* ]] && ! cd "${0%/*}"; then
+    pout "cd into script directory failed"
+    exit 2
+fi
+
+for i in diff jq; do
+    if ! type -P "$i" >/dev/null 2>&1; then
+        pout "required command not found, $i"
+        exit 2
+    fi
+done
+
+while (( $# > 0 )); do
+    case "$1" in
+        -v|--verbose) VERBOSE=1 ;;
+        -h|--help) usage; exit 0 ;;
+        --) shift; break ;;
+        -*) usage; exit 1 ;;
+        *) TEST_FILTER+=( "$1" ) ;;
+    esac
+    shift
+done
+TEST_FILTER+=( "$@" )
+
+total=0
+err=0
+
+for i in *.test.nscan; do
+    filter "$i" || continue
+    pout -n "$i... "
+    REPLY=$(diff -u --label "${i%.test.nscan}.test.json" "${i%.test.nscan}.test.json" \
+        --label CURRENT <(../parse < "$i" 2>/dev/null |jq .))
+    if (( $? == 0 )); then
+        echo "$OK"
+    else
+        echo "$ERROR"
+        (( err++ ))
+        if [[ -n $VERBOSE ]]; then
+            echo "## BEGIN DIFF"
+            echo "$REPLY" |colordiff
+            echo "## END DIFF"
+        fi
+    fi
+    (( total++ ))
+done
+
+pout "DONE, total=$total, err=$err"
+exit $(( err>0?1:0 ))

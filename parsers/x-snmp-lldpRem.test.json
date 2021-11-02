@@ -1,0 +1,132 @@
+{
+  "x-snmp-lldpRem": {
+    "10.1.1.10": {
+      "0": {
+        "localPortNum": 51,
+        "chassisIdSubtype": 4,
+        "chassisId": "B8 69 F4 24 15 8C ",
+        "portIdSubtype": 5,
+        "portId": "62 72 69 64 67 65 ",
+        "sysName": "MikroTik",
+        "sysDesc": "MikroTik RouterOS 6.42.1 (stable) RBSXTR",
+        "sysCapSupported": 20,
+        "sysCapEnabled": 20,
+        "manAddr": "192.168.88.1",
+        "chassisIdDecoded": "b8:69:f4:24:15:8c",
+        "portIdDecoded": "bridge",
+        "sysCapSupportedNames": [
+          "bridge",
+          "router"
+        ],
+        "sysCapEnabledNames": [
+          "bridge",
+          "router"
+        ]
+      },
+      "1": {
+        "localPortNum": 56,
+        "chassisIdSubtype": 5,
+        "chassisId": "01 0A 01 01 8A ",
+        "portIdSubtype": 3,
+        "portId": "80 5E C0 28 3A DB ",
+        "portDesc": "WAN PORT",
+        "sysName": "SIP-T42S",
+        "sysDesc": "66.83.0.30",
+        "sysCapSupported": 32,
+        "sysCapEnabled": 32,
+        "chassisIdDecoded": "10.1.1.138",
+        "portIdDecoded": "80:5e:c0:28:3a:db",
+        "sysCapSupportedNames": [
+          "telephone"
+        ],
+        "sysCapEnabledNames": [
+          "telephone"
+        ]
+      },
+      "2": {
+        "localPortNum": 63,
+        "chassisIdSubtype": 4,
+        "chassisId": "C8 66 5D 30 FF 00 ",
+        "portIdSubtype": 5,
+        "portId": "6D 67 74 30 ",
+        "sysName": "AH-30ff00",
+        "sysCapSupported": 12,
+        "sysCapEnabled": 12,
+        "manAddr": "192.168.2.225",
+        "chassisIdDecoded": "c8:66:5d:30:ff:00",
+        "portIdDecoded": "mgt0",
+        "sysCapSupportedNames": [
+          "bridge",
+          "wlanAccessPoint"
+        ],
+        "sysCapEnabledNames": [
+          "bridge",
+          "wlanAccessPoint"
+        ]
+      },
+      "3": {
+        "localPortNum": 64,
+        "chassisIdSubtype": 4,
+        "chassisId": "34 85 84 12 AC 00 ",
+        "portIdSubtype": 5,
+        "portId": "6D 67 74 30 ",
+        "sysName": "AH-12ac00",
+        "sysCapSupported": 12,
+        "sysCapEnabled": 12,
+        "manAddr": "192.168.2.224",
+        "chassisIdDecoded": "34:85:84:12:ac:00",
+        "portIdDecoded": "mgt0",
+        "sysCapSupportedNames": [
+          "bridge",
+          "wlanAccessPoint"
+        ],
+        "sysCapEnabledNames": [
+          "bridge",
+          "wlanAccessPoint"
+        ]
+      },
+      "4": {
+        "localPortNum": 67,
+        "chassisIdSubtype": 4,
+        "chassisId": "28 C7 CE 91 A4 80 ",
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 31 ",
+        "portDesc": "UPLINK_SW1",
+        "sysName": "sw2.zenetys.loc",
+        "sysDesc": "Cisco IOS Software, C2960X Software (C2960X-UNIVERSALK9-M), Version 15.2(7)E2, RELEASE SOFTWARE (fc3)\nTechnical Support: http://www.cisco.com/techsupport\nCopyri",
+        "sysCapSupported": 20,
+        "sysCapEnabled": 4,
+        "manAddr": "10.1.1.11",
+        "chassisIdDecoded": "28:c7:ce:91:a4:80",
+        "portIdDecoded": "Gi1/0/1",
+        "sysCapSupportedNames": [
+          "bridge",
+          "router"
+        ],
+        "sysCapEnabledNames": [
+          "bridge"
+        ]
+      },
+      "5": {
+        "localPortNum": 69,
+        "chassisIdSubtype": 5,
+        "chassisId": "01 0A 01 03 4F ",
+        "portIdSubtype": 3,
+        "portId": "80 5E C0 52 CC 1D ",
+        "portDesc": "WAN PORT",
+        "sysName": "SIP-T42S",
+        "sysDesc": "66.83.0.30",
+        "sysCapSupported": 32,
+        "sysCapEnabled": 32,
+        "chassisIdDecoded": "10.1.3.79",
+        "portIdDecoded": "80:5e:c0:52:cc:1d",
+        "sysCapSupportedNames": [
+          "telephone"
+        ],
+        "sysCapEnabledNames": [
+          "telephone"
+        ]
+      }
+    }
+  }
+}

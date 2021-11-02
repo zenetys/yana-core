@@ -1,0 +1,334 @@
+{
+  "x-snmp-dot1dBasePort": {
+    "10.1.1.10": {
+      "49": {
+        "dot1dBasePort": 49,
+        "ifIndex": 49
+      },
+      "50": {
+        "dot1dBasePort": 50,
+        "ifIndex": 50
+      },
+      "51": {
+        "dot1dBasePort": 51,
+        "ifIndex": 51
+      },
+      "52": {
+        "dot1dBasePort": 52,
+        "ifIndex": 52
+      },
+      "53": {
+        "dot1dBasePort": 53,
+        "ifIndex": 53
+      },
+      "54": {
+        "dot1dBasePort": 54,
+        "ifIndex": 54
+      },
+      "55": {
+        "dot1dBasePort": 55,
+        "ifIndex": 55
+      },
+      "56": {
+        "dot1dBasePort": 56,
+        "ifIndex": 56
+      },
+      "57": {
+        "dot1dBasePort": 57,
+        "ifIndex": 57
+      },
+      "58": {
+        "dot1dBasePort": 58,
+        "ifIndex": 58
+      },
+      "59": {
+        "dot1dBasePort": 59,
+        "ifIndex": 59
+      },
+      "60": {
+        "dot1dBasePort": 60,
+        "ifIndex": 60
+      },
+      "61": {
+        "dot1dBasePort": 61,
+        "ifIndex": 61
+      },
+      "62": {
+        "dot1dBasePort": 62,
+        "ifIndex": 62
+      },
+      "63": {
+        "dot1dBasePort": 63,
+        "ifIndex": 63
+      },
+      "64": {
+        "dot1dBasePort": 64,
+        "ifIndex": 64
+      },
+      "65": {
+        "dot1dBasePort": 65,
+        "ifIndex": 65
+      },
+      "66": {
+        "dot1dBasePort": 66,
+        "ifIndex": 66
+      },
+      "67": {
+        "dot1dBasePort": 67,
+        "ifIndex": 67
+      },
+      "68": {
+        "dot1dBasePort": 68,
+        "ifIndex": 68
+      },
+      "69": {
+        "dot1dBasePort": 69,
+        "ifIndex": 69
+      },
+      "70": {
+        "dot1dBasePort": 70,
+        "ifIndex": 70
+      },
+      "71": {
+        "dot1dBasePort": 71,
+        "ifIndex": 71
+      },
+      "72": {
+        "dot1dBasePort": 72,
+        "ifIndex": 72
+      },
+      "73": {
+        "dot1dBasePort": 73,
+        "ifIndex": 73
+      },
+      "74": {
+        "dot1dBasePort": 74,
+        "ifIndex": 74
+      },
+      "75": {
+        "dot1dBasePort": 75,
+        "ifIndex": 75
+      },
+      "76": {
+        "dot1dBasePort": 76,
+        "ifIndex": 76
+      },
+      "1000": {
+        "dot1dBasePort": 1000,
+        "ifIndex": 1000
+      },
+      "1001": {
+        "dot1dBasePort": 1001,
+        "ifIndex": 1001
+      },
+      "1002": {
+        "dot1dBasePort": 1002,
+        "ifIndex": 1002
+      },
+      "1003": {
+        "dot1dBasePort": 1003,
+        "ifIndex": 1003
+      },
+      "1004": {
+        "dot1dBasePort": 1004,
+        "ifIndex": 1004
+      },
+      "1005": {
+        "dot1dBasePort": 1005,
+        "ifIndex": 1005
+      },
+      "1006": {
+        "dot1dBasePort": 1006,
+        "ifIndex": 1006
+      },
+      "1007": {
+        "dot1dBasePort": 1007,
+        "ifIndex": 1007
+      }
+    }
+  },
+  "x-snmp-dot1dTpFdb": {
+    "10.1.1.10": {
+      "0": {
+        "mac": "00:00:5e:00:dd:01",
+        "dot1dBasePort": 67
+      },
+      "1": {
+        "mac": "00:0d:b9:4b:1f:84",
+        "dot1dBasePort": 55
+      },
+      "2": {
+        "mac": "00:0d:b9:4b:1f:85",
+        "dot1dBasePort": 49
+      },
+      "3": {
+        "mac": "00:10:f3:9b:e5:b0",
+        "dot1dBasePort": 67
+      },
+      "4": {
+        "mac": "00:11:32:2f:2a:b5",
+        "dot1dBasePort": 72
+      },
+      "5": {
+        "mac": "00:15:65:b7:17:c5",
+        "dot1dBasePort": 60
+      },
+      "6": {
+        "mac": "00:30:18:a7:a0:d6",
+        "dot1dBasePort": 66
+      },
+      "7": {
+        "mac": "04:d9:f5:cb:9b:b5",
+        "dot1dBasePort": 67
+      },
+      "8": {
+        "mac": "04:d9:f5:cb:9c:0c",
+        "dot1dBasePort": 67
+      },
+      "9": {
+        "mac": "04:d9:f5:cb:9c:0d",
+        "dot1dBasePort": 67
+      },
+      "10": {
+        "mac": "12:0d:24:a0:b7:f6",
+        "dot1dBasePort": 67
+      },
+      "11": {
+        "mac": "1a:d2:ed:0a:5e:1c",
+        "dot1dBasePort": 67
+      },
+      "12": {
+        "mac": "28:c7:ce:91:a4:81",
+        "dot1dBasePort": 67
+      },
+      "13": {
+        "mac": "28:c7:ce:91:a4:c0",
+        "dot1dBasePort": 67
+      },
+      "14": {
+        "mac": "30:05:5c:66:9b:db",
+        "dot1dBasePort": 73
+      },
+      "15": {
+        "mac": "34:85:84:12:ac:00",
+        "dot1dBasePort": 64
+      },
+      "16": {
+        "mac": "3a:56:36:84:24:82",
+        "dot1dBasePort": 67
+      },
+      "17": {
+        "mac": "42:10:fc:60:bc:62",
+        "dot1dBasePort": 67
+      },
+      "18": {
+        "mac": "42:de:8b:a4:44:9f",
+        "dot1dBasePort": 67
+      },
+      "19": {
+        "mac": "68:05:ca:01:52:56",
+        "dot1dBasePort": 67
+      },
+      "20": {
+        "mac": "68:05:ca:24:e7:8b",
+        "dot1dBasePort": 67
+      },
+      "21": {
+        "mac": "7a:50:fe:88:5e:c0",
+        "dot1dBasePort": 67
+      },
+      "22": {
+        "mac": "80:5e:c0:28:3a:d8",
+        "dot1dBasePort": 59
+      },
+      "23": {
+        "mac": "80:5e:c0:28:3a:db",
+        "dot1dBasePort": 56
+      },
+      "24": {
+        "mac": "80:5e:c0:52:cc:1d",
+        "dot1dBasePort": 69
+      },
+      "25": {
+        "mac": "80:ee:73:67:ef:da",
+        "dot1dBasePort": 67
+      },
+      "26": {
+        "mac": "80:ee:73:67:f1:e1",
+        "dot1dBasePort": 67
+      },
+      "27": {
+        "mac": "80:ee:73:67:f2:1b",
+        "dot1dBasePort": 67
+      },
+      "28": {
+        "mac": "80:ee:73:67:f2:a8",
+        "dot1dBasePort": 67
+      },
+      "29": {
+        "mac": "80:ee:73:70:16:1f",
+        "dot1dBasePort": 67
+      },
+      "30": {
+        "mac": "92:83:fe:9c:41:a6",
+        "dot1dBasePort": 67
+      },
+      "31": {
+        "mac": "96:0b:16:bb:f9:74",
+        "dot1dBasePort": 67
+      },
+      "32": {
+        "mac": "96:45:3b:c6:27:6d",
+        "dot1dBasePort": 67
+      },
+      "33": {
+        "mac": "a2:35:cc:1d:66:1d",
+        "dot1dBasePort": 67
+      },
+      "34": {
+        "mac": "ae:41:fa:a8:ab:42",
+        "dot1dBasePort": 67
+      },
+      "35": {
+        "mac": "b8:69:f4:24:15:8c",
+        "dot1dBasePort": 51
+      },
+      "36": {
+        "mac": "c8:66:5d:30:ff:00",
+        "dot1dBasePort": 63
+      },
+      "37": {
+        "mac": "ca:54:66:12:aa:c1",
+        "dot1dBasePort": 67
+      },
+      "38": {
+        "mac": "d0:ab:d5:7e:e3:f7",
+        "dot1dBasePort": 63
+      },
+      "39": {
+        "mac": "ea:e3:82:a7:3c:56",
+        "dot1dBasePort": 67
+      },
+      "40": {
+        "mac": "ec:a8:6b:ff:78:22",
+        "dot1dBasePort": 60
+      },
+      "41": {
+        "mac": "f0:23:b9:ed:91:a8",
+        "dot1dBasePort": 50
+      },
+      "42": {
+        "mac": "f2:4a:ea:bb:16:f0",
+        "dot1dBasePort": 67
+      },
+      "43": {
+        "mac": "f2:91:0c:ed:90:c7",
+        "dot1dBasePort": 67
+      },
+      "44": {
+        "mac": "f2:f4:69:f7:9b:09",
+        "dot1dBasePort": 67
+      }
+    }
+  }
+}

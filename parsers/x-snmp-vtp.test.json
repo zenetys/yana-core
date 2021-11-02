@@ -1,0 +1,86 @@
+{
+  "x-snmp-vtpDomain": {
+    "10.1.1.11": {
+      "domainName": "ZPP",
+      "domainLocalMode": 2,
+      "domainConfigRevNumber": 12,
+      "domainLastUpdater": "10.1.1.11",
+      "domainLastChange": 1620640620,
+      "domainPruningState": 2,
+      "domainVersionInUse": 1,
+      "domainPruningStateOper": 2
+    }
+  },
+  "x-snmp-vtpVlan": {
+    "10.1.1.11": {
+      "1": {
+        "vlanId": 1,
+        "vlanName": "default"
+      },
+      "104": {
+        "vlanId": 104,
+        "vlanName": "VLAN0104"
+      },
+      "105": {
+        "vlanId": 105,
+        "vlanName": "LAB_105"
+      },
+      "106": {
+        "vlanId": 106,
+        "vlanName": "VLAN_106"
+      },
+      "107": {
+        "vlanId": 107,
+        "vlanName": "VLAN_107"
+      },
+      "108": {
+        "vlanId": 108,
+        "vlanName": "VLAN_108"
+      },
+      "109": {
+        "vlanId": 109,
+        "vlanName": "VLAN_109"
+      },
+      "187": {
+        "vlanId": 187,
+        "vlanName": "LAB_802.1x"
+      },
+      "200": {
+        "vlanId": 200,
+        "vlanName": "Interco_FW_Lab"
+      },
+      "201": {
+        "vlanId": 201,
+        "vlanName": "ZTEST"
+      },
+      "202": {
+        "vlanId": 202,
+        "vlanName": "ZCAPTIVE"
+      },
+      "210": {
+        "vlanId": 210,
+        "vlanName": "VLAN0210"
+      },
+      "220": {
+        "vlanId": 220,
+        "vlanName": "VLAN0220"
+      },
+      "1002": {
+        "vlanId": 1002,
+        "vlanName": "fddi-default"
+      },
+      "1003": {
+        "vlanId": 1003,
+        "vlanName": "token-ring-default"
+      },
+      "1004": {
+        "vlanId": 1004,
+        "vlanName": "fddinet-default"
+      },
+      "1005": {
+        "vlanId": 1005,
+        "vlanName": "trnet-default"
+      }
+    }
+  }
+}

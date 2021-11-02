@@ -1,0 +1,22 @@
+{
+  "x-snmp-inetCidrRoute": {
+    "10.1.1.4": {
+      "0": {
+        "destType": 1,
+        "dest": "0.0.0.0",
+        "pfxLen": 0,
+        "nextHop": "10.1.1.254",
+        "ifIndex": 2,
+        "metric1": 100
+      },
+      "1": {
+        "destType": 1,
+        "dest": "10.1.1.0",
+        "pfxLen": 24,
+        "nextHop": "0.0.0.0",
+        "ifIndex": 2,
+        "metric1": 100
+      }
+    }
+  }
+}

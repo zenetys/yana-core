@@ -1,0 +1,22 @@
+{
+  "x-snmp-if": {
+    "10.109.11.11": {
+      "2": {
+        "ifIndex": 2,
+        "duplexStatus": 3
+      },
+      "3": {
+        "ifIndex": 3,
+        "duplexStatus": 3
+      },
+      "4": {
+        "ifIndex": 4,
+        "duplexStatus": 1
+      },
+      "6": {
+        "ifIndex": 6,
+        "duplexStatus": 3
+      }
+    }
+  }
+}

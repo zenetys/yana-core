@@ -1,0 +1,10 @@
+{
+  "x-snmp-cdpGlobal": {
+    "10.1.1.10": {
+      "cdpGlobalRun": 1,
+      "cdpGlobalDeviceId": "33 34 36 32 38 38 38 35 38 31 39 61 ",
+      "cdpGlobalDeviceIdFormat": 2,
+      "cdpGlobalDeviceIdDecoded": "34:62:88:85:81:9a"
+    }
+  }
+}

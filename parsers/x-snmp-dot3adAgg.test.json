@@ -1,0 +1,22 @@
+{
+  "x-snmp-if": {
+    "10.109.10.17": {
+      "10134": {
+        "ifIndex": 10134,
+        "dot3adAggIfIndex": 10666
+      },
+      "10135": {
+        "ifIndex": 10135,
+        "dot3adAggIfIndex": 10666
+      },
+      "10138": {
+        "ifIndex": 10138,
+        "dot3adAggIfIndex": 10666
+      },
+      "10140": {
+        "ifIndex": 10140,
+        "dot3adAggIfIndex": 10666
+      }
+    }
+  }
+}

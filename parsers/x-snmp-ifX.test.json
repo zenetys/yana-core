@@ -1,0 +1,23 @@
+{
+  "x-snmp-if": {
+    "10.109.1.2": {
+      "1": {
+        "ifIndex": 1,
+        "ifName": "lo",
+        "ifAlias": "lo"
+      },
+      "2": {
+        "ifIndex": 2,
+        "ifName": "eth0_0",
+        "ifSpeed": 1000000000,
+        "ifAlias": "eth0_0"
+      },
+      "11": {
+        "ifIndex": 11,
+        "ifName": "eth0_1.211",
+        "ifSpeed": 1000000000,
+        "ifAlias": "eth0_1.211"
+      }
+    }
+  }
+}

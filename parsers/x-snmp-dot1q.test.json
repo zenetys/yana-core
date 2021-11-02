@@ -1,0 +1,688 @@
+{
+  "x-snmp-dot1qVlan": {
+    "10.1.1.10": {
+      "1": {
+        "dot1qVlanIndex": 1,
+        "dot1qVlanFdbId": 1,
+        "dot1qVlanCurrentEgressPorts": [
+          52,
+          53,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          1000,
+          1001,
+          1002,
+          1003,
+          1004,
+          1005,
+          1006,
+          1007
+        ],
+        "dot1qVlanCurrentUntaggedPorts": [
+          52,
+          53,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          65,
+          66,
+          67,
+          68,
+          69,
+          70,
+          71,
+          72,
+          73,
+          74,
+          75,
+          76,
+          1000,
+          1001,
+          1002,
+          1003,
+          1004,
+          1005,
+          1006,
+          1007
+        ]
+      },
+      "10": {
+        "dot1qVlanIndex": 10,
+        "dot1qVlanFdbId": 10,
+        "dot1qVlanStaticName": "INTERNET_4G",
+        "dot1qVlanCurrentEgressPorts": [
+          49,
+          51,
+          75,
+          76
+        ],
+        "dot1qVlanCurrentUntaggedPorts": [
+          51
+        ]
+      },
+      "102": {
+        "dot1qVlanIndex": 102,
+        "dot1qVlanFdbId": 102,
+        "dot1qVlanStaticName": "WIFI",
+        "dot1qVlanCurrentEgressPorts": [
+          49,
+          50,
+          61,
+          62,
+          63,
+          64,
+          75,
+          76
+        ],
+        "dot1qVlanCurrentUntaggedPorts": [
+          50,
+          61,
+          62,
+          63,
+          64
+        ]
+      },
+      "103": {
+        "dot1qVlanIndex": 103,
+        "dot1qVlanFdbId": 103,
+        "dot1qVlanStaticName": "VOIP",
+        "dot1qVlanCurrentEgressPorts": [
+          49,
+          59,
+          60,
+          69,
+          74,
+          75,
+          76
+        ],
+        "dot1qVlanCurrentUntaggedPorts": []
+      },
+      "104": {
+        "dot1qVlanIndex": 104,
+        "dot1qVlanFdbId": 104,
+        "dot1qVlanStaticName": "DMZ_SRV",
+        "dot1qVlanCurrentEgressPorts": [
+          49,
+          67,
+          75,
+          76
+        ],
+        "dot1qVlanCurrentUntaggedPorts": []
+      },
+      "105": {
+        "dot1qVlanIndex": 105,
+        "dot1qVlanFdbId": 105,
+        "dot1qVlanStaticName": "ZLAB_105",
+        "dot1qVlanCurrentEgressPorts": [
+          49,
+          67,
+          75,
+          76
+        ],
+        "dot1qVlanCurrentUntaggedPorts": []
+      },
+      "106": {
+        "dot1qVlanIndex": 106,
+        "dot1qVlanFdbId": 106,
+        "dot1qVlanStaticName": "VLAN_106",
+        "dot1qVlanCurrentEgressPorts": [
+          49,
+          67,
+          75,
+          76
+        ],
+        "dot1qVlanCurrentUntaggedPorts": []
+      },
+      "107": {
+        "dot1qVlanIndex": 107,
+        "dot1qVlanFdbId": 107,
+        "dot1qVlanStaticName": "VLAN_107",
+        "dot1qVlanCurrentEgressPorts": [
+          49,
+          67,
+          75,
+          76
+        ],
+        "dot1qVlanCurrentUntaggedPorts": []
+      },
+      "108": {
+        "dot1qVlanIndex": 108,
+        "dot1qVlanFdbId": 108,
+        "dot1qVlanStaticName": "VLAN_108",
+        "dot1qVlanCurrentEgressPorts": [
+          49,
+          67,
+          75,
+          76
+        ],
+        "dot1qVlanCurrentUntaggedPorts": []
+      },
+      "109": {
+        "dot1qVlanIndex": 109,
+        "dot1qVlanFdbId": 109,
+        "dot1qVlanStaticName": "VLAN_109",
+        "dot1qVlanCurrentEgressPorts": [
+          49,
+          67,
+          75,
+          76
+        ],
+        "dot1qVlanCurrentUntaggedPorts": []
+      },
+      "187": {
+        "dot1qVlanIndex": 187,
+        "dot1qVlanFdbId": 187,
+        "dot1qVlanStaticName": "Z_LAB_802.1x",
+        "dot1qVlanCurrentEgressPorts": [
+          49,
+          67,
+          74
+        ],
+        "dot1qVlanCurrentUntaggedPorts": []
+      },
+      "200": {
+        "dot1qVlanIndex": 200,
+        "dot1qVlanFdbId": 200,
+        "dot1qVlanStaticName": "Interco_ZLAB",
+        "dot1qVlanCurrentEgressPorts": [
+          49,
+          67,
+          75,
+          76
+        ],
+        "dot1qVlanCurrentUntaggedPorts": []
+      }
+    }
+  },
+  "x-snmp-dot1qTpFdb": {
+    "10.1.1.10": {
+      "0": {
+        "dot1qFdbId": 1,
+        "mac": "00:0d:b9:4b:1f:84",
+        "dot1dBasePort": 55
+      },
+      "1": {
+        "dot1qFdbId": 1,
+        "mac": "00:11:32:2f:2a:b5",
+        "dot1dBasePort": 72
+      },
+      "2": {
+        "dot1qFdbId": 1,
+        "mac": "00:15:65:b7:17:c5",
+        "dot1dBasePort": 60
+      },
+      "3": {
+        "dot1qFdbId": 1,
+        "mac": "00:30:18:a7:a0:d6",
+        "dot1dBasePort": 66
+      },
+      "4": {
+        "dot1qFdbId": 1,
+        "mac": "04:d9:f5:cb:9b:b5",
+        "dot1dBasePort": 67
+      },
+      "5": {
+        "dot1qFdbId": 1,
+        "mac": "04:d9:f5:cb:9c:0d",
+        "dot1dBasePort": 67
+      },
+      "6": {
+        "dot1qFdbId": 1,
+        "mac": "12:0d:24:a0:b7:f6",
+        "dot1dBasePort": 67
+      },
+      "7": {
+        "dot1qFdbId": 1,
+        "mac": "28:c7:ce:91:a4:81",
+        "dot1dBasePort": 67
+      },
+      "8": {
+        "dot1qFdbId": 1,
+        "mac": "28:c7:ce:91:a4:c0",
+        "dot1dBasePort": 67
+      },
+      "9": {
+        "dot1qFdbId": 1,
+        "mac": "30:05:5c:66:9b:db",
+        "dot1dBasePort": 73
+      },
+      "10": {
+        "dot1qFdbId": 1,
+        "mac": "3a:56:36:84:24:82",
+        "dot1dBasePort": 67
+      },
+      "11": {
+        "dot1qFdbId": 1,
+        "mac": "42:10:fc:60:bc:62",
+        "dot1dBasePort": 67
+      },
+      "12": {
+        "dot1qFdbId": 1,
+        "mac": "42:de:8b:a4:44:9f",
+        "dot1dBasePort": 67
+      },
+      "13": {
+        "dot1qFdbId": 1,
+        "mac": "72:2e:db:dd:99:33",
+        "dot1dBasePort": 67
+      },
+      "14": {
+        "dot1qFdbId": 1,
+        "mac": "7a:50:fe:88:5e:c0",
+        "dot1dBasePort": 67
+      },
+      "15": {
+        "dot1qFdbId": 1,
+        "mac": "80:5e:c0:28:3a:d8",
+        "dot1dBasePort": 59
+      },
+      "16": {
+        "dot1qFdbId": 1,
+        "mac": "80:5e:c0:28:3a:db",
+        "dot1dBasePort": 56
+      },
+      "17": {
+        "dot1qFdbId": 1,
+        "mac": "80:5e:c0:52:cc:1d",
+        "dot1dBasePort": 69
+      },
+      "18": {
+        "dot1qFdbId": 1,
+        "mac": "80:ee:73:67:ef:da",
+        "dot1dBasePort": 67
+      },
+      "19": {
+        "dot1qFdbId": 1,
+        "mac": "80:ee:73:67:f1:e1",
+        "dot1dBasePort": 67
+      },
+      "20": {
+        "dot1qFdbId": 1,
+        "mac": "80:ee:73:67:f2:1b",
+        "dot1dBasePort": 67
+      },
+      "21": {
+        "dot1qFdbId": 1,
+        "mac": "80:ee:73:67:f2:a8",
+        "dot1dBasePort": 67
+      },
+      "22": {
+        "dot1qFdbId": 1,
+        "mac": "80:ee:73:70:16:1f",
+        "dot1dBasePort": 67
+      },
+      "23": {
+        "dot1qFdbId": 1,
+        "mac": "96:0b:16:bb:f9:74",
+        "dot1dBasePort": 67
+      },
+      "24": {
+        "dot1qFdbId": 1,
+        "mac": "96:45:3b:c6:27:6d",
+        "dot1dBasePort": 67
+      },
+      "25": {
+        "dot1qFdbId": 1,
+        "mac": "a2:35:cc:1d:66:1d",
+        "dot1dBasePort": 67
+      },
+      "26": {
+        "dot1qFdbId": 1,
+        "mac": "ae:41:fa:a8:ab:42",
+        "dot1dBasePort": 67
+      },
+      "27": {
+        "dot1qFdbId": 1,
+        "mac": "ca:54:66:12:aa:c1",
+        "dot1dBasePort": 67
+      },
+      "28": {
+        "dot1qFdbId": 1,
+        "mac": "ec:a8:6b:ff:78:22",
+        "dot1dBasePort": 60
+      },
+      "29": {
+        "dot1qFdbId": 1,
+        "mac": "f2:4a:ea:bb:16:f0",
+        "dot1dBasePort": 67
+      },
+      "30": {
+        "dot1qFdbId": 1,
+        "mac": "f2:90:41:ca:b2:ad",
+        "dot1dBasePort": 67
+      },
+      "31": {
+        "dot1qFdbId": 1,
+        "mac": "f2:f4:69:f7:9b:09",
+        "dot1dBasePort": 67
+      },
+      "32": {
+        "dot1qFdbId": 10,
+        "mac": "b8:69:f4:24:15:8c",
+        "dot1dBasePort": 51
+      },
+      "33": {
+        "dot1qFdbId": 102,
+        "mac": "00:0d:b9:4b:1f:85",
+        "dot1dBasePort": 49
+      },
+      "34": {
+        "dot1qFdbId": 102,
+        "mac": "34:85:84:12:ac:00",
+        "dot1dBasePort": 64
+      },
+      "35": {
+        "dot1qFdbId": 102,
+        "mac": "c8:66:5d:30:ff:00",
+        "dot1dBasePort": 63
+      },
+      "36": {
+        "dot1qFdbId": 102,
+        "mac": "f0:23:b9:ed:91:a8",
+        "dot1dBasePort": 50
+      },
+      "37": {
+        "dot1qFdbId": 103,
+        "mac": "00:0d:b9:4b:1f:85",
+        "dot1dBasePort": 49
+      },
+      "38": {
+        "dot1qFdbId": 103,
+        "mac": "00:15:65:b7:17:c5",
+        "dot1dBasePort": 60
+      },
+      "39": {
+        "dot1qFdbId": 103,
+        "mac": "80:5e:c0:52:cc:1d",
+        "dot1dBasePort": 69
+      },
+      "40": {
+        "dot1qFdbId": 104,
+        "mac": "28:c7:ce:91:a4:81",
+        "dot1dBasePort": 67
+      },
+      "41": {
+        "dot1qFdbId": 105,
+        "mac": "00:0d:b9:4b:1f:85",
+        "dot1dBasePort": 49
+      },
+      "42": {
+        "dot1qFdbId": 105,
+        "mac": "1a:d2:ed:0a:5e:1c",
+        "dot1dBasePort": 67
+      },
+      "43": {
+        "dot1qFdbId": 105,
+        "mac": "28:c7:ce:91:a4:81",
+        "dot1dBasePort": 67
+      },
+      "44": {
+        "dot1qFdbId": 105,
+        "mac": "68:05:ca:24:d9:56",
+        "dot1dBasePort": 67
+      },
+      "45": {
+        "dot1qFdbId": 105,
+        "mac": "92:83:fe:9c:41:a6",
+        "dot1dBasePort": 67
+      },
+      "46": {
+        "dot1qFdbId": 105,
+        "mac": "f2:91:0c:ed:90:c7",
+        "dot1dBasePort": 67
+      },
+      "47": {
+        "dot1qFdbId": 106,
+        "mac": "28:c7:ce:91:a4:81",
+        "dot1dBasePort": 67
+      },
+      "48": {
+        "dot1qFdbId": 106,
+        "mac": "68:05:ca:01:52:56",
+        "dot1dBasePort": 67
+      },
+      "49": {
+        "dot1qFdbId": 106,
+        "mac": "68:05:ca:24:e7:8b",
+        "dot1dBasePort": 67
+      },
+      "50": {
+        "dot1qFdbId": 107,
+        "mac": "28:c7:ce:91:a4:81",
+        "dot1dBasePort": 67
+      },
+      "51": {
+        "dot1qFdbId": 107,
+        "mac": "68:05:ca:01:52:56",
+        "dot1dBasePort": 67
+      },
+      "52": {
+        "dot1qFdbId": 107,
+        "mac": "68:05:ca:24:df:a5",
+        "dot1dBasePort": 67
+      },
+      "53": {
+        "dot1qFdbId": 108,
+        "mac": "28:c7:ce:91:a4:81",
+        "dot1dBasePort": 67
+      },
+      "54": {
+        "dot1qFdbId": 108,
+        "mac": "68:05:ca:24:d9:56",
+        "dot1dBasePort": 67
+      },
+      "55": {
+        "dot1qFdbId": 109,
+        "mac": "04:d9:f5:cb:9b:b4",
+        "dot1dBasePort": 67
+      },
+      "56": {
+        "dot1qFdbId": 109,
+        "mac": "28:c7:ce:91:a4:81",
+        "dot1dBasePort": 67
+      },
+      "57": {
+        "dot1qFdbId": 187,
+        "mac": "00:0d:b9:4b:1f:85",
+        "dot1dBasePort": 49
+      },
+      "58": {
+        "dot1qFdbId": 187,
+        "mac": "28:c7:ce:91:a4:81",
+        "dot1dBasePort": 67
+      },
+      "59": {
+        "dot1qFdbId": 187,
+        "mac": "ea:e3:82:a7:3c:56",
+        "dot1dBasePort": 67
+      },
+      "60": {
+        "dot1qFdbId": 200,
+        "mac": "00:00:5e:00:dd:01",
+        "dot1dBasePort": 67
+      },
+      "61": {
+        "dot1qFdbId": 200,
+        "mac": "00:0d:b9:4b:1f:85",
+        "dot1dBasePort": 49
+      },
+      "62": {
+        "dot1qFdbId": 200,
+        "mac": "00:10:f3:9b:e5:b0",
+        "dot1dBasePort": 67
+      },
+      "63": {
+        "dot1qFdbId": 200,
+        "mac": "28:c7:ce:91:a4:81",
+        "dot1dBasePort": 67
+      }
+    }
+  },
+  "x-snmp-dot1dBasePort": {
+    "10.1.1.10": {
+      "49": {
+        "dot1dBasePort": 49,
+        "dot1qPvid": 4095
+      },
+      "50": {
+        "dot1dBasePort": 50,
+        "dot1qPvid": 102
+      },
+      "51": {
+        "dot1dBasePort": 51,
+        "dot1qPvid": 10
+      },
+      "52": {
+        "dot1dBasePort": 52,
+        "dot1qPvid": 1
+      },
+      "53": {
+        "dot1dBasePort": 53,
+        "dot1qPvid": 1
+      },
+      "54": {
+        "dot1dBasePort": 54,
+        "dot1qPvid": 1
+      },
+      "55": {
+        "dot1dBasePort": 55,
+        "dot1qPvid": 1
+      },
+      "56": {
+        "dot1dBasePort": 56,
+        "dot1qPvid": 1
+      },
+      "57": {
+        "dot1dBasePort": 57,
+        "dot1qPvid": 1
+      },
+      "58": {
+        "dot1dBasePort": 58,
+        "dot1qPvid": 1
+      },
+      "59": {
+        "dot1dBasePort": 59,
+        "dot1qPvid": 1
+      },
+      "60": {
+        "dot1dBasePort": 60,
+        "dot1qPvid": 1
+      },
+      "61": {
+        "dot1dBasePort": 61,
+        "dot1qPvid": 102
+      },
+      "62": {
+        "dot1dBasePort": 62,
+        "dot1qPvid": 102
+      },
+      "63": {
+        "dot1dBasePort": 63,
+        "dot1qPvid": 102
+      },
+      "64": {
+        "dot1dBasePort": 64,
+        "dot1qPvid": 102
+      },
+      "65": {
+        "dot1dBasePort": 65,
+        "dot1qPvid": 1
+      },
+      "66": {
+        "dot1dBasePort": 66,
+        "dot1qPvid": 1
+      },
+      "67": {
+        "dot1dBasePort": 67,
+        "dot1qPvid": 1
+      },
+      "68": {
+        "dot1dBasePort": 68,
+        "dot1qPvid": 1
+      },
+      "69": {
+        "dot1dBasePort": 69,
+        "dot1qPvid": 1
+      },
+      "70": {
+        "dot1dBasePort": 70,
+        "dot1qPvid": 1
+      },
+      "71": {
+        "dot1dBasePort": 71,
+        "dot1qPvid": 1
+      },
+      "72": {
+        "dot1dBasePort": 72,
+        "dot1qPvid": 1
+      },
+      "73": {
+        "dot1dBasePort": 73,
+        "dot1qPvid": 1
+      },
+      "74": {
+        "dot1dBasePort": 74,
+        "dot1qPvid": 1
+      },
+      "75": {
+        "dot1dBasePort": 75,
+        "dot1qPvid": 1
+      },
+      "76": {
+        "dot1dBasePort": 76,
+        "dot1qPvid": 1
+      },
+      "1000": {
+        "dot1dBasePort": 1000,
+        "dot1qPvid": 1
+      },
+      "1001": {
+        "dot1dBasePort": 1001,
+        "dot1qPvid": 1
+      },
+      "1002": {
+        "dot1dBasePort": 1002,
+        "dot1qPvid": 1
+      },
+      "1003": {
+        "dot1dBasePort": 1003,
+        "dot1qPvid": 1
+      },
+      "1004": {
+        "dot1dBasePort": 1004,
+        "dot1qPvid": 1
+      },
+      "1005": {
+        "dot1dBasePort": 1005,
+        "dot1qPvid": 1
+      },
+      "1006": {
+        "dot1dBasePort": 1006,
+        "dot1qPvid": 1
+      },
+      "1007": {
+        "dot1dBasePort": 1007,
+        "dot1qPvid": 1
+      }
+    }
+  }
+}

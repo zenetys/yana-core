@@ -1,0 +1,70 @@
+{
+  "x-snmp-vm": {
+    "10.1.1.11": {
+      "10102": {
+        "ifIndex": 10102,
+        "vmVlan": 1
+      },
+      "10103": {
+        "ifIndex": 10103,
+        "vmVlan": 1
+      },
+      "10104": {
+        "ifIndex": 10104,
+        "vmVlan": 1
+      },
+      "10105": {
+        "ifIndex": 10105,
+        "vmVlan": 1
+      },
+      "10107": {
+        "ifIndex": 10107,
+        "vmVlan": 1
+      },
+      "10108": {
+        "ifIndex": 10108,
+        "vmVlan": 200
+      },
+      "10117": {
+        "ifIndex": 10117,
+        "vmVlan": 200
+      },
+      "10118": {
+        "ifIndex": 10118,
+        "vmVlan": 200
+      },
+      "10121": {
+        "ifIndex": 10121,
+        "vmVlan": 1
+      },
+      "10122": {
+        "ifIndex": 10122,
+        "vmVlan": 1
+      },
+      "10123": {
+        "ifIndex": 10123,
+        "vmVlan": 104
+      },
+      "10124": {
+        "ifIndex": 10124,
+        "vmVlan": 104
+      },
+      "10125": {
+        "ifIndex": 10125,
+        "vmVlan": 1
+      },
+      "10126": {
+        "ifIndex": 10126,
+        "vmVlan": 1
+      },
+      "10201": {
+        "ifIndex": 10201,
+        "vmVlan": 1
+      },
+      "10202": {
+        "ifIndex": 10202,
+        "vmVlan": 1
+      }
+    }
+  }
+}

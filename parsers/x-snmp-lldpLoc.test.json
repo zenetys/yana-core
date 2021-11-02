@@ -1,0 +1,246 @@
+{
+  "x-snmp-lldpLocSys": {
+    "10.1.1.11": {
+      "chassisIdSubtype": 4,
+      "chassisId": "28 C7 CE 91 A4 80 ",
+      "sysName": "sw2",
+      "sysDesc": "Cisco IOS Software, C2960X Software (C2960X-UNIVERSALK9-M), Version 15.2(7)E2, RELEASE SOFTWARE (fc3)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2020 by Cisco Systems, Inc.\nCompiled Sat 14-Mar-20 16:53 by prod_rel_team",
+      "sysCapSupported": 20,
+      "sysCapEnabled": 4,
+      "chassisIdDecoded": "28:c7:ce:91:a4:80",
+      "sysCapSupportedNames": [
+        "bridge",
+        "router"
+      ],
+      "sysCapEnabledNames": [
+        "bridge"
+      ]
+    }
+  },
+  "x-snmp-lldpLocPort": {
+    "10.1.1.11": {
+      "1": {
+        "portNum": 1,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 31 ",
+        "portDesc": "GigabitEthernet1/0/1",
+        "portIdDecoded": "Gi1/0/1"
+      },
+      "2": {
+        "portNum": 2,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 32 ",
+        "portDesc": "GigabitEthernet1/0/2",
+        "portIdDecoded": "Gi1/0/2"
+      },
+      "3": {
+        "portNum": 3,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 33 ",
+        "portDesc": "GigabitEthernet1/0/3",
+        "portIdDecoded": "Gi1/0/3"
+      },
+      "4": {
+        "portNum": 4,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 34 ",
+        "portDesc": "GigabitEthernet1/0/4",
+        "portIdDecoded": "Gi1/0/4"
+      },
+      "5": {
+        "portNum": 5,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 35 ",
+        "portDesc": "GigabitEthernet1/0/5",
+        "portIdDecoded": "Gi1/0/5"
+      },
+      "6": {
+        "portNum": 6,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 36 ",
+        "portDesc": "GigabitEthernet1/0/6",
+        "portIdDecoded": "Gi1/0/6"
+      },
+      "7": {
+        "portNum": 7,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 37 ",
+        "portDesc": "GigabitEthernet1/0/7",
+        "portIdDecoded": "Gi1/0/7"
+      },
+      "8": {
+        "portNum": 8,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 38 ",
+        "portDesc": "GigabitEthernet1/0/8",
+        "portIdDecoded": "Gi1/0/8"
+      },
+      "9": {
+        "portNum": 9,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 39 ",
+        "portDesc": "GigabitEthernet1/0/9",
+        "portIdDecoded": "Gi1/0/9"
+      },
+      "10": {
+        "portNum": 10,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 31 30 ",
+        "portDesc": "GigabitEthernet1/0/10",
+        "portIdDecoded": "Gi1/0/10"
+      },
+      "11": {
+        "portNum": 11,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 31 31 ",
+        "portDesc": "GigabitEthernet1/0/11",
+        "portIdDecoded": "Gi1/0/11"
+      },
+      "12": {
+        "portNum": 12,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 31 32 ",
+        "portDesc": "GigabitEthernet1/0/12",
+        "portIdDecoded": "Gi1/0/12"
+      },
+      "13": {
+        "portNum": 13,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 31 33 ",
+        "portDesc": "GigabitEthernet1/0/13",
+        "portIdDecoded": "Gi1/0/13"
+      },
+      "14": {
+        "portNum": 14,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 31 34 ",
+        "portDesc": "GigabitEthernet1/0/14",
+        "portIdDecoded": "Gi1/0/14"
+      },
+      "15": {
+        "portNum": 15,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 31 35 ",
+        "portDesc": "GigabitEthernet1/0/15",
+        "portIdDecoded": "Gi1/0/15"
+      },
+      "16": {
+        "portNum": 16,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 31 36 ",
+        "portDesc": "GigabitEthernet1/0/16",
+        "portIdDecoded": "Gi1/0/16"
+      },
+      "17": {
+        "portNum": 17,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 31 37 ",
+        "portDesc": "GigabitEthernet1/0/17",
+        "portIdDecoded": "Gi1/0/17"
+      },
+      "18": {
+        "portNum": 18,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 31 38 ",
+        "portDesc": "GigabitEthernet1/0/18",
+        "portIdDecoded": "Gi1/0/18"
+      },
+      "19": {
+        "portNum": 19,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 31 39 ",
+        "portDesc": "GigabitEthernet1/0/19",
+        "portIdDecoded": "Gi1/0/19"
+      },
+      "20": {
+        "portNum": 20,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 32 30 ",
+        "portDesc": "GigabitEthernet1/0/20",
+        "portIdDecoded": "Gi1/0/20"
+      },
+      "21": {
+        "portNum": 21,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 32 31 ",
+        "portDesc": "GigabitEthernet1/0/21",
+        "portIdDecoded": "Gi1/0/21"
+      },
+      "22": {
+        "portNum": 22,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 32 32 ",
+        "portDesc": "GigabitEthernet1/0/22",
+        "portIdDecoded": "Gi1/0/22"
+      },
+      "23": {
+        "portNum": 23,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 32 33 ",
+        "portDesc": "GigabitEthernet1/0/23",
+        "portIdDecoded": "Gi1/0/23"
+      },
+      "24": {
+        "portNum": 24,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 32 34 ",
+        "portDesc": "GigabitEthernet1/0/24",
+        "portIdDecoded": "Gi1/0/24"
+      },
+      "25": {
+        "portNum": 25,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 32 35 ",
+        "portDesc": "GigabitEthernet1/0/25",
+        "portIdDecoded": "Gi1/0/25"
+      },
+      "26": {
+        "portNum": 26,
+        "portIdSubtype": 5,
+        "portId": "47 69 31 2F 30 2F 32 36 ",
+        "portDesc": "GigabitEthernet1/0/26",
+        "portIdDecoded": "Gi1/0/26"
+      },
+      "27": {
+        "portNum": 27,
+        "portIdSubtype": 5,
+        "portId": "54 65 31 2F 30 2F 31 ",
+        "portDesc": "TenGigabitEthernet1/0/1",
+        "portIdDecoded": "Te1/0/1"
+      },
+      "28": {
+        "portNum": 28,
+        "portIdSubtype": 5,
+        "portId": "54 65 31 2F 30 2F 32 ",
+        "portDesc": "TenGigabitEthernet1/0/2",
+        "portIdDecoded": "Te1/0/2"
+      },
+      "29": {
+        "portNum": 29,
+        "portIdSubtype": 5,
+        "portId": "54 65 31 2F 31 2F 31 ",
+        "portDesc": "TenGigabitEthernet1/1/1",
+        "portIdDecoded": "Te1/1/1"
+      },
+      "30": {
+        "portNum": 30,
+        "portIdSubtype": 5,
+        "portId": "54 65 31 2F 31 2F 32 ",
+        "portDesc": "TenGigabitEthernet1/1/2",
+        "portIdDecoded": "Te1/1/2"
+      },
+      "840": {
+        "portNum": 840,
+        "portIdSubtype": 5,
+        "portId": "53 74 31 ",
+        "portDesc": "StackPort1",
+        "portIdDecoded": "St1"
+      }
+    }
+  },
+  "x-snmp-lldpLocMan": {
+    "10.1.1.11": {
+      "manAddr": "10.1.1.11"
+    }
+  }
+}

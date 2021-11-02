@@ -1,0 +1,14 @@
+{
+  "x-snmp-pagpGroup": {
+    "10.1.1.11": {
+      "10123": {
+        "ifIndex": 10123,
+        "pagpGroupIfIndex": 10666
+      },
+      "10124": {
+        "ifIndex": 10124,
+        "pagpGroupIfIndex": 10666
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+<<<< cb-resolve device 10.109.11.57 ptr >>>>
+Using domain server:
+Name: 10.109.11.59
+Address: 10.109.11.59#53
+Aliases: 
+
+57.11.109.10.in-addr.arpa domain name pointer srv21r5j4.location.acme.fr.

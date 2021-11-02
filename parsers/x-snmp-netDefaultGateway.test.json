@@ -1,0 +1,7 @@
+{
+  "x-snmp-netDefaultGateway": {
+    "10.109.10.17": {
+      "netDefaultGateway": "10.109.10.2"
+    }
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "x-snmp-stackPort": {
+    "10.1.1.11": {
+      "1.1": {
+        "portModuleIndex": 1,
+        "portIndex": 1,
+        "ifIndex": 10101,
+        "vlanPortIslOperStatus": 1
+      },
+      "1.2": {
+        "portModuleIndex": 1,
+        "portIndex": 2,
+        "ifIndex": 10102,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.3": {
+        "portModuleIndex": 1,
+        "portIndex": 3,
+        "ifIndex": 10103,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.4": {
+        "portModuleIndex": 1,
+        "portIndex": 4,
+        "ifIndex": 10104,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.5": {
+        "portModuleIndex": 1,
+        "portIndex": 5,
+        "ifIndex": 10105,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.6": {
+        "portModuleIndex": 1,
+        "portIndex": 6,
+        "ifIndex": 10106,
+        "vlanPortIslOperStatus": 1
+      },
+      "1.7": {
+        "portModuleIndex": 1,
+        "portIndex": 7,
+        "ifIndex": 10107,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.8": {
+        "portModuleIndex": 1,
+        "portIndex": 8,
+        "ifIndex": 10108,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.9": {
+        "portModuleIndex": 1,
+        "portIndex": 9,
+        "ifIndex": 10109,
+        "vlanPortIslOperStatus": 1
+      },
+      "1.10": {
+        "portModuleIndex": 1,
+        "portIndex": 10,
+        "ifIndex": 10110,
+        "vlanPortIslOperStatus": 1
+      },
+      "1.11": {
+        "portModuleIndex": 1,
+        "portIndex": 11,
+        "ifIndex": 10111,
+        "vlanPortIslOperStatus": 1
+      },
+      "1.12": {
+        "portModuleIndex": 1,
+        "portIndex": 12,
+        "ifIndex": 10112,
+        "vlanPortIslOperStatus": 1
+      },
+      "1.13": {
+        "portModuleIndex": 1,
+        "portIndex": 13,
+        "ifIndex": 10113,
+        "vlanPortIslOperStatus": 1
+      },
+      "1.14": {
+        "portModuleIndex": 1,
+        "portIndex": 14,
+        "ifIndex": 10114,
+        "vlanPortIslOperStatus": 1
+      },
+      "1.15": {
+        "portModuleIndex": 1,
+        "portIndex": 15,
+        "ifIndex": 10115,
+        "vlanPortIslOperStatus": 1
+      },
+      "1.16": {
+        "portModuleIndex": 1,
+        "portIndex": 16,
+        "ifIndex": 10116,
+        "vlanPortIslOperStatus": 1
+      },
+      "1.17": {
+        "portModuleIndex": 1,
+        "portIndex": 17,
+        "ifIndex": 10117,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.18": {
+        "portModuleIndex": 1,
+        "portIndex": 18,
+        "ifIndex": 10118,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.19": {
+        "portModuleIndex": 1,
+        "portIndex": 19,
+        "ifIndex": 10119,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.20": {
+        "portModuleIndex": 1,
+        "portIndex": 20,
+        "ifIndex": 10120,
+        "vlanPortIslOperStatus": 1
+      },
+      "1.21": {
+        "portModuleIndex": 1,
+        "portIndex": 21,
+        "ifIndex": 10121,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.22": {
+        "portModuleIndex": 1,
+        "portIndex": 22,
+        "ifIndex": 10122,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.23": {
+        "portModuleIndex": 1,
+        "portIndex": 23,
+        "ifIndex": 10123,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.24": {
+        "portModuleIndex": 1,
+        "portIndex": 24,
+        "ifIndex": 10124,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.25": {
+        "portModuleIndex": 1,
+        "portIndex": 25,
+        "ifIndex": 10125,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.26": {
+        "portModuleIndex": 1,
+        "portIndex": 26,
+        "ifIndex": 10126,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.27": {
+        "portModuleIndex": 1,
+        "portIndex": 27,
+        "ifIndex": 10201,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.28": {
+        "portModuleIndex": 1,
+        "portIndex": 28,
+        "ifIndex": 10202,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.29": {
+        "portModuleIndex": 1,
+        "portIndex": 29,
+        "ifIndex": 10401,
+        "vlanPortIslOperStatus": 2
+      },
+      "1.30": {
+        "portModuleIndex": 1,
+        "portIndex": 30,
+        "ifIndex": 10402,
+        "vlanPortIslOperStatus": 2
+      }
+    }
+  }
+}
