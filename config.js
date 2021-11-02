@@ -8,6 +8,8 @@ const APP_DEFAULTS = {
     config: __dirname + '/config.json',
     dataDir: __dirname + '/data',
     handlerDirs: [ __dirname + '/handlers' ],
+    parserDirs: [ __dirname + '/parsers' ],
+    snmpOidFile: __dirname + '/snmp-oid.json',
 };
 
 class Config extends EventEmitter {
