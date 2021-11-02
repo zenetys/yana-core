@@ -1,0 +1,60 @@
+#!/bin/bash
+
+export LC_ALL=C
+PROGNAME=${0##*/}
+
+OUI_URL='http://standards-oui.ieee.org/oui/oui.txt'
+
+# wireshark has an alternative database, with short names
+# the format is different
+# https://gitlab.com/wireshark/wireshark/-/raw/master/manuf
+
+OUI_DIR=.
+DOWNLOAD=
+
+function usage() {
+    echo "\
+Usage: $PROGNAME [OPTION...]
+Generate a JSON object from a oui.txt database
+
+Options:
+  -D, --download    Download ouit.txt (use wget)
+  -d, --directory   Destination directory (download) or oui.txt directory
+  -h, --help        Display this help"
+}
+
+snmpopts=()
+
+while (( $# > 0 )); do
+    case "$1" in
+        -D|--download) DOWNLOAD=1 ;;
+        -d|--directory) OUI_DIR=$2; shift ;;
+        -h|--help) usage; exit 0 ;;
+        *) usage >/dev/stderr; exit 1 ;;
+    esac
+    shift
+done
+
+if [[ -n $DOWNLOAD ]]; then
+    if ! wget -N -P "$OUI_DIR" "$OUI_URL"; then
+        echo "$PROGNAME: failed to download ${OUI_URL##*/}" >&2
+        exit 2
+    fi
+fi
+if [[ ! -f $OUI_DIR/${OUI_URL##*/} ]]; then
+    echo "$PROGNAME: cannot find ${OUI_URL##*/}" >&2
+    exit 2
+fi
+
+echo '{'
+re='^[0-9A-F][0-9A-F]-[0-9A-F][0-9A-F]-[0-9A-F][0-9A-F]'
+while read -r hex type descr; do
+    [[ $type == '(hex)' && $hex =~ $re ]] || continue
+    hex=${hex,,} # lowercase
+    hex=${hex//-/:}
+    descr=${descr%$'\r'*}
+    printf '  "%s": "%s",\n' "$hex" "${descr//\"/\\\"}"
+done < "$OUI_DIR/${OUI_URL##*/}" |
+    sort |
+    sed -e '$s,\,$,,'
+echo '}'
