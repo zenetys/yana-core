@@ -1,0 +1,5 @@
+*~
+.*swp
+data/
+snmp-oid.json
+tmp/
