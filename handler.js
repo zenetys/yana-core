@@ -34,7 +34,7 @@ class Handler extends EventEmitter {
     }
 
     debugRequest(ctx) {
-        if (!this.log.debug2('Request headers from %s:%s',
+        if (!this.log.debug3('Request headers from %s:%s',
                 ctx.req.socket.remoteAddress, ctx.req.socket.remotePort)) {
             return; /* verbosity too low */
         }
@@ -45,7 +45,7 @@ class Handler extends EventEmitter {
     }
 
     debugData(ctx) {
-        if (!this.log.debug2('Request data from %s:%s',
+        if (!this.log.debug3('Request data from %s:%s',
                 ctx.req.socket.remoteAddress, ctx.req.socket.remotePort)) {
             return; /* verbosity too low */
         }
