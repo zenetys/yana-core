@@ -4,6 +4,7 @@
 
 const builder = require('./builder.js');
 const config = require('./config.js');
+const cache = require('./cache.js');
 const handler = require('./handler.js');
 const Logger = require('./logger.js');
 const parser = require('./parser.js');
@@ -64,6 +65,7 @@ config.reload(opts);
 var srv = new Server(config.options.server);
 
 function reloadModular() {
+    cache.reload();
     parser.reload();
     builder.reload();
     handler.reload();
