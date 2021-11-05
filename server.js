@@ -109,6 +109,8 @@ function Server(options) {
 
     async function onRequest(req, res) {
         req.on('error', onRequestError);
+        log.debug(`${req.socket[SOCK_NAME]}, new request:`,
+                 `"${req.method} ${req.url} HTTP/${req.httpVersion}"`);
 
         let start = new Date().getTime(), elapsed = 0;
         let url = parseUrl(req.url);
@@ -141,7 +143,8 @@ function Server(options) {
         }
 
         elapsed = new Date().getTime() - start;
-        log.info(`${req.socket[SOCK_NAME]}, ${res.statusCode} ${elapsed}`,
+        log.info(`${req.socket[SOCK_NAME]}, end request:`,
+                 `${res.statusCode} ${elapsed}`,
                  `"${req.method} ${req.url} HTTP/${req.httpVersion}"`);
     }
 
