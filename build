@@ -1,0 +1,76 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const builder = require('./builder.js');
+const config = require('./config.js');
+const Logger = require('./logger.js');
+const path = require('path');
+const util = require('./util.js');
+const log = new Logger('build');
+
+function onUnhandledRejection(e) {
+    log.error('Abort due to unhandledRejection!');
+    log.error(e);
+    process.exit(99);
+}
+
+function onUncaughtException(e) {
+    log.error('Abort due to uncaughtException!');
+    log.error(e);
+    process.exit(99);
+}
+
+process.on('unhandledRejection', onUnhandledRejection);
+process.on('uncaughtException', onUncaughtException);
+
+function exitUsage(code) {
+    code = code || 0;
+    var stream = code ? process.stderr : process.stdout;
+    stream.write('Usage: ' + path.basename(process.argv[1]) + ' [OPTION]...\n' +
+        'Standalone command to build databases from an nscan JSON object\n' +
+        '\n' +
+        'Available options:\n' +
+        '  -f, --config FILE        Set configuration file\n' +
+        '  -v, --verbose            Increase verbosity\n' +
+        '\n' +
+        'The input is expected to be in nscan JSON format, result of the\n' +
+        'nscan parser. Input is read from stdin, output is printed on stdout.\n');
+    process.exit(1);
+}
+
+var opts = { log: { } }
+for (let i = 2; i < process.argv.length; i++) {
+    if ((process.argv[i] == '-f' ||
+         process.argv[i] == '--config') && i < process.argv.length - 1)
+        opts.config = process.argv[++i];
+    else if (process.argv[i] == '-v' ||
+             process.argv[i] == '--verbose')
+        opts.log.verbose = (opts.log.verbose || 0) + 1;
+    else if (process.argv[i].charAt(0) == '-') {
+        for (let j = 1; j < process.argv[i].length; j++) {
+            let c = process.argv[i].charAt(j);
+            switch (c) {
+                case 'v': opts.log.verbose = (opts.log.verbose || 0) + 1; break;
+                default: exitUsage(1);
+            }
+        }
+    }
+    else
+        exitUsage(1);
+}
+
+config.reload(opts);
+builder.reload();
+
+(async () => {
+    var data = [];
+    for await (const chunk of process.stdin)
+        data.push(chunk);
+
+    data = util.bufArr2str(data);
+    data = JSON.parse(data);
+
+    var build = builder.runBuilders(data, 'stdin');
+    process.stdout.write(JSON.stringify(build.db));
+})();
