@@ -635,55 +635,6 @@ function decNum(input) {
     return num;
 }
 
-var SNMP_OID = {};
-var SNMP_OID_LOAD_STATUS = 1; /* 0: loaded, 1: not loaded, 2: failed */
-
-function decOidName(oid, opt) {
-    opt = Object.assign({}, { /* defaults */ maxTries: 1 }, opt);
-    var saveOid = oid;
-    var fallback = () => opt.fallback === undefined ? saveOid : opt.fallback;
-    var load = () => {
-        let data;
-        try {
-            data = fs.readFileSync(config.options.snmpOidFile);
-            data = JSON.parse(data);
-            if (!util.isObject(data))
-                throw Error('snmpOidFile has invalid JSON data')
-        }
-        catch (e) {
-            log.error('Failed to load snmpOidFile.', e);
-            SNMP_OID_LOAD_STATUS = 2;
-            return false;
-        }
-        SNMP_OID = data;
-        SNMP_OID_LOAD_STATUS = 0;
-        return true;
-    }
-
-    if ((SNMP_OID_LOAD_STATUS == 1 && !load()) || SNMP_OID_LOAD_STATUS != 0)
-        return fallback();
-
-    let tries = 0;
-    while (oid.length > 0) {
-        if (SNMP_OID[oid])
-            return SNMP_OID[oid];
-
-        tries++;
-        if (opt.maxTries && tries >= opt.maxTries)
-            break;
-
-        let lastDot = oid.lastIndexOf('.');
-        if (lastDot == -1)
-            break;
-
-        oid = oid.substr(0, lastDot);
-        if (opt.downTo && (oid.indexOf(opt.downTo) != 0 || oid.length < opt.downTo.length))
-            break;
-    }
-
-    return fallback();
-}
-
 /**
  * Convert a mac address from decimal OID notation to an hex notation.
  *
@@ -751,7 +702,6 @@ module.exports = {
     decLldpChassisId,
     decLldpPortId,
     decNum,
-    decOidName,
     decOidMac,
     decQBridgePorts,
 };
