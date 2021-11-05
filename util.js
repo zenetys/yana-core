@@ -114,6 +114,28 @@ function cmpDefault(a, b) {
     return a > b ? 1 : (a < b ? -1 : 0);
 }
 
+function cmpIntSplit(a, b) {
+    a = a.split(/[^0-9]+/);
+    b = b.split(/[^0-9]+/);
+
+    for (let i = 0, len = Math.max(a.length, b.length); i < len; i++) {
+        a[i] *= 1; /* type number */
+        b[i] *= 1; /* type number */
+        if (isNaN(a[i])) {
+            if (!isNaN(b[i]))
+                return -1;
+        }
+        else if (isNaN(b[i]))
+            return 1;
+        else {
+            let cmp = a[i] - b[i];
+            if (cmp != 0)
+                return cmp;
+        }
+    }
+    return 0;
+}
+
 /* Recursively test if two objects are equivalents. This simple implementation
  * is enought for primitive data types, standard objects, arrays.
  * Credits to Jean Vincent (uiteoi), https://stackoverflow.com/a/6713782 */
@@ -258,9 +280,25 @@ function lsDirSync(dir, options) {
     return ls;
 }
 
+function makeCmpFn(fn, asc /* -1 or 1 */, cmpFn) {
+    cmpFn ||= cmpDefault;
+    return (a, b) => cmpFn(fn(a), fn(b)) * (asc || 1);
+}
+
 function makeCmpKey(key, asc /* -1 or 1 */, cmpFn) {
     cmpFn ||= cmpDefault;
     return (a, b) => cmpFn(a[key], b[key]) * (asc || 1);
+}
+
+function makeCmpMultiFn(spec /* [ { asc: 1 or -1, fn: <func(a,b)> }, ... ] */) {
+    return (a, b) => {
+        for (let s of spec) {
+            let cmp = s.fn(a, b) * (s.asc || 1);
+            if (cmp != 0)
+                return cmp;
+        }
+        return 0;
+    }
 }
 
 function oget(o, path, cb) {
@@ -531,13 +569,16 @@ Object.assign(module.exports, util, {
     checkData,
     clone,
     cmpDefault,
+    cmpIntSplit,
     eq,
     err2str,
     humanNumber,
     ifNot,
     isObject,
     lsDirSync,
+    makeCmpFn,
     makeCmpKey,
+    makeCmpMultiFn,
     oget,
     omatch,
     omerge,
