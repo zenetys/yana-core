@@ -352,10 +352,20 @@ function owalk(o, cb, /* internal */ path) {
 }
 
 class Ranges {
-    constructor() {
-        this.ranges = [];
-        this.start = undefined;
-        this.last = undefined;
+    constructor(ranges) {
+        if (ranges) {
+            this.ranges = ranges.slice(0, -1);
+            if (ranges.length > 0) {
+                let x = ranges.slice(-1)[0];
+                this.start = x.from;
+                this.last = x.to;
+            }
+        }
+        else {
+            this.ranges = [];
+            this.start = undefined;
+            this.last = undefined;
+        }
         return this;
     }
     add(int) {
@@ -365,8 +375,7 @@ class Ranges {
         else {
             let diff = int - this.last;
             if (diff <= 0)
-                throw Error('RangeArray value must be greater than previous');
-
+                throw Error('Ranges.add: value must be greater than previous');
             if (diff > 1) {
                 this.ranges.push({ from: this.start, to: this.last });
                 this.start = int;
@@ -375,18 +384,75 @@ class Ranges {
         this.last = int;
         return this;
     }
-    done() {
+    get() {
+        var out = [...this.ranges];
         if (this.last !== undefined) /* so is this.start */
-            this.ranges.push({ from: this.start, to: this.last });
-        return this.ranges;
+            out.push({ from: this.start, to: this.last });
+        return out;
     }
-    static *iterator(ranges) {
-        for (let r of ranges) {
-            if (typeof r.from != 'number' || typeof r.to != 'number')
-                throw Error('invalid RangeArray iterator argument');
-            for (let i = r.from; i <= r.to; i++)
-                yield i;
+    remove(int) {
+        let done = false;
+        for (let i = 0; i < this.ranges.length; i++) {
+            if (int < this.ranges[i].from)
+                break;
+            if (int == this.ranges[i].from) {
+                if (this.ranges[i].to == this.ranges[i].from) {
+                    this.ranges.splice(i, 1);
+                    done = true;
+                    break;
+                }
+                else {
+                    this.ranges[i].from++;
+                    done = true;
+                    break;
+                }
+            }
+            else if (int < this.ranges[i].to) /* && > this.from */ {
+                this.ranges.splice(i, 1,
+                    { from: this.ranges[i].from, to: int-1 },
+                    { from: int+1, to: this.ranges[i].to });
+                done = true;
+                break;
+            }
+            else if (int == this.ranges[i].to) {
+                this.ranges[i].to--;
+                done = true;
+                break;
+            }
         }
+        if (!done && this.last !== undefined) { /* so is this.start */
+            if (int == this.start) {
+                if (this.last == this.start) {
+                    this.start = undefined;
+                    this.last = undefined;
+                }
+                else {
+                    this.start++;
+                }
+            }
+            else if (int > this.start) {
+                if (int < this.last) {
+                    this.ranges.push({ from: this.start, to: int-1 });
+                    this.start = int+1;
+                }
+                else if (int == this.last)
+                    this.last--;
+            }
+        }
+        return this;
+    }
+    toString() {
+        var ranges = this.get();
+        return ranges.reduce((r, i) => {
+            r.push(i.from == i.to ? i.from : `${i.from}-${i.to}`);
+            return r;
+        }, []).join(',');
+    }
+    static fromArray(a) {
+        var r = new Ranges();
+        for (let i of a)
+            r.add(i);
+        return r;
     }
 }
 

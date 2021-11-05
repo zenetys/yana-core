@@ -462,7 +462,7 @@ function decCiscoVlansEnabled(o, baseName) {
                 out.add(offset + (7 - ib1));
         }
     }
-    return out.done();
+    return out.get();
 }
 
 function decHexDate(raw) {
