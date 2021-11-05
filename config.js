@@ -6,6 +6,7 @@ const fs = require('fs');
 
 const APP_DEFAULTS = {
     config: __dirname + '/config.json',
+    builderDirs: [ __dirname + '/builders' ],
     dataDir: __dirname + '/data',
     handlerDirs: [ __dirname + '/handlers' ],
     parserDirs: [ __dirname + '/parsers' ],

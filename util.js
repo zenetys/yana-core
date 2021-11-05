@@ -49,7 +49,7 @@ function checkData(x, r, path = '$') {
             return e(`date string required at ${path}`);
     }
     else if (r.type == 'object') {
-        if (!util.isObject(x))
+        if (!isObject(x))
             return e(`object required at ${path}`);
         if (r.fields) {
             for (let f in r.fields) {
@@ -89,10 +89,23 @@ function checkData(x, r, path = '$') {
     return out;
 }
 
-function clone(x) {
-    if (isObject(x)) {
+function clone(x, strict = true) {
+    if (Array.isArray(x)) {
+        let out = x.constructor(x.length);
+        x.forEach((e, i) => { out[i] = clone(e); });
+        return out;
+    }
+
+    if (typeof x == 'object' && x !== null) {
+        if (x.constructor.name == 'Boolean' ||
+            x.constructor.name == 'Date' ||
+            x.constructor.name == 'Number' ||
+            x.constructor.name == 'RegExp' ||
+            x.constructor.name == 'String')
+            return new x.constructor(x.valueOf());
+
         if (x.constructor.name == 'Object') {
-            let out = x.constructor();
+            let out = {};
             for (let k in x)
                 out[k] = clone(x[k]);
             /* symbols are not enumerated in for ... in loops */
@@ -100,13 +113,11 @@ function clone(x) {
                 out[k] = clone(x[k]);
             return out;
         }
-        if (x.constructor.name == 'Array') {
-            let out = x.constructor(x.length);
-            x.forEach((e, i) => { out[i] = clone(e); });
-            return out;
-        }
-        throw Error(`clone of object type ${x.constructor.name} unsupported`);
+
+        if (strict)
+            throw Error('clone: unsupported object ' + x.constructor.name);
     }
+
     return x;
 }
 
@@ -167,9 +178,13 @@ function eq(x, y) {
 
 function err2str(err) {
     var out = err.toString();
-    for (let i in err)
-        out += `, ${i}: ${err[i]}`;
+    /*for (let i in err)
+        out += `, ${i}: ${err[i]}`;*/
     return out;
+}
+
+function first(x) {
+    return Array.isArray(x) ? x[0] : x;
 }
 
 const HN_DEFAULTS = {
@@ -301,6 +316,12 @@ function makeCmpMultiFn(spec /* [ { asc: 1 or -1, fn: <func(a,b)> }, ... ] */) {
     }
 }
 
+function oempty(o) {
+    for (let i in o)
+            return false;
+    return true;
+}
+
 function oget(o, path, cb) {
     for (let i = 0; i < path.length; i++) {
         if (!isObject(o))
@@ -312,9 +333,27 @@ function oget(o, path, cb) {
     return o;
 }
 
+function ogroup(o, ...groupFn) {
+    var out = {};
+    for (let k in o) {
+        let group = groupFn.map((fn) => fn(k, o[k]))
+        opush(out, group, o[k]);
+    }
+    return out;
+}
+
+function okeys(o, keys) {
+    var out = {};
+    for (let k of keys) {
+        if (o.hasOwnProperty(k))
+            out[k] = o[k];
+    }
+    return out;
+}
+
 function omatch(o, search, testFn) {
     testFn ||= (what, where) => where.toString().toLowerCase()
-                                                .indexOf(what) > -1;
+        .indexOf(what.toLowerCase()) > -1;
     var result = false;
 
     owalk(o, (io, path) => {
@@ -338,12 +377,12 @@ function omatch(o, search, testFn) {
 
 function omerge(...o) {
     function _(o1 = {}, o2 = {}) {
-        Object.keys(o2).forEach((k) => {
+        for (let k of Object.keys(o2)) {
             if (isObject(o1[k]) && isObject(o2[k]))
                 _(o1[k], o2[k]);
             else
-                o1[k] = clone(o2[k]);
-        });
+                o1[k] = clone(o2[k], false);
+        }
         return o1;
     }
 
@@ -353,6 +392,7 @@ function omerge(...o) {
         throw Error('omerge operand #0 must be an object');
 
     var out = o[0];
+
     for (let i = 1; i < o.length; i++) {
         if (o[i] === undefined || o[i] === null)
             o[i] = {};
@@ -375,6 +415,12 @@ function orm(o, path) {
         o = o[path[i]];
     }
     delete o[path[i]];
+}
+
+function opush(o, path, v) {
+    var x = (oget(o, path) || []);
+    x.push(v);
+    oset(o, path, x);
 }
 
 function oset(o, path, value) {
@@ -508,12 +554,12 @@ class Ranges {
         }
         return this;
     }
-    toString() {
+    toString(separator = ',') {
         var ranges = this.get();
         return ranges.reduce((r, i) => {
             r.push(i.from == i.to ? i.from : `${i.from}-${i.to}`);
             return r;
-        }, []).join(',');
+        }, []).join(separator);
     }
     static fromArray(a) {
         var r = new Ranges();
@@ -548,6 +594,17 @@ function sleep(ms) {
     })
 }
 
+function stringifySortedKeys(value, space) {
+    function replacer(k,v) {
+        if (isObject(v))
+            v = Object.keys(v).sort().reduce(
+                    (r, k) => { r[k] = v[k]; return r; },
+                    {});
+        return v;
+    }
+    return JSON.stringify(value, replacer, space);
+}
+
 function tryWrap(fn) {
     var result, error;
     try { result = fn(); }
@@ -572,6 +629,7 @@ Object.assign(module.exports, util, {
     cmpIntSplit,
     eq,
     err2str,
+    first,
     humanNumber,
     ifNot,
     isObject,
@@ -579,9 +637,13 @@ Object.assign(module.exports, util, {
     makeCmpFn,
     makeCmpKey,
     makeCmpMultiFn,
+    oempty,
     oget,
+    ogroup,
+    okeys,
     omatch,
     omerge,
+    opush,
     orm,
     oset,
     owalk,
@@ -590,5 +652,6 @@ Object.assign(module.exports, util, {
     safePromise,
     sha256,
     sleep,
+    stringifySortedKeys,
     tryWrap,
 });

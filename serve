@@ -2,6 +2,7 @@
 
 'use strict';
 
+const builder = require('./builder.js');
 const config = require('./config.js');
 const handler = require('./handler.js');
 const Logger = require('./logger.js');
@@ -64,6 +65,7 @@ var srv = new Server(config.options.server);
 
 function reloadModular() {
     parser.reload();
+    builder.reload();
     handler.reload();
     handler.attach(srv);
 }
