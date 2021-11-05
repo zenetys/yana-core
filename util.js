@@ -180,6 +180,41 @@ function makeCmpKey(key, asc /* -1 or 1 */, cmpFn) {
     return (a, b) => cmpFn(a[key], b[key]) * (asc || 1);
 }
 
+function oget(o, path, cb) {
+    for (let i = 0; i < path.length; i++) {
+        if (!isObject(o))
+            return undefined;
+        o = o[path[i]];
+    }
+    if (cb)
+        cb(o, path);
+    return o;
+}
+
+function omatch(o, search, testFn) {
+    testFn ||= (what, where) => where.toString().toLowerCase()
+                                                .indexOf(what) > -1;
+    var result = false;
+
+    owalk(o, (io, path) => {
+        if (Array.isArray(io)) {
+            for (let e of io) {
+                if (omatch(e, search, testFn)) {
+                    result = true;
+                    return false; /* stop */
+                }
+            }
+        }
+        if (io !== undefined && typeof io != 'object' &&
+            typeof io != 'function' && testFn(search, io)) {
+            result = true;
+            return false; /* stop */
+        }
+        return true; /* continue */
+    });
+    return result;
+}
+
 function omerge(...o) {
     function _(o1 = {}, o2 = {}) {
         Object.keys(o2).forEach((k) => {
@@ -205,6 +240,61 @@ function omerge(...o) {
         out = _(out, o[i]);
     }
     return out;
+}
+
+function orm(o, path) {
+    if (path.length < 1)
+        throw Error(`orm: invalid path, need at least one element`);
+    var i;
+    for (i = 0; i < path.length - 1; i++) {
+        if (path[i] === undefined || /* we could throw on this one */
+            !o[path[i]] ||
+            !isObject(o[path[i]]))
+            return;
+        o = o[path[i]];
+    }
+    delete o[path[i]];
+}
+
+function oset(o, path, value) {
+    var i;
+    for (i = 0; i < path.length -1; i++) {
+        if (!isObject(o[path[i]]))
+            o[path[i]] = {}; /* may override */
+        o = o[path[i]];
+    }
+    o[path[i]] = value; /* may override */
+    return o[path[i]]; /* value */
+}
+
+/* Walk recursively on an object, calling a callback function on each node.
+ * Note: this function does not traverse arrays, only objects.
+ *
+ * The callback takes as argument the current value and the path as array:
+ *   fn(<currentObject>, <path[]>) => return true | false | number
+ *
+ * the callback return value is interpreted as follows:
+ * - true: continue walking,
+ * - false or 0: stop walking immediately,
+ * - n: continue next iteration at depth n.
+ *
+ * If the callback return a number > path.length, the walk continues.
+ */
+function owalk(o, cb, /* internal */ path) {
+    path ||= [];
+    var ret = cb(o, path) || 0;
+    if (ret !== true && ret <= path.length)
+        return ret;
+    if (isObject(o)) {
+        for (let i in o) {
+            let oret = owalk(o[i], cb, path.concat(i));
+            if (oret === true)
+                continue;
+            if (oret <= path.length)
+                return oret;
+        }
+    }
+    return true;
 }
 
 class Ranges {
@@ -285,7 +375,12 @@ Object.assign(module.exports, util, {
     isObject,
     lsDirSync,
     makeCmpKey,
+    oget,
+    omatch,
     omerge,
+    orm,
+    oset,
+    owalk,
     Ranges,
     safePromise,
     sha256,
