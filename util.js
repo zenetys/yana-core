@@ -121,6 +121,56 @@ function err2str(err) {
     return out;
 }
 
+const HN_DEFAULTS = {
+    multiple: 1000,
+    precision: 2,
+    fixed: true,
+    inter: '',
+    uom: '',
+};
+
+function humanNumber(number, options) {
+    options = Object.assign({}, HN_DEFAULTS, options);
+    var minus, prefix, neutral, i;
+
+    if (typeof(number) != 'number')
+        number = new Number(number);
+    if (isNaN(number))
+        return null;
+
+    if (number >= 0)
+        minus = '';
+    else {
+        number = Math.abs(number);
+        minus = '-';
+    }
+
+    if (options.multiple == 1024) {
+        prefix = ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi'];
+        neutral = 0;
+    }
+    else {
+        prefix = ['n', 'µ', 'm', '', 'k', 'M', 'G', 'T', 'P'];
+        neutral = 3;
+    }
+
+    /* index in prefix */
+    i = neutral;
+
+    if (options.multiple != 0) {
+        while (number >= options.multiple && i++ < prefix.length - 1)
+            number /= options.multiple;
+        if (i == neutral) {
+            while (number != 0 && i-- > 0 && number < 1)
+                number *= options.multiple;
+        }
+    }
+    number = options.fixed
+        ? number.toFixed(options.precision)
+        : number.toPrecision(options.precision);
+    return minus + number + options.inter + prefix[i] + options.uom;
+}
+
 function isObject(value) {
     return value !== null && typeof value == 'object' &&
         value.constructor === Object;
@@ -372,6 +422,7 @@ Object.assign(module.exports, util, {
     clone,
     cmpDefault,
     err2str,
+    humanNumber,
     isObject,
     lsDirSync,
     makeCmpKey,
