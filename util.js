@@ -114,6 +114,35 @@ function cmpDefault(a, b) {
     return a > b ? 1 : (a < b ? -1 : 0);
 }
 
+/* Recursively test if two objects are equivalents. This simple implementation
+ * is enought for primitive data types, standard objects, arrays.
+ * Credits to Jean Vincent (uiteoi), https://stackoverflow.com/a/6713782 */
+function eq(x, y) {
+    if (x === y)
+        return true;
+    if (!(x instanceof Object) || !(y instanceof Object))
+        return false;
+    if (x.constructor !== y.constructor)
+        return false;
+    for (let p in x ) {
+        if (!x.hasOwnProperty(p))
+            continue;
+        if (!y.hasOwnProperty(p))
+            return false;
+        if (x[p] === y[p])
+            continue;
+        if (typeof x[p] !== 'object')
+            return false;
+        if (!eq(x[p], y[p]))
+            return false;
+    }
+    for (let p in y) {
+        if (y.hasOwnProperty(p) && !x.hasOwnProperty(p))
+            return false;
+    }
+    return true;
+}
+
 function err2str(err) {
     var out = err.toString();
     for (let i in err)
@@ -502,6 +531,7 @@ Object.assign(module.exports, util, {
     checkData,
     clone,
     cmpDefault,
+    eq,
     err2str,
     humanNumber,
     ifNot,
