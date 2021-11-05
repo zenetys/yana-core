@@ -1,5 +1,6 @@
 'use strict';
 
+const cache = require('../cache.js');
 const config = require('../config.js');
 const handler = require('../handler.js');
 const Logger = require('../logger.js');
@@ -25,20 +26,21 @@ const OPTIONS = {
 function lsDirApplyCb(out, dir, name, stat) {
     if (!stat.isFile())
         return;
-    if (name.substr(-5) != '.json')
-        return;
-    /* Return an object per database with two properties:
-     * id and timestamp. The timestamp is taken from the filename when
-     * possible, otherwise the mtime is used. */
-    var db = { id: name.substr(0, name.length-5) };
-    db.ts = (new Date(db.id)).getTime();
-    if (isNaN(db.ts)) {
-        db.ts = (new Date(stat.mtimeMs)).getTime();
-        if (isNaN(db.ts)) /* should not happen */
-            return;
+
+    for (let ext of cache.DB_SOURCES_EXT)  {
+        if (name.substr((ext.length + 1) * -1) != '.' + ext)
+            continue;
+
+        /* Return an object per database with two properties: id and timestamp.
+         * The timestamp is taken from the filename when possible, otherwise
+         * the mtime is used. */
+        var db = { id: name.substr(0, name.length - ext.length - 1) };
+        db.ts = (new Date(db.id)).getTime();
+        if (isNaN(db.ts))
+            db.ts = (new Date(stat.mtimeMs)).getTime();
+        db.ts /= 1000; /* epoch seconds */
+        out.push(db);
     }
-    db.ts /= 1000; /* epoch seconds */
-    out.push(db);
 }
 
 class HandlerDatabases extends handler.Handler {
@@ -48,12 +50,11 @@ class HandlerDatabases extends handler.Handler {
     }
 
     async process(ctx) {
-        var eDir = config.options.dataDir + '/' + ctx.url.params[0];
         var databases;
 
         try {
-            databases = util.lsDirSync(eDir,
-                { lstat: true, apply: lsDirApplyCb });
+            databases = util.lsDirSync(config.options.dataDir + '/' +
+                ctx.url.params[0], { lstat: true, apply: lsDirApplyCb });
         }
         catch (e) {
             if (e.code == 'ENOENT')
