@@ -65,8 +65,8 @@ class HandlerDatabases extends handler.Handler {
             }
         }
 
-        /* short by timestamp, newest first */
-        databases.sort(util.makeCmpKey('ts', -1));
+        /* short by timestamp */
+        databases.sort(util.makeCmpKey('ts', 1));
         this.headEnd(ctx, 200, JSON.stringify(databases));
     }
 }
