@@ -57,19 +57,17 @@ class HandlerDatabases extends handler.Handler {
         }
         catch (e) {
             if (e.code == 'ENOENT')
-                ctx.res.writeHead(404);
+                return this.headEnd(ctx, 404);
             else {
-                this.log.error(e);
-                this.log.error('Failed to list databases');
-                ctx.res.writeHead(500);
+                this.log.error('Failed to list databases for %s',
+                    ctx.url.params[0], e);
+                return this.headEnd(ctx, 500);
             }
-            return;
         }
 
         /* short by timestamp, newest first */
         databases.sort(util.makeCmpKey('ts', -1));
-        ctx.res.writeHead(200);
-        ctx.res.end(JSON.stringify(databases));
+        this.headEnd(ctx, 200, JSON.stringify(databases));
     }
 }
 

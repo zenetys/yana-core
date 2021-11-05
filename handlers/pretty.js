@@ -20,9 +20,8 @@ class HandlerPretty extends handler.Handler {
     }
 
     async process(ctx) {
-        this.log.info('Pretty echo back')
-        ctx.res.writeHead(200);
-        ctx.res.end(JSON.stringify(ctx.data, null, 4));
+        this.log.info('Pretty echo back');
+        this.headEnd(ctx, 200, JSON.stringify(ctx.data, null, 4));
     }
 }
 

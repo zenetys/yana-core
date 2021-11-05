@@ -24,15 +24,12 @@ class HandlerEntities extends handler.Handler {
                 filter: (d,n,s) => s.isDirectory() && n.substr(0, 1) != '.' });
         }
         catch (e) {
-            this.log.error(e);
-            this.log.error('Failed to list entities');
-            ctx.res.writeHead(500);
-            return;
+            this.log.error('Failed to list entities', e);
+            return this.headEnd(ctx, 500);
         }
 
         entities.sort();
-        ctx.res.writeHead(200);
-        ctx.res.end(JSON.stringify(entities));
+        this.headEnd(ctx, 200, JSON.stringify(entities));
     }
 }
 

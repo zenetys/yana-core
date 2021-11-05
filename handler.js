@@ -121,27 +121,35 @@ class Handler extends EventEmitter {
         this.debugRequest(ctx);
 
         let check = this.checkInputHead(ctx);
-        if (check.error) {
-            ctx.res.writeHead(400, { 'content-type': 'application/json' });
-            ctx.res.end(JSON.stringify({ error: check.error }));
-            return;
-        }
+        if (check.error)
+            return this.headEnd(ctx, 400, { 'content-type': 'application/json' },
+                JSON.stringify({ error: check.error }));
 
         if (this.inputData.enabled) {
             await this.readInputData(ctx);
             if (!ctx.req.readableEnded)
                 return; /* input ended prematurely */
-            check = this.checkInputData(ctx);
-            if (check.error) {
-                ctx.res.writeHead(400, { 'content-type': 'application/json' });
-                ctx.res.end(JSON.stringify({ error: check.error }));
                 return;
             }
+            check = this.checkInputData(ctx);
+            if (check.error)
+                return this.headEnd(ctx, 400, { 'content-type': 'application/json' },
+                    JSON.stringify({ error: check.error }));
         }
 
         if (this.contentType)
             ctx.res.setHeader('content-type', this.contentType);
         await this.process(ctx);
+    }
+
+    headEnd(ctx, status, /* headers optional */ headers, data) {
+        if (arguments.length == 3) {
+            data = headers;
+            headers = undefined;
+        }
+        ctx.res.writeHead(status, headers);
+        ctx.res.end(data);
+        return;
     }
 }
 

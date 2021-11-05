@@ -28,10 +28,9 @@ class HandlerTime extends handler.Handler {
             this.log.info(`Wait ${ctx.url.qs.wait} ms`);
             await util.sleep(ctx.url.qs.wait);
         }
-        this.log.info('Reply our time to the client')
+        this.log.info('Reply our time to the client');
         var data = { time: (new Date()).getTime() / 1000 };
-        ctx.res.writeHead(200);
-        ctx.res.end(JSON.stringify(data));
+        this.headEnd(ctx, 200, JSON.stringify(data));
     }
 }
 
