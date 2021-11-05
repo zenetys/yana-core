@@ -11,6 +11,7 @@ const DEFAULTS = {
     listenPort: 56789,
     clientTimeout: 20000,
     maxConnections: 20,
+    cors: '*',
 }
 
 /*
@@ -112,6 +113,9 @@ function Server(options) {
         let start = new Date().getTime(), elapsed = 0;
         let url = parseUrl(req.url);
         let h = getHandler(req.method, url.path);
+
+        if (options.cors)
+            res.setHeader('Access-Control-Allow-Origin', options.cors);
 
         if (h.handler) {
             url.params = h.params;
