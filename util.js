@@ -481,6 +481,13 @@ function sleep(ms) {
     })
 }
 
+function tryWrap(fn) {
+    var result, error;
+    try { result = fn(); }
+    catch(e) { return [ err, null ]; }
+    return [ null, result ];
+}
+
 util.inspect.defaultOptions.depth = null;
 util.inspect.defaultOptions.maxArrayLength = null;
 util.inspect.defaultOptions.maxStringLength = null;
@@ -512,4 +519,5 @@ Object.assign(module.exports, util, {
     safePromise,
     sha256,
     sleep,
+    tryWrap,
 });
