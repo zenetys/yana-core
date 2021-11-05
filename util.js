@@ -456,6 +456,10 @@ class Ranges {
     }
 }
 
+function ranstr(bytes = 16) {
+    return crypto.randomBytes(bytes).toString('hex');
+}
+
 function safePromise(promise) {
     return promise
         .then(result => [ null, result ])
@@ -504,6 +508,7 @@ Object.assign(module.exports, util, {
     oset,
     owalk,
     Ranges,
+    ranstr,
     safePromise,
     sha256,
     sleep,
