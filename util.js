@@ -171,6 +171,10 @@ function humanNumber(number, options) {
     return minus + number + options.inter + prefix[i] + options.uom;
 }
 
+function ifNot(value1, value2) {
+    return value1 ? value1 : value2;
+}
+
 function isObject(value) {
     return value !== null && typeof value == 'object' &&
         value.constructor === Object;
@@ -423,6 +427,7 @@ Object.assign(module.exports, util, {
     cmpDefault,
     err2str,
     humanNumber,
+    ifNot,
     isObject,
     lsDirSync,
     makeCmpKey,
