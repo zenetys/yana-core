@@ -108,6 +108,7 @@ class Handler extends EventEmitter {
         for await (const chunk of ctx.req)
             ctx.rawData.push(chunk)
         this.debugData(ctx);
+        return true;
     }
 
     process(ctx) {
@@ -126,9 +127,13 @@ class Handler extends EventEmitter {
                 JSON.stringify({ error: check.error }));
 
         if (this.inputData.enabled) {
-            await this.readInputData(ctx);
-            if (!ctx.req.readableEnded)
-                return; /* input ended prematurely */
+            let result = await this.readInputData(ctx);
+            if (!result) {
+                this.log.debug('Input reader returned a falsy value, abort handler');
+                return;
+            }
+            if (!ctx.req.readableEnded) {
+                this.log.debug('Input ended prematurely, abort handler');
                 return;
             }
             check = this.checkInputData(ctx);
