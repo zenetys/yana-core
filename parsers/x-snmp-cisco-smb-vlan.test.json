@@ -1,0 +1,35 @@
+{
+  "x-snmp-cisco-smb-vlan": {
+    "10.233.21.49": {
+      "1": {
+        "ifIndex": 1,
+        "vlanPortModeState": 11,
+        "vlanAccessPortModeVlanId": 211,
+        "vlanTrunkPortModeNativeVlanId": 1
+      },
+      "2": {
+        "ifIndex": 2,
+        "vlanPortModeState": 11,
+        "vlanAccessPortModeVlanId": 211,
+        "vlanTrunkPortModeNativeVlanId": 1
+      },
+      "3": {
+        "ifIndex": 3,
+        "vlanPortModeState": 11,
+        "vlanAccessPortModeVlanId": 211,
+        "vlanTrunkPortModeNativeVlanId": 1
+      },
+      "4": {
+        "ifIndex": 4,
+        "vlanPortModeState": 15,
+        "vlanCustomerPortModeVlanId": 104
+      },
+      "5": {
+        "ifIndex": 5,
+        "vlanPortModeState": 11,
+        "vlanAccessPortModeVlanId": 211,
+        "vlanTrunkPortModeNativeVlanId": 1
+      }
+    }
+  }
+}
