@@ -3,7 +3,7 @@
 export LC_ALL=C
 
 TEST_FILTER=()
-VERBOSE=
+VERBOSE=0
 if [[ -t 1 ]]; then
     OK=$'\x1b[1;32mPASS\x1b[0m'
     ERROR=$'\x1b[1;31mERROR\x1b[0m'
@@ -50,7 +50,7 @@ done
 
 while (( $# > 0 )); do
     case "$1" in
-        -v|--verbose) VERBOSE=1 ;;
+        -v|--verbose) (( VERBOSE++ )) ;;
         -h|--help) usage; exit 0 ;;
         --) shift; break ;;
         -*) usage; exit 1 ;;
@@ -70,10 +70,15 @@ for i in *.test.nscan; do
         --label CURRENT <(../parse < "$i" 2>/dev/null |jq .))
     if (( $? == 0 )); then
         echo "$OK"
+        if (( VERBOSE >= 2 )); then
+            echo "## BEGIN DUMP"
+            jq . < "${i%.test.nscan}.test.json"
+            echo "## END DUMP"
+        fi
     else
         echo "$ERROR"
         (( err++ ))
-        if [[ -n $VERBOSE ]]; then
+        if (( VERBOSE >= 1 )); then
             echo "## BEGIN DIFF"
             echo "$REPLY" |colordiff
             echo "## END DIFF"
