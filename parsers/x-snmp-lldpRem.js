@@ -83,9 +83,9 @@ const DEFINITION = {
                 o = ctx.db[SECTION][ctx.section[2]][o];
 
                 if (o.chassisId !== undefined && o.chassisIdSubtype !== undefined)
-                    o.chassisId = parser.decLldpChassisId(o.chassisId, o.chassisIdSubtype);
+                    o.chassisIdDecoded = parser.decLldpChassisId(o.chassisId, o.chassisIdSubtype);
                 if (o.portId !== undefined && o.portIdSubtype !== undefined)
-                    o.portId = parser.decLldpPortId(o.portId, o.portIdSubtype);
+                    o.portIdDecoded = parser.decLldpPortId(o.portId, o.portIdSubtype);
 
                 if (o.sysCapSupported !== undefined)
                     o.sysCapSupportedNames = parser.decLldpCap(o.sysCapSupported);

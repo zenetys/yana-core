@@ -26,10 +26,8 @@ const DEFINITION = {
                         '.13': { group: 'data', key: 'vlanTrunkPortDynamicState', apply: parser.decNum },
                         '.14': { group: 'data', key: 'vlanTrunkPortDynamicStatus', apply: parser.decNum },
 
-                        /* All vlansEnabled* properties get decoded and merged
-                         * to a single vlansEnabled property on section close.
-                         * The result is either an array of vlan numbers, or
-                         * true for a full trunk (vlans 1-4094). */
+                        /* All vlanTrunkPortVlansEnabled* properties get decoded and merged
+                         * to a single vlanTrunkPortVlansEnabledDecoded property on section close. */
                         '.4': { group: 'data', key: 'vlanTrunkPortVlansEnabled' },
                         '.17': { group: 'data', key: 'vlanTrunkPortVlansEnabled2k' },
                         '.18': { group: 'data', key: 'vlanTrunkPortVlansEnabled3k' },
@@ -48,11 +46,16 @@ const DEFINITION = {
         if (ctx.db[SECTION] && ctx.db[SECTION][ctx.section[2]]) {
             let o = ctx.db[SECTION][ctx.section[2]];
             for (let i in o) {
-                o[i].vlanTrunkPortVlansEnabled = parser.decCiscoVlansEnabled(
-                    o[i], 'vlanTrunkPortVlansEnabled');
-                delete o[i].vlanTrunkPortVlansEnabled2k;
-                delete o[i].vlanTrunkPortVlansEnabled3k;
-                delete o[i].vlanTrunkPortVlansEnabled4k;
+                if (!o[i].vlanTrunkPortVlansEnabled)
+                    continue;
+
+                try {
+                    o[i].vlanTrunkPortVlansEnabledDecoded = parser.decCiscoVlansEnabled(
+                        o[i], 'vlanTrunkPortVlansEnabled');
+                }
+                catch (e) {
+                    ctx.log.error(`Could not decode vlanTrunkPortVlansEnabled from ${ctx.section[2]}.`, e);
+                }
             }
         }
         return true;

@@ -55,7 +55,7 @@ const DEFINITION = {
             let o = ctx.db[SECTION][ctx.section[2]];
             for (let i in o) {
                 if (o[i].cdpCacheAddressType !== undefined && o[i].cdpCacheAddress !== undefined)
-                    o[i].cdpCacheAddress = parser.decCdpAddress(o[i].cdpCacheAddress, o[i].cdpCacheAddressType);
+                    o[i].cdpCacheAddressDecoded = parser.decCdpAddress(o[i].cdpCacheAddress, o[i].cdpCacheAddressType);
                 if (o[i].cdpCacheCapabilities !== undefined)
                     o[i].cdpCacheCapabilitiesNames = parser.decCdpCap(o[i].cdpCacheCapabilities);
             }

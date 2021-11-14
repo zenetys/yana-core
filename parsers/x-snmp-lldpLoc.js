@@ -70,7 +70,7 @@ const DEFINITION = {
             let sys = ctx.db[`${SECTION}Sys`][ctx.section[2]];
 
             if (sys.chassisId !== undefined && sys.chassisIdSubtype !== undefined)
-                sys.chassisId = parser.decLldpChassisId(sys.chassisId, sys.chassisIdSubtype);
+                sys.chassisIdDecoded = parser.decLldpChassisId(sys.chassisId, sys.chassisIdSubtype);
             if (sys.sysCapSupported !== undefined)
                 sys.sysCapSupportedNames = parser.decLldpCap(sys.sysCapSupported);
             if (sys.sysCapEnabled !== undefined)
@@ -81,7 +81,7 @@ const DEFINITION = {
 
             for (let [k,v] of Object.entries(ports)) {
                 if (v.portId !== undefined && v.portIdSubtype !== undefined)
-                    v.portId = parser.decLldpPortId(v.portId, v.portIdSubtype);
+                    v.portIdDecoded = parser.decLldpPortId(v.portId, v.portIdSubtype);
             }
         }
         return true;

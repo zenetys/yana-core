@@ -34,7 +34,7 @@ const DEFINITION = {
             let o = ctx.db[SECTION][ctx.section[2]];
 
             if (o.cdpGlobalDeviceId !== undefined) {
-                o.cdpGlobalDeviceId = parser.decCdpDeviceId(o.cdpGlobalDeviceId,
+                o.cdpGlobalDeviceIdDecoded = parser.decCdpDeviceId(o.cdpGlobalDeviceId,
                     o.cdpGlobalDeviceIdFormat /* may be undefined */);
             }
         }
