@@ -212,10 +212,31 @@ function saveGenIdDb(entity) {
     }
 }
 
+/* standalone json databases */
+
+function getOuiDb() {
+    if (!CACHE.oui) {
+        let data;
+        try {
+            data = fs.readFileSync(config.options.ouiFile);
+            data = JSON.parse(data);
+            if (!util.isObject(data))
+                throw Error('ouiFile has invalid JSON data');
+        }
+        catch (e) {
+            log.error('Failed to load ouiFile.', e);
+            data = {}; /* retry on next reload only */
+        }
+        CACHE.oui = data;
+    }
+    return CACHE.oui;
+}
+
 /* exports */
 
 module.exports = {
     DB_SOURCES_EXT: Object.keys(DB_SOURCES),
     getDb,
+    getOuiDb,
     reload,
 };

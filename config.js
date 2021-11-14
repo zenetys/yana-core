@@ -11,6 +11,7 @@ const APP_DEFAULTS = {
     handlerDirs: [ __dirname + '/handlers' ],
     parserDirs: [ __dirname + '/parsers' ],
     snmpOidFile: __dirname + '/snmp-oid.json',
+    ouiFile: __dirname + '/oui.json',
 };
 
 class Config extends EventEmitter {
