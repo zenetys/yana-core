@@ -1,5 +1,6 @@
 'use strict';
 
+/* const <cache> delayed after module.exports to handle circular dependency */
 const config = require('./config.js');
 const crypto = require('crypto');
 const fs = require('fs');
@@ -441,41 +442,17 @@ const SW_PORT_STATUS = {
 
 /* utility functions */
 
-var SNMP_OID = {};
-var SNMP_OID_LOAD_STATUS = 1; /* 0: loaded, 1: not loaded, 2: failed */
-
 function decOidName(oid, opt) {
     opt = Object.assign({}, { /* defaults */ maxTries: 1 }, opt);
+
     var saveOid = oid;
     var fallback = () => opt.fallback === undefined ? saveOid : opt.fallback;
-    var load = () => {
-        let data;
-        try {
-            data = fs.readFileSync(config.options.snmpOidFile);
-            data = JSON.parse(data);
-            if (!util.isObject(data))
-                throw Error('snmpOidFile has invalid JSON data')
-        }
-        catch (e) {
-            log.error('Failed to load snmpOidFile.', e);
-            SNMP_OID_LOAD_STATUS = 2;
-            return false;
-        }
-        SNMP_OID = data;
-        SNMP_OID_LOAD_STATUS = 0;
-        /* merge local entries */
-        if (config.options.snmp && config.options.snmp.oid)
-            util.omerge(data, config.options.snmp.oid);
-        return true;
-    }
+    var snmpOidDb = cache.getSnmpOidDb();
+    var tries = 0;
 
-    if ((SNMP_OID_LOAD_STATUS == 1 && !load()) || SNMP_OID_LOAD_STATUS != 0)
-        return fallback();
-
-    let tries = 0;
     while (oid.length > 0) {
-        if (SNMP_OID[oid])
-            return SNMP_OID[oid];
+        if (snmpOidDb[oid])
+            return snmpOidDb[oid];
 
         tries++;
         if (opt.maxTries && tries >= opt.maxTries)
@@ -546,3 +523,6 @@ module.exports = {
     decOidName,
     Build
 };
+
+/* circular dependency workaround */
+const cache = require('./cache.js');
