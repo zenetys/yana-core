@@ -214,6 +214,27 @@ function saveGenIdDb(entity) {
 
 /* standalone json databases */
 
+function getSnmpOidDb() {
+    if (!CACHE.snmpOid) {
+        let data;
+        try {
+            data = fs.readFileSync(config.options.snmpOidFile);
+            data = JSON.parse(data);
+            if (!util.isObject(data))
+                throw Error('snmpOidFile has invalid JSON data');
+        }
+        catch (e) {
+            log.error('Failed to load snmpOidFile.', e);
+            data = {}; /* retry on next reload only */
+        }
+        /* merge local entries */
+        if (config.options.snmp && config.options.snmp.oid)
+            util.omerge(data, config.options.snmp.oid);
+        CACHE.snmpOid = data;
+    }
+    return CACHE.snmpOid;
+}
+
 function getOuiDb() {
     if (!CACHE.oui) {
         let data;
@@ -238,5 +259,6 @@ module.exports = {
     DB_SOURCES_EXT: Object.keys(DB_SOURCES),
     getDb,
     getOuiDb,
+    getSnmpOidDb,
     reload,
 };
