@@ -458,7 +458,6 @@ function getOuiDb() {
 /* exports */
 
 module.exports = {
-    DB_SOURCES_EXT: Object.keys(DB_SOURCES),
     getDb,
     getDbList,
     getEntityList,

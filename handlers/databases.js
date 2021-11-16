@@ -23,26 +23,6 @@ const OPTIONS = {
     },
 };
 
-function lsDirApplyCb(out, dir, name, stat) {
-    if (!stat.isFile())
-        return;
-
-    for (let ext of cache.DB_SOURCES_EXT)  {
-        if (name.substr((ext.length + 1) * -1) != '.' + ext)
-            continue;
-
-        /* Return an object per database with two properties: id and timestamp.
-         * The timestamp is taken from the filename when possible, otherwise
-         * the mtime is used. */
-        var db = { id: name.substr(0, name.length - ext.length - 1) };
-        db.ts = (new Date(db.id)).getTime();
-        if (isNaN(db.ts))
-            db.ts = (new Date(stat.mtimeMs)).getTime();
-        db.ts /= 1000; /* epoch seconds */
-        out.push(db);
-    }
-}
-
 class HandlerDatabases extends handler.Handler {
 
     constructor() {
@@ -50,25 +30,11 @@ class HandlerDatabases extends handler.Handler {
     }
 
     async process(ctx) {
-        var databases;
+        var result = cache.getDbList(ctx.url.params[0]);
+        if (result instanceof Error)
+            return this.headEnd(ctx, result.code == 'ENOENT' ? 400 : 500);
 
-        try {
-            databases = util.lsDirSync(config.options.dataDir + '/' +
-                ctx.url.params[0], { lstat: true, apply: lsDirApplyCb });
-        }
-        catch (e) {
-            if (e.code == 'ENOENT')
-                return this.headEnd(ctx, 404);
-            else {
-                this.log.error('Failed to list databases for %s',
-                    ctx.url.params[0], e);
-                return this.headEnd(ctx, 500);
-            }
-        }
-
-        /* short by timestamp */
-        databases.sort(util.makeCmpKey('ts', 1));
-        this.headEnd(ctx, 200, JSON.stringify(databases));
+        this.headEnd(ctx, 200, JSON.stringify(result));
     }
 }
 
