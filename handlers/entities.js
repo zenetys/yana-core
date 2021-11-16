@@ -1,5 +1,6 @@
 'use strict';
 
+const cache = require('../cache.js');
 const config = require('../config.js');
 const handler = require('../handler.js');
 const Logger = require('../logger.js');
@@ -17,19 +18,11 @@ class HandlerEntities extends handler.Handler {
     }
 
     async process(ctx) {
-        var entities;
-
-        try {
-            entities = util.lsDirSync(config.options.dataDir, { lstat: true,
-                filter: (d,n,s) => s.isDirectory() && n.substr(0, 1) != '.' });
-        }
-        catch (e) {
-            this.log.error('Failed to list entities', e);
+        var result = cache.getEntityList();
+        if (result instanceof Error)
             return this.headEnd(ctx, 500);
-        }
 
-        entities.sort();
-        this.headEnd(ctx, 200, JSON.stringify(entities));
+        this.headEnd(ctx, 200, JSON.stringify(result));
     }
 }
 
