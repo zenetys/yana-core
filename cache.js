@@ -13,6 +13,7 @@ const log = new Logger('cache');
 const zlib = require('zlib');
 
 const CACHE = {};
+const WATCHES = {};
 
 const DB_SOURCES = {
     'nscan': async (f, ...rest) => await getDbFromNscanFile(f, false, ...rest),
@@ -22,12 +23,22 @@ const DB_SOURCES = {
 /* core */
 
 /**
+ * flush()
+ * Flush all cached data.
+ */
+function flush() {
+    Object.keys(CACHE).forEach(k => delete CACHE[k]);
+    Object.keys(WATCHES).forEach(k => { WATCHES[k].close(); delete WATCHES[k]; });
+}
+
+/**
  * reload()
- * Flush and reinit cache.
+ * Call flush() and reinit cache.
  */
 function reload() {
     log.debug('Cache reload');
-    Object.keys(CACHE).forEach(k => delete CACHE[k]);
+    flush();
+    initLsDirWatches();
     logStats();
 }
 
@@ -47,6 +58,197 @@ function logStats() {
             { base: 1024, uom: 'B', precision: 0 });
     }
     log.info(`stats: Databases: inCache=${dbsInCache}, Memory: ${memstr}`);
+}
+
+/* entity and database listing */
+
+/**
+ * getEntityList()
+ * Get the list of entities.
+ * @return The list of entities as an array of strings.
+ *     An Error object is returned on failure.
+ */
+function getEntityList() {
+    if (!CACHE.lsentity) {
+        try {
+            CACHE.lsentity = util.lsDirSync(
+                config.options.dataDir,
+                { stat: true, filter: (d,n,s) =>
+                    s.isDirectory() && n.substr(0, 1) != '.' }
+            );
+        }
+        catch (e) {
+            log.error('Failed to list entities.', e);
+            return e;
+        }
+        CACHE.lsentity.sort();
+    }
+    return CACHE.lsentity;
+}
+
+/**
+ * getDbList(entity)
+ * Get the list of databases available for a given <entity>.
+ * @return The list of available databases for the entity, as array of objects,
+ *     each object having the following two properties:
+ *         - id: identifier for the database
+ *         - ts: timestamp of the database in epoch seconds
+ *     An Error object is returned on failure.
+ */
+function getDbList(entity) {
+    function lsDirApplyCb(out, dir, name, stat) {
+        if (!stat.isFile())
+            return;
+
+        for (let ext of Object.keys(DB_SOURCES))  {
+            if (name.substr((ext.length + 1) * -1) != '.' + ext)
+                continue;
+
+            /* Return an object per database with two properties: id and timestamp.
+             * The timestamp is taken from the filename when possible, otherwise
+             * the mtime is used. */
+            var db = { id: name.substr(0, name.length - ext.length - 1) };
+            db.ts = (new Date(db.id)).getTime();
+            if (isNaN(db.ts))
+                db.ts = (new Date(stat.mtimeMs)).getTime();
+            db.ts /= 1000; /* epoch seconds */
+            out.push(db);
+        }
+    }
+
+    var ls = util.oget(CACHE, ['lsdb', entity]);
+    if (!ls) {
+        try {
+            ls = util.lsDirSync(
+                `${config.options.dataDir}/${entity}`,
+                { lstat: true, apply: lsDirApplyCb });
+            ls.sort(util.makeCmpKey('ts', 1));
+        }
+        catch (e) {
+            log.error(`Failed to list databases for entity ${entity}.`, e);
+            return e;
+        }
+        util.oset(CACHE, ['lsdb', entity], ls);
+    }
+    return CACHE.lsdb[entity];
+}
+
+/**
+ * getLatestDbId(entity)
+ * Get the latest availble database ID for a given <entity>.
+ * @return The latest database ID available for the given <entity>.
+ *     If no database is available for the entity, undefined is returned.
+ *     An Error object is returned on failure.
+ */
+function getLatestDbId(entity) {
+    var lsdb = getDbList(entity);
+    if (!(lsdb instanceof Error)) {
+        lsdb = lsdb.slice(-1)[0];
+        if (lsdb !== undefined)
+            lsdb = lsdb.id;
+    }
+    return lsdb;
+}
+
+/**
+ * Data watches.
+ *
+ * Their goal is to watch for filesystem events (inotify) on the data directory
+ * <config.options.dataDir> and its children entity directories. Due to
+ * the limitations on the fs.watch() API, the watches are only used to trigger
+ * flushes in order to invalidate some cached data.
+ *
+ * The cached data involved by these flushes is:
+ * - the list of entities, cached in CACHE.lsentity;
+ * - the list of databases available for an entity, cached in
+ *   CACHE.lsdb[<entityName>];
+ *
+ * The data watches ARE NOT involved in the cache of databases.
+ */
+
+/**
+ * initLsDirWatches()
+ * Initialize the data directory watches allowing to invalidate the cached
+ * list of entities and list of available databases per entity.
+ */
+function initLsDirWatches() {
+    const sEntity = Symbol('entityName');
+    const wOpts = { persistent: false };
+    var entities = getEntityList();
+
+    log.debug('Init data watches');
+
+    if (entities instanceof Error) {
+        log.error('List entities error, cannot init data watches');
+        return;
+    }
+
+    /* watch data directory */
+    addDirWatch('.', `${config.options.dataDir}/`,
+        (ev, fname) => onDataDirChange(ev, fname),
+        'data directory');
+    /* watch entity directories */
+    for (let entity of entities)
+        addDirWatch('.', `${config.options.dataDir}/${entity}/`,
+            (ev, fname) => onEntityDirChange(ev, fname, entity),
+            `entity ${entity}`);
+
+    /* add watch helper */
+    function addDirWatch(regKey, dir, cb, errHint) {
+        try { WATCHES[regKey] = fs.watch(dir, wOpts, cb); }
+        catch (e) { log.error(`Failed to add watch for ${errHint}`, e); }
+    }
+
+    /* flusher */
+    function flushLsDirCache(entity) {
+        util.orm(CACHE, ['lsentity']); /* entity list */
+        util.orm(CACHE, ['lsdb', entity]); /* entity database list */
+    }
+
+    /* listeners */
+    function onEntityDirChange(ev, fname, entity) {
+        if (ev == 'rename' &&
+            Object.keys(DB_SOURCES).some((x) => fname.endsWith('.' + x))) {
+            log.debug2(`Data watch event: entity ${entity}, child ${fname}`);
+            flushLsDirCache(entity);
+        }
+    }
+    function onDataDirChange(ev, fname) {
+        if (ev != 'rename')
+            return; /* ignore change event */
+
+        let stat;
+        try { stat = fs.statSync(`${config.options.dataDir}/${fname}`); }
+        catch (e) { stat = e; }
+
+        if (fname == '' /* not a child */) {
+            /* Something bad happened with the data directory itself, like
+             * remove or rename. This is an error, so flush and clear all
+             * watches. HUP or program restart is required. */
+            let msg = 'Unexpected watch event: data directory itself, flush!';
+            if (stat instanceof Error)
+                msg += ` ${stat}`;
+            log.error(msg);
+            flush();
+            return;
+        }
+        /* <fname> is the name of a child in <config.options.dataDir>. It may
+         * be a new entity directory, one could have been removed or even
+         * something related to a file that was / has been put in the directory,
+         * We just know it involves the child entry <fname>. To make it
+         * easier, remove and reinstall watch on entity directory if still
+         * present. */
+        log.debug2(`Data watch event: data directory, child ${fname}`);
+        if (WATCHES[fname]) {
+            WATCHES[fname].close();
+            delete WATCHES[fname];
+        }
+        flushLsDirCache(fname); /* noop if it does not match an entity */
+        if (!(stat instanceof Error) && stat.isDirectory())
+            addDirWatch('.', `${config.options.dataDir}/${fname}/`,
+                (ev, f) => onEntityDirChange(ev, f, fname),
+                `entity ${fname}`);
+    }
 }
 
 /* database */
@@ -258,6 +460,9 @@ function getOuiDb() {
 module.exports = {
     DB_SOURCES_EXT: Object.keys(DB_SOURCES),
     getDb,
+    getDbList,
+    getEntityList,
+    getLatestDbId,
     getOuiDb,
     getSnmpOidDb,
     reload,
