@@ -26,7 +26,6 @@ const OPTIONS = {
                 database: {
                     type: 'string',
                     check: (x) => x.length > 0 && x.indexOf('.') != 0,
-                    required: true,
                 },
                 id: {
                     type: 'string',
@@ -44,6 +43,15 @@ class HandlerInterfaces extends handler.Handler {
     }
 
     async process(ctx) {
+        /* use latest database if none requested */
+        if (!ctx.url.qs.database) {
+            ctx.url.qs.database = cache.getLatestDbId(ctx.url.params[0]);
+            if (ctx.url.qs.database instanceof Error)
+                return this.headEnd(ctx, ctx.url.qs.database.code == 'ENOENT' ? 400 : 500);
+            if (!ctx.url.qs.database)
+                return this.headEnd(ctx, 404);
+        }
+
         var db = await cache.getDb(ctx.url.params[0], ctx.url.qs.database);
         if (!db)
             return this.headEnd(ctx, db === null ? 400 : 500);
