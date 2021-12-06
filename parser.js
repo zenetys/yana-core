@@ -408,21 +408,27 @@ function decCdpDeviceId(raw, type) {
 }
 
 /**
- * Decode Cisco vlansEnabled(2k,3k,4k) hex strings.
+ * Decode Cisco vlanTrunkPortVlansEnabled|vmVlans(2k,3k,4k) hex strings.
  *
- * @param o Object containing vlansEnabled(2k,3k,4k) properties
- * @param baseName Base name of vlansEnabled* properties in the object <o>.
+ * @param o Object containing vlans(2k,3k,4k) properties
+ * @param baseName Base name of vlans* properties in the object <o>.
  *     For instance, when <baseName> is "vlanTrunkPortVlansEnabled", the
  *     following properties in <o> will be read to build the list of vlans:
  *         - vlanTrunkPortVlansEnabled
  *         - vlanTrunkPortVlansEnabled2k
  *         - vlanTrunkPortVlansEnabled3k
  *         - vlanTrunkPortVlansEnabled4k
- * @throws Error if the vlansEnabled* properties contain invalid data.
+ * @param typeOffset Force a vlan id offset for the most significant byte.
+ *     In practive this is used because vmVlans counts vlan ids from 1,
+ *     whereas vlanTrunkPortVlansEnabled counts vlan ids from 0. Thus, the
+ *     <typeOffset> value for <vmVlans> data should be 1. If this parameter
+ *     is not given, it is set to 1 if <baseName> is "vmVlans", otherwise
+ *     it is set to 0.
+ * @throws Error if the vlans* properties contain invalid data.
  * @return An array of from/to objects corresponding to the contiguous
  *     ranges of enabled vlans.
  */
-function decCiscoVlansEnabled(o, baseName) {
+function decCiscoVlansEnabled(o, baseName, typeOffset) {
     var full = '';
     var noMore = false;
     var err = null;
@@ -444,9 +450,15 @@ function decCiscoVlansEnabled(o, baseName) {
     if (full.length == 0 || full.length % 256 != 0)
         throw Error('invalid vlansEnabled data, expecting 128 bytes sequences');
 
+    if (typeOffset === undefined) {
+        /* vmVlans counts vlan ids from 1
+         * vlanTrunkPortVlansEnabled counts vlan ids from 0 */
+        typeOffset = (baseName == 'vmVlans') ? 1 : 0;
+    }
+
     for (let i = 0, offset = 0; i < full.length; i += 2, offset += 8) {
         // |  |  |  |  |  |  |  |    ... loop ...
-        // 0  1  2  3  4  5  6  7  + offset = vlan
+        // 0  1  2  3  4  5  6  7  [+ typeOffset] + offset = vlan
         let b8 = decHexNum(full.substr(i, 2));
         // b1(7) = 128  # vlan = offset + 0
         // b1(6) = 64   # vlan = offset + 1
@@ -461,7 +473,7 @@ function decCiscoVlansEnabled(o, baseName) {
         for (let ib1 = 7; b8 > 0 && ib1 >= 0; ib1--) {
             let b1 = Math.pow(2, ib1);
             if ((b8 & b1) > 0)
-                out.add(offset + (7 - ib1));
+                out.add(offset + (7 - ib1 + typeOffset));
         }
     }
     return out.get();
