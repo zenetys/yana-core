@@ -1,0 +1,90 @@
+{
+  "x-snmp-cefexBinding": {
+    "172.17.10.3": {
+      "369098852": {
+        "ifIndex": 369098852,
+        "fexIndex": 101
+      },
+      "369098853": {
+        "ifIndex": 369098853,
+        "fexIndex": 102
+      },
+      "369098854": {
+        "ifIndex": 369098854,
+        "fexIndex": 103
+      },
+      "369098872": {
+        "ifIndex": 369098872,
+        "fexIndex": 121
+      },
+      "369098873": {
+        "ifIndex": 369098873,
+        "fexIndex": 122
+      },
+      "436207616": {
+        "ifIndex": 436207616,
+        "fexIndex": 101
+      },
+      "436211712": {
+        "ifIndex": 436211712,
+        "fexIndex": 101
+      },
+      "436215808": {
+        "ifIndex": 436215808,
+        "fexIndex": 102
+      },
+      "436219904": {
+        "ifIndex": 436219904,
+        "fexIndex": 102
+      },
+      "436224000": {
+        "ifIndex": 436224000,
+        "fexIndex": 103
+      },
+      "436228096": {
+        "ifIndex": 436228096,
+        "fexIndex": 103
+      },
+      "436232192": {
+        "ifIndex": 436232192,
+        "fexIndex": 122
+      },
+      "436236288": {
+        "ifIndex": 436236288,
+        "fexIndex": 122
+      },
+      "436240384": {
+        "ifIndex": 436240384,
+        "fexIndex": 121
+      },
+      "436244480": {
+        "ifIndex": 436244480,
+        "fexIndex": 121
+      }
+    }
+  },
+  "x-snmp-cefexName": {
+    "172.17.10.3": {
+      "101": {
+        "fexIndex": 101,
+        "fexName": "FEX0101"
+      },
+      "102": {
+        "fexIndex": 102,
+        "fexName": "FEX0102"
+      },
+      "103": {
+        "fexIndex": 103,
+        "fexName": "FEX0103"
+      },
+      "121": {
+        "fexIndex": 121,
+        "fexName": "FEX0121"
+      },
+      "122": {
+        "fexIndex": 122,
+        "fexName": "FEX0122"
+      }
+    }
+  }
+}
