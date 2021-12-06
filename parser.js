@@ -179,10 +179,11 @@ function onNscanSectionClose(ctx) {
 function onNscanClose(ctx) {
     /* handle section close callback */
     onNscanSectionClose(ctx);
+    ctx.ms = (new Date()) - ctx.ms;
 
     let fn = ctx.errors ? 'error' : 'info';
-    ctx.log[fn](`EOF, acquired=${ctx.acquired}, errors=${ctx.errors},`,
-                `skipped=${ctx.skipped}, ignored=${ctx.ignored}`);
+    ctx.log[fn](`EOF, acquired=${ctx.acquired}, errors=${ctx.errors}, \
+skipped=${ctx.skipped}, ignored=${ctx.ignored}, time=${ctx.ms}ms`);
 }
 
 /**
@@ -208,6 +209,7 @@ function nscanParser(lid) {
         parser: undefined, /* current section data parser */
         autoinc: {}, /* container for auto-increments */
         db: {}, /* container where parsed data get stored to */
+        ms: new Date(), /* assume start, updated to elapsed time on close */
     };
 
     ctx.lid = lid
