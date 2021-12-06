@@ -441,7 +441,7 @@ function decCiscoVlansEnabled(o, baseName) {
 
     if (err)
         throw Error(`invalid vlansEnabled data, gap before ${err}`)
-    if (full.length % 256 != 0)
+    if (full.length == 0 || full.length % 256 != 0)
         throw Error('invalid vlansEnabled data, expecting 128 bytes sequences');
 
     for (let i = 0, offset = 0; i < full.length; i += 2, offset += 8) {
