@@ -590,6 +590,8 @@ function decLldpCap(integer) {
     return capNames;
 }
 
+const RE_LLDP_MAC_ALT_REPRESENTATION = /^([0-9a-f]{2} ){2}((3a|2d) ([0-9a-f]{2} ){2}){5}/;
+
 function decLldpChassisId(raw, type) {
     if (type == 1) /* chassisComponent */
         return decHexString(raw);
@@ -598,8 +600,13 @@ function decLldpChassisId(raw, type) {
     else if (type == 3) /* portComponent */
         return decHexString(raw);
     else if (type == 4) { /* macAddress */
-        if (/^([0-9a-f]{2} ){2}(3a ([0-9a-f]{2} ){2}){5}/i.test(raw))
-            return decHexString(raw).toLowerCase();
+        let rawLc = raw.toLowerCase();
+        let alt = RE_LLDP_MAC_ALT_REPRESENTATION.exec(rawLc);
+        if (alt) {
+            return (alt[3] == '2d')
+                ? decHexString(raw).toLowerCase().replaceAll('-', ':')
+                : decHexString(raw).toLowerCase();
+        }
         else
             return decHexStringMac(raw);
     }
@@ -622,8 +629,13 @@ function decLldpPortId(raw, type) {
     else if (type == 2) /* portComponent */
         return decHexString(raw);
     else if (type == 3) { /* macAddress */
-        if (/^([0-9a-f]{2} ){2}(3a ([0-9a-f]{2} ){2}){5}/i.test(raw))
-            return decHexString(raw).toLowerCase();
+        let rawLc = raw.toLowerCase();
+        let alt = RE_LLDP_MAC_ALT_REPRESENTATION.exec(rawLc);
+        if (alt) {
+            return (alt[3] == '2d')
+                ? decHexString(raw).toLowerCase().replaceAll('-', ':')
+                : decHexString(raw).toLowerCase();
+        }
         else
             return decHexStringMac(raw);
     }
