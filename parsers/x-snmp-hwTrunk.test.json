@@ -1,0 +1,102 @@
+{
+  "x-snmp-hwTrunk": {
+    "10.20.0.12": {
+      "0": {
+        "hwTrunkIndex": 0,
+        "hwTrunkIfIndex": 175,
+        "hwTrunkMem": {
+          "0": {
+            "ifIndex": 52
+          },
+          "1": {
+            "ifIndex": 110
+          }
+        }
+      },
+      "1": {
+        "hwTrunkIndex": 1,
+        "hwTrunkIfIndex": 176,
+        "hwTrunkMem": {
+          "0": {
+            "ifIndex": 47
+          },
+          "1": {
+            "ifIndex": 105
+          }
+        }
+      },
+      "2": {
+        "hwTrunkIndex": 2,
+        "hwTrunkIfIndex": 178,
+        "hwTrunkMem": {
+          "0": {
+            "ifIndex": 48
+          },
+          "1": {
+            "ifIndex": 106
+          }
+        }
+      },
+      "3": {
+        "hwTrunkIndex": 3,
+        "hwTrunkIfIndex": 183,
+        "hwTrunkMem": {
+          "0": {
+            "ifIndex": 44
+          },
+          "1": {
+            "ifIndex": 102
+          }
+        }
+      },
+      "4": {
+        "hwTrunkIndex": 4,
+        "hwTrunkIfIndex": 184,
+        "hwTrunkMem": {
+          "0": {
+            "ifIndex": 33
+          },
+          "1": {
+            "ifIndex": 91
+          }
+        }
+      },
+      "5": {
+        "hwTrunkIndex": 5,
+        "hwTrunkIfIndex": 185,
+        "hwTrunkMem": {
+          "0": {
+            "ifIndex": 45
+          },
+          "1": {
+            "ifIndex": 103
+          }
+        }
+      },
+      "6": {
+        "hwTrunkIndex": 6,
+        "hwTrunkIfIndex": 186,
+        "hwTrunkMem": {
+          "0": {
+            "ifIndex": 28
+          },
+          "1": {
+            "ifIndex": 86
+          }
+        }
+      },
+      "7": {
+        "hwTrunkIndex": 7,
+        "hwTrunkIfIndex": 188,
+        "hwTrunkMem": {
+          "0": {
+            "ifIndex": 30
+          },
+          "1": {
+            "ifIndex": 88
+          }
+        }
+      }
+    }
+  }
+}
