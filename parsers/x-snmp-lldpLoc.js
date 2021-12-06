@@ -24,7 +24,7 @@ const DEFINITION = {
                     match: {
                         '.2': { key: 'portIdSubtype', group: 'data', apply: parser.decNum },
                         '.3': { key: 'portId', group: 'data' }, /* decode depends on subtype */
-                        '.4': { key: 'portDesc', group: 'data', apply: parser.decHexString },
+                        '.4': { key: 'portDesc', group: 'data', filter: (v) => v != '6E 6F 74 20 61 64 76 65 72 74 69 73 65 64 ', apply: parser.decHexString },
                     },
                 },
             ],
@@ -55,8 +55,8 @@ const DEFINITION = {
                     match: {
                         '.1.0': { key: 'chassisIdSubtype', group: 'data', apply: parser.decNum },
                         '.2.0': { key: 'chassisId', group: 'data' }, /* decode depends on subtype */
-                        '.3.0': { key: 'sysName', group: 'data', apply: parser.decHexString },
-                        '.4.0': { key: 'sysDesc', group: 'data', apply: parser.decHexString },
+                        '.3.0': { key: 'sysName', group: 'data', filter: (v) => v != '6E 6F 74 20 61 64 76 65 72 74 69 73 65 64 ', apply: parser.decHexString },
+                        '.4.0': { key: 'sysDesc', group: 'data', filter: (v) => v != '6E 6F 74 20 61 64 76 65 72 74 69 73 65 64 ', apply: parser.decHexString },
                         '.5.0': { key: 'sysCapSupported', group: 'data', apply: parser.decHexStringBits },
                         '.6.0': { key: 'sysCapEnabled', group: 'data', apply: parser.decHexStringBits },
                     },

@@ -37,9 +37,9 @@ const DEFINITION = {
                         '.5': { key: 'chassisId', group: 'data' }, /* decode depends on subtype */
                         '.6': { key: 'portIdSubtype', group: 'data', apply: parser.decNum },
                         '.7': { key: 'portId', group: 'data' },  /* decode depends on subtype */
-                        '.8': { key: 'portDesc', group: 'data', apply: parser.decHexString },
-                        '.9': { key: 'sysName', group: 'data', apply: parser.decHexString },
-                        '.10': { key: 'sysDesc', group: 'data', apply: parser.decHexString },
+                        '.8': { key: 'portDesc', group: 'data', filter: (v) => v != '6E 6F 74 20 61 64 76 65 72 74 69 73 65 64 ', apply: parser.decHexString },
+                        '.9': { key: 'sysName', group: 'data', filter: (v) => v != '6E 6F 74 20 61 64 76 65 72 74 69 73 65 64 ', apply: parser.decHexString },
+                        '.10': { key: 'sysDesc', group: 'data', filter: (v) => v != '6E 6F 74 20 61 64 76 65 72 74 69 73 65 64 ', apply: parser.decHexString },
                         '.11': { key: 'sysCapSupported', group: 'data', apply: parser.decHexStringBits },
                         '.12': { key: 'sysCapEnabled', group: 'data', apply: parser.decHexStringBits },
                     },
