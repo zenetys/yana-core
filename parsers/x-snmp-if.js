@@ -23,6 +23,7 @@ const DEFINITION = {
                     group: 'oid',
                     match: {
                         '.2': { key: 'ifDescr', group: 'data', apply: parser.decHexString },
+                        '.3': { key: 'ifType', group: 'data', apply: parser.decNum },
                         '.5': { key: 'ifSpeed', group: 'data', filter: (v) => v != '0', apply: parser.decNum },
                         '.6': {
                             key: 'ifPhysAddress',

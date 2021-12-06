@@ -4,12 +4,14 @@
       "1": {
         "ifIndex": 1,
         "ifDescr": "lo",
+        "ifType": 24,
         "ifAdminStatus": 1,
         "ifOperStatus": 4
       },
       "2": {
         "ifIndex": 2,
         "ifDescr": "eth0_0",
+        "ifType": 6,
         "ifSpeed": 1000000000,
         "ifPhysAddress": "20:14:f3:64:32:a7",
         "ifAdminStatus": 1,
@@ -18,6 +20,7 @@
       "11": {
         "ifIndex": 11,
         "ifDescr": "eth0_1.211",
+        "ifType": 6,
         "ifSpeed": 1000000000,
         "ifPhysAddress": "20:14:f3:64:32:a8",
         "ifAdminStatus": 1,
