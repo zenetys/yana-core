@@ -258,15 +258,15 @@ function initLsDirWatches() {
  * Get the database ID <dbId> from entity <entity>. The database is
  * retrieved from cache if present, otherwise from a file located in the
  * entity directory. If the database is retrived from file, it gets cached
- * for subsequent access.
+ * for subsequent access. If <force> is a trueval, the cache is ignored.
  * @return The database object on success.
  *     null if no source could be found for the given <entity> and <dbId>.
  *     false on error.
  */
-async function getDb(entity, dbId) {
+async function getDb(entity, dbId, force = false) {
     var db = util.oget(CACHE, ['db', entity, dbId]);
 
-    if (db) {
+    if (db && !force) {
         log.info(`${entity}/${dbId}: Use database from cache`);
     }
     else {
