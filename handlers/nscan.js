@@ -1,5 +1,6 @@
 'use strict';
 
+const cache = require('../cache.js');
 const config = require('../config.js');
 const events = require('events');
 const fs = require('fs');
@@ -99,6 +100,10 @@ class HandlerNscan extends handler.Handler {
         }
 
         this.headEnd(ctx, 200);
+
+        /* pre-load database in background */
+        this.log.info('Preload database %s/%s', ctx.url.params[0], ctx.url.qs.id);
+        cache.getDb(ctx.url.params[0], ctx.url.qs.id, true);
     }
 }
 
