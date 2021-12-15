@@ -239,15 +239,17 @@ function isArpAcceptable(ctx, did, arpIp, arpMac, didFromIp, didFromMac) {
         return false;
 
     /* proxy arp */
-    /* Tentative 1: ignore if the device has no default gateway */
-    var routes = util.oget(ctx.db.device, [ did, 'route' ]);
-    if (routes) {
-        routes = builder.datalistValues(routes, {
-            filter: (d) => builder.dataValue(d).dest == '0.0.0.0/0',
-        });
-        if (!routes.some((r) => r.via && r.via != '0.0.0.0'))
-            return false; /* no default gateway */
-    }
+    /* Tentative 1: ignore if the device has no default gateway.
+     * Disabled as we had at least one case were it caused legitimate ARP
+     * entries to be ignored. */
+    // var routes = util.oget(ctx.db.device, [ did, 'route' ]);
+    // if (routes) {
+    //     routes = builder.datalistValues(routes, {
+    //         filter: (d) => builder.dataValue(d).dest == '0.0.0.0/0',
+    //     });
+    //     if (!routes.some((r) => r.via && r.via != '0.0.0.0'))
+    //         return false; /* no default gateway */
+    // }
 
     /* Tentative 2: ignore if the device corresponding to the arpMac
      * has complete IP data. Assume this is the case if the device has
