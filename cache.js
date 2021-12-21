@@ -60,6 +60,53 @@ function logStats() {
     log.info(`stats: Databases: inCache=${dbsInCache}, Memory: ${memstr}`);
 }
 
+/**
+ * maybeFreeDbCache()
+ * This is designed to be called before loading a new database in cache.
+ * Best would be to free'up memory until a max heapUsed threshold is reached.
+ * To do that, we did not find any other solution than calling global.gc()
+ * after deleting a database, and it would mean to run node with --expose-gc.
+ * Also this would (probably?) block during guabage collection. For these
+ * reasons we prefer to implement a free based on "max databases in cache"
+ * and "max idle time" criterias.
+ */
+function maybeFreeDbCache() {
+    var dbMaxCount = util.oget(config.options, ['cache', 'dbMaxCount']);
+    var dbMaxIdleMs = util.oget(config.options, ['cache', 'dbMaxIdleMs']);
+    /* early exit shortcut, no criteria to free */
+    if (!dbMaxCount && !dbMaxIdleMs)
+        return;
+
+    /* sort databases in cache by age */
+    var dbs = [];
+    for (let e in CACHE.db) {
+        for (let i in CACHE.db[e]) {
+            dbs.push({
+                entity: e,
+                database: i,
+                /* assume lastUse is set */
+                idleMs: new Date() - CACHE.db[e][i].lastUse,
+            });
+        }
+    }
+    dbs.sort(util.makeCmpFn((x) => x.idleMs, -1));
+
+    while (dbs.length > 0) {
+        let reason;
+        /* called before adding a database in cache, hence the -1 */
+        if (dbMaxCount && dbs.length > dbMaxCount-1)
+            reason = `dbs in cache: ${dbs.length}, config dbMaxCount: ${dbMaxCount}`;
+        else if (dbMaxIdleMs && dbs[0].idleMs > dbMaxIdleMs)
+            reason = `db idleMs: ${dbs[0].idleMs}, config dbMaxIdleMs: ${dbMaxIdleMs}`;
+        else
+            break;
+
+        log.info('gc: Free database %s/%s, %s', dbs[0].entity, dbs[0].database, reason);
+        delete CACHE.db[dbs[0].entity][dbs[0].database];
+        dbs.splice(0, 1);
+    }
+}
+
 /* entity and database listing */
 
 /**
@@ -270,6 +317,7 @@ async function getDb(entity, dbId, force = false) {
         log.info(`${entity}/${dbId}: Use database from cache`);
     }
     else {
+        maybeFreeDbCache();
         log.prefix = `${entity}/${dbId}`;
         log.info('Database not in cache, need to load from file');
         let buildOpts = {
@@ -284,6 +332,9 @@ async function getDb(entity, dbId, force = false) {
             logStats();
         }
     }
+
+    if (db)
+        db.lastUse = new Date();
 
     return db;
 }
