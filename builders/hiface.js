@@ -83,7 +83,7 @@ function buildMeta(od, oif, osp) {
     }
 
     if (oif.adminStatus == builder.IF_STATUS_UP && !oif.description)
-        messages.description.push({ level: 2, text: 'Port is enabled, description expected' });
+        messages.description.push({ level: 1, text: 'Port is enabled, description expected' });
 
     let cisco = buildCiscoHints(od, oif, osp);
 
