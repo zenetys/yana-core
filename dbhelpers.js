@@ -6,6 +6,18 @@ const Logger = require('./logger.js');
 const util = require('./util.js');
 const log = new Logger('dbhelpers');
 
+function countSfdbMacs(macs /* expected format sfdb.<did>.<ifname> */) {
+    let seen = {};
+    let count = 0;
+    for (let i = 0; i < macs.length; i++) {
+        if (!seen[macs[i].mac]) {
+            seen[macs[i].mac] = 1;
+            count++;
+        }
+    }
+    return count;
+}
+
 function getDeviceBestName(db, did, stripDom) {
     let name = getDeviceName(db, did, stripDom);
     if (name)
@@ -231,6 +243,7 @@ function stripDomain(name) {
 }
 
 module.exports = {
+    countSfdbMacs,
     getDeviceBestName,
     getDeviceIp,
     getDeviceIpsFromMac,

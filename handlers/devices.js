@@ -92,8 +92,11 @@ function getSwPort(db, macs) {
                 if (swnei.length > 0)
                     continue;
                 let portmacs = util.oget(db.sfdb, [mpdid, mpifname]) || [];
-                portmacs = Object.keys(util.ogroup(portmacs, (k, v) => v.mac)).length;
-                seenOn.push({ id: mpdid, ifname: mpifname, count: portmacs });
+                seenOn.push({
+                    id: mpdid,
+                    ifname: mpifname,
+                    count: dbhelpers.countSfdbMacs(portmacs),
+                });
             }
         }
     }
@@ -120,7 +123,7 @@ function getUplinks(db, did, ifname) {
             id: n.id,
             name: dbhelpers.getDeviceBestName(db, n.id, true),
             iface: dbhelpers.shortIfname(n.ifname),
-            count: Object.keys(util.ogroup(fdb, (k, v) => v.mac)).length,
+            count: dbhelpers.countSfdbMacs(fdb),
         }
         return nn;
     });
