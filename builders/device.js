@@ -1135,6 +1135,15 @@ function tryResolve(ctx) {
 /* builder callback */
 
 function run(ctx, def) {
+    ctx.db.toResolve = ctx.toResolve;
+    ctx.db.ndb = ctx.ndb;
+
+    /* make sure these tables always exist */
+    ctx.db.device = {};
+    ctx.db.fdb = {};
+    ctx.db.rfdb = {};
+    ctx.db.nei = {};
+
     ctx.log.debug('Process cb-ipv4-fping entries');
     ctx.ntableForEach2('cb-ipv4-fping', 2, (did, k1, k2, v, t) => {
         addDeviceIp(ctx, did, k2, t);
@@ -1519,9 +1528,6 @@ function run(ctx, def) {
 
     ctx.log.debug('Try to resolve conflicts');
     tryResolve(ctx);
-
-    ctx.db.toResolve = ctx.toResolve;
-    ctx.db.ndb = ctx.ndb;
     return true;
 }
 
