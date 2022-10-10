@@ -18,26 +18,28 @@ const options = config.options.log;
 /* color formating options */
 const fmtColor = [
     {
-        ERROR: { open: '', close: '' },
-        WARNING: { open: '', close: '' },
-        INFO: { open: '', close: '' },
-        DEBUG: { open: '', close: '' },
-        DEBUG2: { open: '', close: '' },
-        DEBUG3: { open: '', close: '' },
-        stack: { open: '', close: '' },
-        dump: { open: '', close: '' },
+        ERROR: {},
+        WARNING: {},
+        INFO: {},
+        DEBUG: {},
+        DEBUG2: {},
+        DEBUG3: {},
+        stack: {},
+        dump: {},
     },
     {
-        ERROR: { open: '\x1b[31m', close: '\x1b[0m' },
-        WARNING: { open: '\x1b[33;2m', close: '\x1b[0m' },
-        INFO: { open: '', close: '' },
-        DEBUG: { open: '\x1b[37;2m', close: '\x1b[0m' },
-        DEBUG2: { open: '\x1b[37;2m', close: '\x1b[0m' },
-        DEBUG3: { open: '\x1b[37;2m', close: '\x1b[0m' },
-        stack: { open: '\x1b[37;2m', close: '\x1b[0m' },
-        dump: { open: '\x1b[37;2m', close: '\x1b[0m' },
+        ERROR: { c1: '\x1b[31m' },
+        WARNING: { c1: '\x1b[33;2m' },
+        INFO: {},
+        DEBUG: { c1: '\x1b[37;2m' },
+        DEBUG2: { c1: '\x1b[37;2m' },
+        DEBUG3: { c1: '\x1b[37;2m' },
+        stack: { c1: '\x1b[37;2m' },
+        dump: { c1: '\x1b[37;2m' },
     },
 ];
+
+const creset = '\x1b[0m';
 
 /* minimum verbosity to print for a given severity */
 const minVerbosity = {
@@ -113,8 +115,9 @@ class Logger {
         }
 
         const color = this.getFmtColor(severity);
-        let intro = formatDate() + ' ' + color.open + severity +
-             color.close + ' [' + this.name + '] ';
+        let intro = formatDate() + ' ' + (color.c1 ?
+            (color.c1 + severity + creset) : severity) +
+            ' [' + this.name + '] ';
         if (this.prefix)
             intro += ((typeof this.prefix == 'function')
                 ? this.prefix() : this.prefix) + ': ';
@@ -128,9 +131,9 @@ class Logger {
 
     dump(...args) {
         const color = this.getFmtColor('dump');
-        process.stderr.write(color.open);
+        process.stderr.write(color.c1);
         console.error(...args);
-        process.stderr.write(color.close);
+        process.stderr.write(creset);
     }
 
     error(...args) { return this.log('ERROR', ...args); }
