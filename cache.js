@@ -421,6 +421,12 @@ function getDbFromNscanDb(ndb, /* optional */ buildOpts) {
     return build.db;
 }
 
+/* useful for debugging or testing */
+
+function setCache(path, value) {
+    util.oset(CACHE, path, value);
+}
+
 /* genid */
 
 function getGenId(entity, path) {
@@ -516,4 +522,5 @@ module.exports = {
     getOuiDb,
     getSnmpOidDb,
     reload,
+    setCache,
 };
