@@ -943,6 +943,24 @@ function guessIfSameDeviceForMerge(ctx, did1, did2) {
             return false;
         },
     };
+    const sharedMacBlacklist = [
+        '00:05:9a:3c:7a:00', // cisco anyconnect vpn client
+        '00:50:56:c0:00:01', // vmware player vmnet1
+        '00:50:56:c0:00:08', // vmware player vmnet8
+        '00:a0:c6:00:00:00', // possibly bogus qualcomm firmware
+        '02:00:4e:43:50:49', // ncp secure client virtual ndis6 adapter
+        '02:80:37:ec:02:00', // ericsson 3g modem?
+        '0a:00:27:00:00:00', // vboxnet0, partial? vboxnet1 mac+1, etc.
+        '20:41:53:59:4e:ff', // special mac on windows? ras async adapter
+        '24:b6:20:52:41:53', // kaspersky anti-virus ndis miniport
+        '33:50:6f:45:30:30', // wan miniport pppoe on windows
+        '50:50:54:50:30:30', // wan miniport pptp on windows
+        'd2:0a:2d:a0:04:be', // fireware?
+        'd2:6b:25:2f:2c:e7', // fireware?
+        'e2:e6:16:20:0a:35', // fireware?
+        '00:0b:ca:fe:00:00', // juniper bme0?
+    ];
+
     let decision = false;
     let mac1 = dbhelpers.getDeviceMacs(ctx.db, did1, { object: true });
     ctx.log.debug4('guessIfSameDeviceForMerge: did1/mac', mac1);
@@ -963,6 +981,8 @@ function guessIfSameDeviceForMerge(ctx, did1, did2) {
                     delete shared[ex];
                 exclude = dbhelpers.getDeviceMacsFromIface(ctx.db, did2, excludeListOpts);
                 for (let ex in exclude)
+                    delete shared[ex];
+                for (let ex of sharedMacBlacklist)
                     delete shared[ex];
                 ctx.log.debug4('guessIfSameDeviceForMerge: shared macs after exclusions', shared);
                 decision = !util.oempty(shared);
