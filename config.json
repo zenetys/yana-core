@@ -1,4 +1,8 @@
 {
+    "cache": {
+        "dbMaxCount": 140,
+        "dbMaxIdleMs": 345600000
+    },
     "log": {
         "verbose": 1,
         "stack": true
