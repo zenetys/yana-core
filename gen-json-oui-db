@@ -18,7 +18,7 @@ Usage: $PROGNAME [OPTION...]
 Generate a JSON object from a oui.txt database
 
 Options:
-  -D, --download    Download ouit.txt (use wget)
+  -D, --download    Download oui.txt (use wget)
   -d, --directory   Destination directory (download) or oui.txt directory
   -h, --help        Display this help"
 }
