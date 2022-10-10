@@ -48,13 +48,15 @@ fi
 
 echo '{'
 re='^[0-9A-F][0-9A-F]-[0-9A-F][0-9A-F]-[0-9A-F][0-9A-F]'
-while read -r hex type descr; do
-    [[ $type == '(hex)' && $hex =~ $re ]] || continue
-    hex=${hex,,} # lowercase
-    hex=${hex//-/:}
-    descr=${descr%$'\r'*}
-    printf '  "%s": "%s",\n' "$hex" "${descr//\"/\\\"}"
-done < "$OUI_DIR/${OUI_URL##*/}" |
+{   while read -r hex type descr; do
+        [[ $type == '(hex)' && $hex =~ $re ]] || continue
+        hex=${hex,,} # lowercase
+        hex=${hex//-/:}
+        descr=${descr%$'\r'*}
+        printf '  "%s": "%s",\n' "$hex" "${descr//\"/\\\"}"
+    done < "$OUI_DIR/${OUI_URL##*/}"
+    printf '  "%s": "%s",\n' '52:54:00' 'QEMU KVM'
+} |
     sort |
     sed -e '$s,\,$,,'
 echo '}'
