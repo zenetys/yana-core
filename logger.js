@@ -16,7 +16,7 @@ config.options.log = util.omerge({}, DEFAULTS, config.options.log)
 const options = config.options.log;
 
 /* color formating options */
-const fmtOpenClose = [
+const fmtColor = [
     {
         ERROR: { open: '', close: '' },
         WARNING: { open: '', close: '' },
@@ -112,9 +112,9 @@ class Logger {
             args.push(util.err2str(err));
         }
 
-        let oc = this.getOpenClose();
-        let intro = formatDate() + ' ' + oc[severity].open + severity +
-             oc[severity].close + ' [' + this.name + '] ';
+        const color = this.getFmtColor(severity);
+        let intro = formatDate() + ' ' + color.open + severity +
+             color.close + ' [' + this.name + '] ';
         if (this.prefix)
             intro += ((typeof this.prefix == 'function')
                 ? this.prefix() : this.prefix) + ': ';
@@ -127,10 +127,10 @@ class Logger {
     }
 
     dump(...args) {
-        let oc = this.getOpenClose();
-        process.stderr.write(oc.dump.open);
+        const color = this.getFmtColor('dump');
+        process.stderr.write(color.open);
         console.error(...args);
-        process.stderr.write(oc.dump.close);
+        process.stderr.write(color.close);
     }
 
     error(...args) { return this.log('ERROR', ...args); }
@@ -149,11 +149,11 @@ class Logger {
             : options[property];
     }
 
-    getOpenClose() {
+    getFmtColor(cid) {
         if (options.color === null) /* auto */
             options.color = process.stdin.isTTY ? true : false;
-        /* 0/1 indice in fmtOpenClose */
-        return fmtOpenClose[(!!options.color + 0)];
+        /* 0/1 indice in fmtColor */
+        return fmtColor[(!!options.color + 0)][cid];
     }
 }
 
