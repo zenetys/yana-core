@@ -3,7 +3,9 @@
 'use strict';
 
 const builder = require('./builder.js');
+const cache = require('./cache.js');
 const config = require('./config.js');
+const fs = require('fs');
 const Logger = require('./logger.js');
 const path = require('path');
 const util = require('./util.js');
@@ -31,17 +33,23 @@ function exitUsage(code) {
         'Standalone command to build databases from an nscan JSON object\n' +
         '\n' +
         'Available options:\n' +
+        '  -i, --genid-db FILE      Read an existing genid cache file\n' +
         '  -f, --config FILE        Set configuration file\n' +
         '  -v, --verbose            Increase verbosity\n' +
         '\n' +
         'The input is expected to be in nscan JSON format, result of the\n' +
-        'nscan parser. Input is read from stdin, output is printed on stdout.\n');
+        'nscan parser. Input is read from stdin, output is printed on stdout.\n' +
+        'If a genid cache file is given with option -i, --genid-db, it is\n' +
+        'only read and will not be modified.\n');
     process.exit(1);
 }
 
 var opts = { log: { } }
 for (let i = 2; i < process.argv.length; i++) {
-    if ((process.argv[i] == '-f' ||
+    if ((process.argv[i] == '-i' ||
+         process.argv[i] == '--genid-db') && i < process.argv.length - 1)
+        opts.genidDb = process.argv[++i];
+    else if ((process.argv[i] == '-f' ||
          process.argv[i] == '--config') && i < process.argv.length - 1)
         opts.config = process.argv[++i];
     else if (process.argv[i] == '-v' ||
@@ -63,6 +71,15 @@ for (let i = 2; i < process.argv.length; i++) {
 config.reload(opts);
 builder.reload();
 
+let buildOpts = {};
+
+if (opts.genidDb) {
+    let genidDb = fs.readFileSync(opts.genidDb);
+    genidDb = JSON.parse(genidDb);
+    cache.setCache(['genid', '_cli'], genidDb);
+    buildOpts.genid = (path) => cache.getGenId('_cli', path);
+}
+
 (async () => {
     var data = [];
     for await (const chunk of process.stdin)
@@ -71,6 +88,6 @@ builder.reload();
     data = util.bufArr2str(data);
     data = JSON.parse(data);
 
-    var build = builder.runBuilders(data, 'stdin');
+    var build = builder.runBuilders(data, buildOpts);
     process.stdout.write(JSON.stringify(build.db));
 })();
