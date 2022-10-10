@@ -927,6 +927,8 @@ function guessIfVirtualIP(ctx, did1, did2, ip) {
 }
 
 function guessIfSameDeviceForMerge(ctx, did1, did2) {
+    ctx.log.debug4(`guessIfSameDeviceForMerge: did1 ${did1}, did2 ${did2}`);
+
     /* Current implementation assumes two devices should be merged
      * if they share at least one mac, with exception to handle
      * Cisco FEX modules. */
@@ -941,9 +943,12 @@ function guessIfSameDeviceForMerge(ctx, did1, did2) {
             return false;
         },
     };
+    let decision = false;
     let mac1 = dbhelpers.getDeviceMacs(ctx.db, did1, { object: true });
+    ctx.log.debug4('guessIfSameDeviceForMerge: did1/mac', mac1);
     if (mac1) {
         let mac2 = dbhelpers.getDeviceMacs(ctx.db, did2, { object: true });
+        ctx.log.debug4('guessIfSameDeviceForMerge: did2/mac', mac2);
         if (mac2) {
             let shared = {};
             for (let m1 in mac1) {
@@ -959,11 +964,13 @@ function guessIfSameDeviceForMerge(ctx, did1, did2) {
                 exclude = dbhelpers.getDeviceMacsFromIface(ctx.db, did2, excludeListOpts);
                 for (let ex in exclude)
                     delete shared[ex];
-                return !util.oempty(shared);
+                ctx.log.debug4('guessIfSameDeviceForMerge: shared macs after exclusions', shared);
+                decision = !util.oempty(shared);
             }
         }
     }
-    return false;
+    ctx.log.debug4(`guessIfSameDeviceForMerge: did1 ${did1}, did2 ${did2} => ${decision}`);
+    return decision;
 }
 
 /* merge <did2> into <did2> */
