@@ -518,6 +518,7 @@ module.exports = {
     getDb,
     getDbList,
     getEntityList,
+    getGenId,
     getLatestDbId,
     getOuiDb,
     getSnmpOidDb,
