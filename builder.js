@@ -232,6 +232,10 @@ Build.prototype.addToResolve = function (data) {
 
 Build.prototype.add = function (db, path, /* optional */ value, opt) {
     opt ||= {};
+    if (opt._op !== 'get') {
+        this.log.debug4(`add${opt._op ? '('+ opt._op +')' : ''}:`, db,
+            JSON.stringify(path), JSON.stringify(value));
+    }
     this.db[db] ||= {};
     var o = this.db[db];
     var i;
@@ -261,8 +265,12 @@ Build.prototype.add = function (db, path, /* optional */ value, opt) {
             throw Error(`add: cannot set ${db}.${path.join('.')} to ${JSON.stringify(value)}, ` +
                         `unresolved conflict with ${JSON.stringify(o[path[i]])}`);
     }
-    else if (o[path[i]] === undefined && opt.onNotFound)
-        o[path[i]] = opt.onNotFound();
+    else if (o[path[i]] === undefined && opt.onNotFound) {
+        const notFoundResult = opt.onNotFound();
+        this.log.debug4(`add${opt._op ? '('+ opt._op +')' : ''}:`, db,
+            JSON.stringify(path), 'notFoundResult =', notFoundResult);
+        o[path[i]] = notFoundResult;
+    }
     return o[path[i]];
 }
 
@@ -282,6 +290,7 @@ Build.prototype.ualias = function (path, value) {
                 `ualias.${path.join('.')} to ${value}, conflict with ${current}` });
             return true; /* later analysis */
         },
+        _op: value === undefined ? 'get' : 'ualias',
     });
 }
 
@@ -298,6 +307,7 @@ Build.prototype.addImmutableData = function (db, path, data) {
     return this.add(db, path, data, {
         /* only value matters, ignore origin and potential other metadata */
         onConflict: (o, k, v) => dataValueEq(o[k], v),
+        _op: 'addImmutableData',
     });
 }
 
@@ -305,14 +315,18 @@ Build.prototype.addImmutableData = function (db, path, data) {
 Build.prototype.set = function (db, path, value) {
     return this.add(db, path, value, {
         onConflict: (o, k, v) => { o[k] = v; return true; },
+        _op: 'set',
     });
 }
 
-Build.prototype.get = Build.prototype.add;
+Build.prototype.get = function (db, path) {
+    return this.add(db, path, undefined, { _op: 'get'});
+};
 
 Build.prototype.getOrGenID = function (db, path) {
     return this.add(db, path, undefined, {
         onNotFound: () => this.genid(path),
+        _op: 'get',
     });
 }
 
@@ -320,6 +334,7 @@ Build.prototype.getOrGenID = function (db, path) {
 Build.prototype.addDatalist = function (db, path, datalist) {
     return this.add(db, path, datalist, {
         onConflict: (o, k, v) => { datalistAdd(o[k], v); return true; },
+        _op: 'addDatalist',
     });
 }
 
