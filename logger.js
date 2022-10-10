@@ -41,6 +41,17 @@ const fmtColor = [
 
 const creset = '\x1b[0m';
 
+function consoleColor(color, ...args) {
+    if (color) {
+        process.stderr.write(color);
+        process.stderr.write(args.map((a) =>
+            typeof a == 'string' ? a : util.inspect(a)).join(' '));
+        process.stderr.write(creset + '\n');
+    }
+    else
+        console.error(...args);
+}
+
 /* minimum verbosity to print for a given severity */
 const minVerbosity = {
     DEBUG3: 4,
@@ -131,9 +142,7 @@ class Logger {
 
     dump(...args) {
         const color = this.getFmtColor('dump');
-        process.stderr.write(color.c1);
-        console.error(...args);
-        process.stderr.write(creset);
+        consoleColor(color.c1, ...args);
     }
 
     error(...args) { return this.log('ERROR', ...args); }
