@@ -24,6 +24,7 @@ const fmtColor = [
         DEBUG: {},
         DEBUG2: {},
         DEBUG3: {},
+        DEBUG4: {},
         stack: {},
         dump: {},
     },
@@ -34,6 +35,7 @@ const fmtColor = [
         DEBUG: { c1: '\x1b[37;2m' },
         DEBUG2: { c1: '\x1b[37;2m' },
         DEBUG3: { c1: '\x1b[37;2m' },
+        DEBUG4: { c1: '\x1b[37;2m', c2: '\x1b[0;90m' },
         stack: { c1: '\x1b[37;2m' },
         dump: { c1: '\x1b[37;2m' },
     },
@@ -54,6 +56,7 @@ function consoleColor(color, ...args) {
 
 /* minimum verbosity to print for a given severity */
 const minVerbosity = {
+    DEBUG4: 5,
     DEBUG3: 4,
     DEBUG2: 3,
     DEBUG: 2,
@@ -134,7 +137,7 @@ class Logger {
                 ? this.prefix() : this.prefix) + ': ';
 
         process.stderr.write(intro);
-        console.error(...args);
+        consoleColor(color.c2, ...args);
         if (err && err.stack && this.getOption('stack'))
             console.error(err);
         return true; /* printed */
@@ -151,6 +154,7 @@ class Logger {
     debug(...args) { return this.log('DEBUG', ...args); }
     debug2(...args) { return this.log('DEBUG2', ...args); }
     debug3(...args) { return this.log('DEBUG3', ...args); }
+    debug4(...args) { return this.log('DEBUG4', ...args); }
 
     /* property: verbose, stack */
     getOption(property) {
