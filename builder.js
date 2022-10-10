@@ -201,9 +201,9 @@ Build.prototype.ntableForEach1 = function (table, ntableDeviceKNum /* falsy to d
         throw Error('ntableForEach1: expected ntableDeviceKNum 1 or falsy to disable');
     var did; /* undefined */
     for (let k1 in this.ndb[table]) {
+        this.log.debug3(`ntableForEach1: on table ${table}: k1=${k1}`);
         if (ntableDeviceKNum)
             did = this.addDevice('nscan', k1, table);
-        this.log.debug3(`ntableForEach1: on table ${table}: k1=${k1}`);
         fn(did, k1, this.ndb[table][k1], table);
     }
 }
@@ -216,9 +216,9 @@ Build.prototype.ntableForEach2 = function (table, ntableDeviceKNum /* falsy to d
     for (let k1 in this.ndb[table]) {
         let did = undefined;
         for (let k2 in this.ndb[table][k1]) {
+            this.log.debug3(`ntableForEach2: on table ${table}: k1=${k1}, k2=${k2}`);
             if (ntableDeviceKNum)
                 did = this.addDevice('nscan', ntableDeviceKNum == 1 ? k1 : k2, table);
-            this.log.debug3(`ntableForEach2: on table ${table}: k1=${k1}, k2=${k2}`);
             fn(did, k1, k2, this.ndb[table][k1][k2], table);
         }
     }
