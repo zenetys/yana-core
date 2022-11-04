@@ -138,7 +138,7 @@ function getIfnameWithGuess(ctx, did, ifalias, failureHint) {
             continue;
         let ret = /[0-9/.]+$/.exec(ifalias[i]);
         if (ret != null) {
-            let pfx = ifalias[i].substr(0, ret.index);
+            let pfx = ifalias[i].substr(0, ret.index).toLowerCase();
             if (moreAlias[pfx]) {
                 for (let ma of moreAlias[pfx])
                     ifalias.push(ma + ret[0]);
