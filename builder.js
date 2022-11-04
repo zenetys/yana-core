@@ -392,6 +392,8 @@ function runBuilders(ndb, opts) {
     else
         ctx.log.error('Build failed');
 
+    ctx.db.toResolve = ctx.toResolve;
+    ctx.db.ndb = ctx.ndb;
     return ctx;
 }
 

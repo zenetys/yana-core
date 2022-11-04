@@ -1180,9 +1180,6 @@ function tryResolve(ctx) {
 /* builder callback */
 
 function run(ctx, def) {
-    ctx.db.toResolve = ctx.toResolve;
-    ctx.db.ndb = ctx.ndb;
-
     /* make sure these tables always exist */
     ctx.db.device = {};
     ctx.db.fdb = {};
