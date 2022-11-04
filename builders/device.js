@@ -1061,6 +1061,16 @@ function mergeDevice(ctx, did1, did2) {
         delete ctx.db.ualias.iface[did2];
     }
     var _malias = (did1, did2) => {
+        if (!ctx.db || !ctx.db.malias)
+            return;
+        util.owalk(ctx.db.malias, (o, path) => {
+            if (path.length == 3 && o[did2]) {
+                o[did1] = did1;
+                delete o[did2];
+                return 3;
+            }
+            return true;
+        });
     }
     var _rarp = (did1, did2) => {
         if (!ctx.db || !ctx.db.rarp)
@@ -1082,6 +1092,7 @@ function mergeDevice(ctx, did1, did2) {
 
     _ualias_device(did1, did2);
     _ualias_iface(did1, did2);
+    _malias(did1, did2);
     _rarp(did1, did2);
     _(od1, od2);
 
