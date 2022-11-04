@@ -928,7 +928,7 @@ function guessIfVirtualIP(ctx, did1, did2, ip) {
 }
 
 function guessIfSameDeviceForMerge(ctx, did1, did2) {
-    ctx.log.debug4(`guessIfSameDeviceForMerge: did1 ${did1}, did2 ${did2}`);
+    ctx.log.debug4(`guessIfSameDeviceForMerge: did1 ${did1}, did2 ${did2}, if so merge did2 into did1`);
 
     /* Current implementation assumes two devices should be merged
      * if they share at least one mac, with exception to handle
@@ -1104,11 +1104,11 @@ function tryResolve(ctx) {
         ctx.toResolve = [];
         resolveLoopCount++;
         hasResolved = false;
-        ctx.log.debug(`tryResolve loop #${resolveLoopCount}`);
+        ctx.log.debug(`tryResolve: Loop #${resolveLoopCount}: begin`);
 
         /* <c> for "conflict" */
         for (let c of toResolve) {
-            ctx.log.debug2(`On conflict: ${c.comment ? c.comment : JSON.stringify(c.comment)}`);
+            ctx.log.debug2(`tryResolve: On conflict: ${c.comment ? c.comment : JSON.stringify(c.comment)}`);
 
             if (c.add) {
                 if (c.add.db == 'ualias') {
@@ -1116,11 +1116,11 @@ function tryResolve(ctx) {
                         let dvalue = ctx.get('device', [c.add.value]);
                         let dcurrent = ctx.get('device', [c.add.current]);
                         if (!dvalue) {
-                            ctx.log.debug2(`Device ${c.add.value} not found, maybe due to earlier resolution, drop`);
+                            ctx.log.debug2(`tryResolve: Device ${c.add.value} not found, maybe due to earlier resolution, drop`);
                             continue;
                         }
                         if (!dcurrent) {
-                            ctx.log.debug2(`Device ${c.add.current} not found, maybe due to earlier resolution, replay`);
+                            ctx.log.debug2(`tryResolve: Device ${c.add.current} not found, maybe due to earlier resolution, replay`);
                             ctx.ualias(c.add.path, c.add.value);
                             continue;
                         }
@@ -1132,45 +1132,49 @@ function tryResolve(ctx) {
 
                         if (c.add.path[1] == 'ip') {
                             if (guessIfVirtualIP(ctx, c.add.value, c.add.current, c.add.path[2])) {
-                                ctx.log.debug2(`IP ${c.add.path[2]} is a VIP on devices ${c.add.current} and ${c.add.value}, drop`);
+                                ctx.log.debug2(`tryResolve: IP ${c.add.path[2]} is a VIP on devices ${c.add.current} and ${c.add.value}, drop`);
                                 hasResolved = true;
                                 continue;
                             }
                         }
                     }
 
-                    ctx.log.debug2(`No specific resolution handler for this alias, replay`);
+                    ctx.log.debug2(`tryResolve: No specific resolution handler for this alias, replay`);
                     ctx.ualias(c.add.path, c.add.value);
                     continue;
                 }
 
-                ctx.log.debug2(`No specific resolution handler for this add operation, replay`);
+                ctx.log.debug2(`tryResolve: No specific resolution handler for this add operation, replay`);
                 ctx.add(c.add.db, c.add.path, c.add.value);
                 continue;
             }
 
             if (c.arp) {
-                ctx.log.debug2(`Process arp conflicts later all together`);
+                ctx.log.debug2(`tryResolve: Process arp conflicts later all together`);
                 toResolveArp.push(c);
                 continue;
             }
 
-            ctx.log.debug2(`No resolution handler for this situation`);
+            ctx.log.debug2(`tryResolve: No resolution handler for this situation`);
             ctx.toResolve.push(c);
         }
+
+        ctx.log.debug(`tryResolve: Loop #${resolveLoopCount}: done, conflicts before ${toResolve.length} vs after ${ctx.toResolve.length}`);
 
     } while (hasResolved &&
              resolveLoopCount < 200 /* safeguard */);
 
-    ctx.log.debug2(`Replay arp entries, pass 1`);
+    ctx.log.debug2(`tryResolve: Replay arp entries, pass 1`);
     let arpDelayed = [];
     for (let c of toResolveArp) {
         if (!processArpEntry(ctx, c.arp.did, c.arp.entry, c.arp.table, true /* delayNewDevices */))
             arpDelayed.push([c.arp.did, c.arp.entry, c.arp.table]);
     }
-    ctx.log.debug2(`Replay arp entries, pass 2`);
+    ctx.log.debug2(`tryResolve: Replay arp entries, pass 2`);
     for (let args of arpDelayed)
         processArpEntry(ctx, ...args);
+
+    ctx.log.debug(`tryResolve: Process done: conflicts ${ctx.toResolve.length}`);
 }
 
 /* builder callback */
