@@ -1061,6 +1061,18 @@ function mergeDevice(ctx, did1, did2) {
     }
     var _malias = (did1, did2) => {
     }
+    var _rarp = (did1, did2) => {
+        if (!ctx.db || !ctx.db.rarp)
+            return;
+        util.owalk(ctx.db.rarp, (o, path) => {
+            if (path.length == 2 && o[did2]) {
+                o[did1] = o[did2];
+                delete o[did2];
+                return 2;
+            }
+            return true;
+        });
+    }
 
     let od1 = util.oget(ctx.db, ['device', did1]);
     let od2 = util.oget(ctx.db, ['device', did2]);
@@ -1069,6 +1081,7 @@ function mergeDevice(ctx, did1, did2) {
 
     _ualias_device(did1, did2);
     _ualias_iface(did1, did2);
+    _rarp(did1, did2);
     _(od1, od2);
 
     /* Delete the second device (merged) and its references.
@@ -1170,6 +1183,7 @@ function run(ctx, def) {
     ctx.db.fdb = {};
     ctx.db.rfdb = {};
     ctx.db.nei = {};
+    ctx.db.rarp = {};
 
     ctx.log.debug('Process cb-ipv4-fping entries');
     ctx.ntableForEach2('cb-ipv4-fping', 2, (did, k1, k2, v, t) => {
@@ -1290,6 +1304,10 @@ function run(ctx, def) {
     let arpDelayed = [];
     ctx.log.debug('Process x-snmp-arp entries, pass 1');
     ctx.ntableForEach2('x-snmp-arp', 1, (did, k1, k2, v, t) => {
+
+        if (v.ifIndex)
+            ctx.set('rarp', [v.ip, v.mac, did], v.ifIndex);
+
         if (!processArpEntry(ctx, did, v, t, true /* delayNewDevices */))
             arpDelayed.push([did, v, t]);
     });
@@ -1555,6 +1573,16 @@ function run(ctx, def) {
 
     ctx.log.debug('Try to resolve conflicts');
     tryResolve(ctx);
+
+    /* rarp ifname resolution */
+    util.owalk(ctx.db.rarp, (o, path) => {
+        if (path.length == 3) {
+            let ifname = getIfname(ctx, path[2], `_snmp_ifIndex_${o}`, `cannot resolve rarp ifIndex, ${JSON.stringify(path)}`);
+            util.oset(ctx.db.rarp, path, ifname);
+        }
+        return true;
+    });
+
     return true;
 }
 
