@@ -406,6 +406,7 @@ function omerge(...o) {
 function orm(o, path) {
     if (path.length < 1)
         throw Error(`orm: invalid path, need at least one element`);
+    var root = o;
     var i;
     for (i = 0; i < path.length - 1; i++) {
         if (path[i] === undefined || /* we could throw on this one */
@@ -415,6 +416,8 @@ function orm(o, path) {
         o = o[path[i]];
     }
     delete o[path[i]];
+    if (oempty(o) && path.length > 1)
+        orm(root, path.slice(0,-1));
 }
 
 function opush(o, path, v) {
