@@ -126,6 +126,7 @@ function getIfnameWithGuess(ctx, did, ifalias, failureHint) {
         fa: [ 'FastEthernet', 'Fa' ],
         gi: [ 'GigabitEthernet', 'Gi' ],
         te: [ 'TenGigabitEthernet', 'Te', '10GE' ],
+        twe: [ 'TwentyFiveGigE', 'Twe' ],
         fo: [ 'FortyGigabitEthernet', 'Fo', '40GE' ],
         hu: [ 'HundredGigabitEthernet', 'Hu', '100GE' ],
         po: [ 'Port-Channel', 'port-channel', 'Po' ],
