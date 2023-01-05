@@ -19,5 +19,84 @@
             ".1.3.6.1.4.1.10456.1.1543": "_planetSwitch",
             ".1.3.6.1.4.1.18334.1.1.1": "_konicaMinoltaPrinter"
         }
+    },
+    "switch-vendors": [
+            "huawei",
+            "cisco"
+    ],
+    "switch-defaults":  {
+        "cisco-default-48": [
+            { "from": 1, "to": 12, "numerotation": "up-down" },
+            { "from": 13, "to": 24, "numerotation": "up-down" },
+            { "from": 25, "to": 36, "numerotation": "up-down" },
+            { "from": 37, "to": 48, "numerotation": "up-down" },
+            { "from": 49, "to": 50, "numerotation": "left-right", "type": "dual-ud" }
+        ],
+        "huawei-default-48": [
+            { "from": 1, "to": 12, "numerotation": "down-up" },
+            { "from": 13, "to": 24, "numerotation": "down-up" },
+            { "from": 25, "to": 36, "numerotation": "down-up" },
+            { "from": 37, "to": 48, "numerotation": "down-up" },
+            { "from": 49, "to": 50, "numerotation": "left-right", "type": "dual-lr" }
+        ],
+
+        "cisco-default-24": [
+            { "from": 1, "to": 12, "numerotation": "up-down" },
+            { "from": 13, "to": 24, "numerotation": "up-down" },
+            { "from": 25, "to": 26, "numerotation": "left-right", "type": "dual-ud" }
+        ],
+        "huawei-default-24": [
+            { "from": 1, "to": 12, "numerotation": "down-up" },
+            { "from": 13, "to": 24, "numerotation": "down-up" },
+            { "from": 25, "to": 26, "numerotation": "left-right", "type": "dual-lr" }
+        ],
+
+        "cisco-default-12": [
+            { "from": 1, "to": 12, "numerotation": "left-right" },
+            { "from": 13, "to": 14, "numerotation": "left-right", "type": "dual-ud" }
+        ],
+        "huawei-default-12": [
+            { "from": 1, "to": 12, "numerotation": "down-up" },
+            { "from": 13, "to": 14, "numerotation": "left-right", "type": "dual-lr" }
+        ]
+    },
+    "switch-templates": {
+        "ws-c2960x-48ts-l": [
+            { "from": 1, "to": 12, "numerotation": "up-down" },
+            { "from": 13, "to": 24, "numerotation": "up-down" },
+            { "from": 25, "to": 36, "numerotation": "up-down" },
+            { "from": 37, "to": 48, "numerotation": "up-down" },
+            { "from": 49, "to": 52, "numerotation": "up-down", "sfp": true }
+        ],
+        "ws-c2960-24pc-l": [
+            { "from": 1, "to": 12, "numerotation": "up-down" },
+            { "from": 13, "to": 24, "numerotation": "up-down" },
+            { "from": 25, "to": 26, "numerotation": "left-right", "type": "dual-lr" }
+        ],
+        "ws-c2960x-24ts-l": [
+            { "from": 1, "to": 12, "numerotation": "up-down" },
+            { "from": 13, "to": 24, "numerotation": "up-down" },
+            { "from": 25, "to": 26, "numerotation": "up-down", "sfp": true },
+            { "from": 27, "to": 28, "numerotation": "up-down", "sfp": true }
+        ],
+        "ws-c2960c-8pc-l": [
+            { "from": 1, "to": 8, "numerotation": "up-down", "oneline": true },
+            { "from": 9, "to": 10, "numerotation": "left-right", "type": "dual-ud" }
+        ],
+        "ws-c3850-24t": [
+            { "from": 1, "to": 12, "numerotation": "up-down" },
+            { "from": 13, "to": 24, "numerotation": "up-down" },
+            { "from": 25, "to": 28, "numerotation": "left-right", "oneline": true, "sfp": true }
+        ],
+        "ws-c2960g-24tc-l": [
+            { "from": 1, "to": 12, "numerotation": "up-down" },
+            { "from": 13, "to": 24, "numerotation": "up-down" },
+            { "from": 25, "to": 28, "numerotation": "left-right", "type": "dual-lr" }
+        ],
+        "ws-c2960-24tc-l": [
+            { "from": 1, "to": 12, "numerotation": "up-down" },
+            { "from": 13, "to": 24, "numerotation": "up-down" },
+            { "from": 25, "to": 26, "numerotation": "left-right", "type": "dual-ud" }
+        ]
     }
 }
