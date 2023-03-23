@@ -41,70 +41,29 @@ const OPTIONS = {
 };
 
 
-let VENDORS = [];
-let SWCONFIG = {};
-let SWMODELS = {};
-
 const createConfig = (device) => {
-    const switches = [];
-    let counter = 0;
+    const switches = {};
+
     Object.keys(device.iface).forEach((iface, i) => {
-        const re = RegExp('[0-9]+\/[0-9]+(\/[0-9]+)?');
-        const match = re.exec(iface);
-        let range = [];
-        let nport = -1;
-        let nswitch = 0;
-        let prefix = '';
-
-        if(match) {
-            prefix = iface.slice(0, match.index);
-            range = match[0].split('/');
-        }
-        else if (iface.includes('thernet')) {
-            const data = iface.split('thernet');
-            prefix = data[0];
-            const r = data[data.length - 1];
-            range = r.split('/');
-        }
-
-        switch (range.length) {
-            case 1:
-                nport = range[0];
-                break;
-            case 2:
-                nswitch = range[0];
-                nport = range[1];
-                break;
-            case 3:
-                nswitch = range[0];
-                nport = range[2];
-                break;
-        }
+        const { prefix, suffix } = getPrefixNSuffix(iface, iface.length);
+        const { port, mod, nswitch } = getPortModSwitch(suffix);
 
         const { operStatus, name } = device.iface[iface];
 
-        if (counter != nswitch) {
-            counter = nswitch;
+        if (!switches[prefix]) {
+            switches[prefix] = [];
         }
-
-        if (!switches[counter] && nport >= 0) {
-            switches[counter] = [];
+        if (!switches[prefix][nswitch]) {
+            switches[prefix][nswitch] = [];
         }
-
-        if (nport >= 0 && prefix.toLowerCase() !== 'bluetooth') {
-            const index = Number(nport);
-            /*
-            ** IF NPORT IS ALREADY ASSIGNED EX: NPORT 1 and switches[counter][1]
-            ** already exists then it will be pushed at the end of array
-             */
-            if (switches[counter][index - 1]) {
-                switches[counter].push({ index, operStatus, name: name[0] });
-            } else {
-                switches[counter][index - 1] = { index, operStatus, name: name[0] };
-            }
+        if (!switches[prefix][nswitch][mod]) {
+            switches[prefix][nswitch][mod] = [];
+        }
+        if(switches[prefix][nswitch][mod]) {
+            const index = Number(port);
+            switches[prefix][nswitch][mod].push({ index, operStatus, name: name[0] });
         }
     })
-
     const types = Array.isArray(device.type) ? device.type : [ device.type ];
     const description = device.description[0] ? device.description[0] : device.description;
     const { swmodels, swconfig, swvendors } = readConfigFile();
@@ -113,21 +72,68 @@ const createConfig = (device) => {
     const swmodel = getSwitchModel(types, description);
 
     const res = [];
+
     const maxLength = getMaxPortLength(switches);
     const defaultConfig = getDefaultConfig(swconfig, swbrand, maxLength);
-    switches.forEach((ports, nswitch) => {
-        if (ports.length > 0) {
-            const knownConfig = swmodels[swmodel] || null;
-            const config = knownConfig || defaultConfig;
-            const isDefault = knownConfig ? false : true;
-            if (config && config.length > 0) {
-                checkPorts(config, ports);
-                res.push({ config, ports, isDefault });
-            }
-        }
-    });
+    const knownConfig = swmodels[swmodel] || null;
+    const config = knownConfig || defaultConfig;
+    const isDefault = knownConfig ? false : true;
+    if (config && config.length > 0) {
+        const ports = getPorts(config, switches);
+        //checkPorts(config, ports);
+        res.push({ config, ports, isDefault });
+    }
 
     return res;
+}
+
+const getPrefixNSuffix = (str, length) => {
+    let counter = 1;
+    for (let i = length - 1;!isNaN(str[--i]) || str[i] === '/' ;) {
+        counter++;
+    }
+
+    const prefix = str.slice(0, length - counter);
+    const suffix = str.slice(length - counter).trim();
+    return { prefix, suffix };
+}
+
+
+const getPortModSwitch = (suffix) => {
+    const range = suffix.split('/');
+    let port = 0;
+    let mod = 0;
+    let nswitch = 0;
+    switch (range.length) {
+            case 1:
+                port = range[0];
+                break;
+            case 2:
+                mod = range[0];
+                port = range[1];
+                break;
+            case 3:
+                nswitch = range[0];
+                mod = range[1]
+                port = range[2];
+                break;
+    }
+
+    return { port, mod, nswitch };
+}
+
+const getPorts = (config, groups) => {
+    const ports = {};
+    config.forEach((el) => {
+        if (!ports[el.prefix]) {
+            ports[el.prefix] = [];
+            groups[el.prefix].forEach(group => {
+                ports[el.prefix].push(group);
+            })
+        }
+    })
+
+    return ports;
 }
 
 const getDefaultConfig = (swconfig, swbrand, plength) => {
@@ -150,13 +156,15 @@ const getDefaultConfig = (swconfig, swbrand, plength) => {
 
 const getMaxPortLength = (switches) => {
     let length = 0;
-    switches.forEach((ports) => {
-        if (ports.length > 0) {
-            const maxLength = max(ports.map(port => port.index));
-            if (maxLength > length) {
-                length = maxLength;
+    Object.keys(switches).forEach((iface) => {
+        switches[iface].forEach((ports) => {
+            if (ports.length > 0) {
+                const maxLength = max(ports.map(port => port.index));
+                if (maxLength > length) {
+                    length = maxLength;
+                }
             }
-        }
+        })
     });
     return length;
 }

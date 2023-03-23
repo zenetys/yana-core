@@ -62,31 +62,36 @@
     },
     "switch-templates": {
         "ws-c2960x-48ts-l": [
-            { "from": 1, "to": 12, "numerotation": "up-down" },
-            { "from": 13, "to": 24, "numerotation": "up-down" },
-            { "from": 25, "to": 36, "numerotation": "up-down" },
-            { "from": 37, "to": 48, "numerotation": "up-down" },
-            { "from": 49, "to": 52, "numerotation": "up-down", "sfp": true }
+            { "prefix": "GigabitEthernet", "from": 1, "to": 12, "numerotation": "up-down" },
+            { "prefix": "GigabitEthernet", "from": 13, "to": 24, "numerotation": "up-down" },
+            { "prefix": "GigabitEthernet", "from": 25, "to": 36, "numerotation": "up-down" },
+            { "prefix": "GigabitEthernet", "from": 37, "to": 48, "numerotation": "up-down" },
+            { "prefix": "GigabitEthernet", "from": 49, "to": 52, "numerotation": "up-down", "sfp": true }
         ],
         "ws-c2960-24pc-l": [
-            { "from": 1, "to": 12, "numerotation": "up-down" },
-            { "from": 13, "to": 24, "numerotation": "up-down" },
-            { "from": 25, "to": 26, "numerotation": "left-right", "type": "dual-lr" }
+            { "prefix": "FastEthernet", "from": 1, "to": 12, "numerotation": "up-down" },
+            { "prefix": "FastEthernet", "from": 13, "to": 24, "numerotation": "up-down" },
+            { "prefix": "GigabitEthernet", "from": 1, "to": 2, "numerotation": "left-right", "type": "dual-lr" }
+        ],
+        "ws-c2960-24pc-l": [
+            { "prefix": "FastEthernet", "from": 1, "to": 12, "numerotation": "up-down" },
+            { "prefix": "FastEthernet", "from": 13, "to": 24, "numerotation": "up-down" },
+            { "prefix": "GigabitEthernet", "from": 1, "to": 2, "numerotation": "left-right", "type": "dual-lr" }
         ],
         "ws-c2960x-24ts-l": [
-            { "from": 1, "to": 12, "numerotation": "up-down" },
-            { "from": 13, "to": 24, "numerotation": "up-down" },
-            { "from": 25, "to": 26, "numerotation": "up-down", "sfp": true },
-            { "from": 27, "to": 28, "numerotation": "up-down", "sfp": true }
+            { "prefix": "GigabitEthernet", "from": 1, "to": 12, "numerotation": "up-down" },
+            { "prefix": "GigabitEthernet", "from": 13, "to": 24, "numerotation": "up-down" },
+            { "prefix": "GigabitEthernet", "from": 25, "to": 26, "numerotation": "up-down", "sfp": true },
+            { "prefix": "GigabitEthernet", "from": 27, "to": 28, "numerotation": "up-down", "sfp": true }
         ],
         "ws-c2960c-8pc-l": [
-            { "from": 1, "to": 8, "numerotation": "up-down", "oneline": true },
-            { "from": 9, "to": 10, "numerotation": "left-right", "type": "dual-ud" }
+            { "prefix": "FastEthernet", "from": 1, "to": 8, "numerotation": "up-down", "oneline": true },
+            { "prefix": "GigabitEthernet", "from": 1, "to": 2, "numerotation": "left-right", "type": "dual-ud" }
         ],
         "ws-c3850-24t": [
-            { "from": 1, "to": 12, "numerotation": "up-down" },
-            { "from": 13, "to": 24, "numerotation": "up-down" },
-            { "from": 25, "to": 28, "numerotation": "left-right", "oneline": true, "sfp": true }
+            { "prefix": "GigabitEthernet", "from": 1, "to": 12, "numerotation": "up-down" },
+            { "prefix": "GigabitEthernet", "from": 13, "to": 24, "numerotation": "up-down" },
+            { "prefix": "GigabitEthernet", "mod": 1, "from": 1, "to": 4, "numerotation": "left-right", "oneline": true, "sfp": true }
         ],
         "ws-c2960g-24tc-l": [
             { "from": 1, "to": 12, "numerotation": "up-down" },
@@ -94,9 +99,9 @@
             { "from": 25, "to": 28, "numerotation": "left-right", "type": "dual-lr" }
         ],
         "ws-c2960-24tc-l": [
-            { "from": 1, "to": 12, "numerotation": "up-down" },
-            { "from": 13, "to": 24, "numerotation": "up-down" },
-            { "from": 25, "to": 26, "numerotation": "left-right", "type": "dual-ud" }
+            { "prefix": "FastEthernet", "from": 1, "to": 12, "numerotation": "up-down" },
+            { "prefix": "FastEthernet", "from": 13, "to": 24, "numerotation": "up-down" },
+            { "prefix": "GigabitEthernet", "from": 1, "to": 2, "numerotation": "left-right", "type": "dual-ud" }
         ]
     }
 }
