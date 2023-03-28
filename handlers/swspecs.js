@@ -40,6 +40,8 @@ const OPTIONS = {
     },
 };
 
+const ctx = OPTIONS.log;
+
 
 const createConfig = (device) => {
     const groups = {};
@@ -76,6 +78,7 @@ const createConfig = (device) => {
 
     const { swmodels, swconfig, swvendors } = readConfigFile();
     const { swbrand, swmodel } = getModelNBrand(device, swvendors);
+    ctx.info(`[getModelNBrand] { swbrand: ${swbrand}, swmodel: ${swmodel} }`)
 
     const res = [];
 
@@ -103,6 +106,7 @@ const createConfig = (device) => {
 
 const getGroups = (config, slot) => {
     const groups = [];
+    const log = [];
 
     config.forEach((config, i) => {
         if (config.prefix && slot[config.prefix]) {
@@ -114,16 +118,19 @@ const getGroups = (config, slot) => {
             const type = config.type;
             const sfp = config.sfp;
 
+            log.push(`${i}: { numerotation: ${numerotation}, type: ${type}, sfp: ${sfp}, oneline: ${oneline} }`);
             groups.push({ numerotation, type, ports, sfp, oneline });
         }
     })
 
 
+    ctx.info(`[getGroups] groups:\n${log.join('\n')}\n`);
     return groups;
 }
 
 const discoverSwitches = (groups) => {
     const res = [];
+    const log = [];
 
     for (const prefix in groups) {
         if (prefix.toLowerCase().includes('bluetooth') || prefix.toLowerCase().includes('vlan') || prefix.toLowerCase().includes('stack') || prefix.toLowerCase() === "port-channel") {
@@ -137,17 +144,20 @@ const discoverSwitches = (groups) => {
                     if (!res[nswitch][prefix]) res[nswitch][prefix] = [];
                     res[nswitch][prefix][mod] = ports;
 
+                    log.push(`${nswitch}: { prefix: ${prefix}, length: ${ports.length} }`);
                 }
             })
         })
     }
 
+    ctx.info(`[discoverSwitches] switches:\n${log.join('\n')}\n`);
 
     return res;
 }
 
 const identifySwitches = (switches, sizes) => {
     const identified = {};
+    const log = [];
 
     switches.forEach((slot, nswitch) => {
         Object.keys(slot).forEach((prefix) => {
@@ -164,12 +174,14 @@ const identifySwitches = (switches, sizes) => {
                 });
                 if (sizes.includes(defaultSize)) {
 
+                    log.push(`${nswitch}: { prefix: ${prefix}, length: ${length}, defaultSize: ${defaultSize} }`);
                     identified[nswitch].push({ prefix, mod, length: defaultSize });
                 }
             });
         });
     });
 
+    ctx.info(`[identifySwitches] identified:\n${log.join('\n')}\n`);
     return identified;
 }
 
@@ -368,7 +380,7 @@ const readConfigFile = () => {
         return { swmodels, swconfig, swvendors };
     }
     catch (err) {
-        console.log(`@SWSPECS: Error reading file from disk: ${err}`);
+        ctx.error(`[readConfigFile] Error reading file from disk: ${err}`);
     }
 
     return {};
