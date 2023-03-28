@@ -46,7 +46,11 @@ const ctx = OPTIONS.log;
 const createConfig = (device) => {
     const groups = {};
 
-    for(const iface in device.iface) {
+    const { swsizes, swmodels, swconfig, swvendors } = readConfigFile();
+    const { swbrand, swmodel } = getModelNBrand(device, swvendors);
+    ctx.info(`[getModelNBrand] { swbrand: ${swbrand}, swmodel: ${swmodel} }`)
+
+    for (const iface in device.iface) {
         if (iface === "GigabitEthernet0/0") {
             continue;
         }
@@ -70,15 +74,11 @@ const createConfig = (device) => {
         }
     }
 
-    const SIZES = [ 2, 4, 8, 12, 24, 48, 52 ];
+    const SIZES = swsizes;
 
     const switches = discoverSwitches(groups);
     const identified = identifySwitches(switches, SIZES);
 
-
-    const { swmodels, swconfig, swvendors } = readConfigFile();
-    const { swbrand, swmodel } = getModelNBrand(device, swvendors);
-    ctx.info(`[getModelNBrand] { swbrand: ${swbrand}, swmodel: ${swmodel} }`)
 
     const res = [];
 
@@ -90,11 +90,11 @@ const createConfig = (device) => {
 
         const knownConfig = swmodels[swmodel] || null;
 
-        const config = knownConfig || defaultConfig;
+        const config = getConfig(knownConfig, defaultConfig);
 
         const isDefault = knownConfig ? false : true;
         if (config && config.length > 0) {
-            const groups = getGroups(config, slot);
+            const groups = getPorts(createGroups(config, swconfig), slot);
 
             //checkPorts(config, groups);
             res.push({ groups, isDefault });
@@ -104,28 +104,94 @@ const createConfig = (device) => {
     return res;
 }
 
-const getGroups = (config, slot) => {
+/**
+ * Compares the two configs and try to preserve ports,
+ * it will always give reason to the knownConfig if a confilct between two groups occurs
+ *
+ * @param {knownConfig, defConfig} - both configs are as:
+ *                  { template: 'cisco-default-24', prefix: 'Giga', mod: '0' }
+ * @returns {Array} - An array of groups like { numerotation: 'up-down', ... prefix, mod}
+ */
+const getConfig = (knownConfig, defConfig) => {
+    if (knownConfig === null) {
+        return defConfig;
+    }
+
+    const config = [];
+    for (let i = 0; i < knownConfig.length || i < defConfig.length; i++) {
+        const knownGroup = knownConfig[i];
+        const defGroup = defConfig[i];
+
+        // it will always give reason to the knownConfig
+        // execpt if no config is found
+        // that is how we deal for it for now
+        // TODO: Search a better way if needed ?
+        if (!knownGroup) {
+            config.push(defGroup);
+        } else {
+            config.push(knownGroup);
+        }
+
+    }
+
+    return config;
+}
+
+
+/**
+ * Create the groups neccessary to ZSwitch to represent one switch
+ * gets a config like { template: 'cisco-default-24', prefix: 'Giga', mod: '0' }
+ * and builds groups like { numerotation: 'up-down', ... prefix, mod}
+ * refer to the config json switch templates for more details
+ *
+ * @param {config} - config as { template: 'cisco-default-24', prefix: 'Giga', mod: '0' }
+ * @returns {Arrray} - An array of groups like { numerotation: 'up-down', ... prefix, mod}
+ */
+const createGroups = (config, swconfig) => {
     const groups = [];
+
+    config.forEach(slot => {
+        const defaultConfig = swconfig[slot.template] || [];
+
+        const prefix = slot.prefix;
+        const mod = slot.mod;
+        defaultConfig.forEach((group) => {
+            groups.push({ ...group, prefix, mod  })
+        })
+    });
+
+    return groups;
+}
+
+/**
+ * Adds ports to the config groups
+ *
+ * @param {groups, slot} - config groups and the slot of the switch containing the ports
+ * @returns {Arrray} - An array of groups with the ports as
+ *                     { numerotation, ports, prefix, mod ... }
+ */
+const getPorts = (groups, slot) => {
+    const res = [];
     const log = [];
 
-    config.forEach((config, i) => {
-        if (config.prefix && slot[config.prefix]) {
-            const mod = config.mod || 0;
+    groups.forEach((group, i) => {
+        if (group.prefix && slot[group.prefix]) {
+            const mod = group.mod || 0;
 
-            const ports = checkPorts(config, slot[config.prefix][mod]).slice(config.from - 1, config.to);
-            const numerotation = config.numerotation;
-            const oneline = config.oneline;
-            const type = config.type;
-            const sfp = config.sfp;
+            const ports = checkPorts(group, slot[group.prefix][mod]).slice(group.from - 1, group.to);
+            const numerotation = group.numerotation;
+            const oneline = group.oneline;
+            const type = group.type;
+            const sfp = group.sfp;
 
             log.push(`${i}: { numerotation: ${numerotation}, type: ${type}, sfp: ${sfp}, oneline: ${oneline} }`);
-            groups.push({ numerotation, type, ports, sfp, oneline });
+            res.push({ numerotation, type, ports, sfp, oneline });
         }
     })
 
 
-    ctx.info(`[getGroups] groups:\n${log.join('\n')}\n`);
-    return groups;
+    ctx.info(`[getGroups] res:\n${log.join('\n')}\n`);
+    return res;
 }
 
 const discoverSwitches = (groups) => {
@@ -172,11 +238,9 @@ const identifySwitches = (switches, sizes) => {
                     const res = (Math.abs(curr - length) < Math.abs(prev - length) ? curr : prev);
                     return length < res ? res : 0;
                 });
-                if (sizes.includes(defaultSize)) {
 
-                    log.push(`${nswitch}: { prefix: ${prefix}, length: ${length}, defaultSize: ${defaultSize} }`);
-                    identified[nswitch].push({ prefix, mod, length: defaultSize });
-                }
+                log.push(`${nswitch}: { prefix: ${prefix}, length: ${length}, defaultSize: ${defaultSize} }`);
+                identified[nswitch].push({ prefix, mod, length: defaultSize });
             });
         });
     });
@@ -186,20 +250,18 @@ const identifySwitches = (switches, sizes) => {
 }
 
 const guessDefaultConfig = (swconfig, swbrand, identified, sizes) => {
-    const groups = [];
+    const defaultConfig = [];
 
     identified.forEach(group => {
-        const config = getDefaultConfig(swconfig, swbrand, group.length, sizes);
+        const template = getDefaultConfig(swconfig, swbrand, group.length, sizes);
 
         const prefix = group.prefix;
         const mod = group.mod;
 
-        config.forEach(el => {
-            groups.push({ ...el, prefix, mod });
-        })
+        defaultConfig.push({ prefix, mod, template})
     });
 
-    return groups;
+    return defaultConfig;
 }
 
 const getPrefixNSuffix = (str, length) => {
@@ -250,11 +312,11 @@ const getDefaultConfig = (swconfig, swbrand, plength, sizes) => {
 
     if (i > sizes.length - 1) {
         ctx.error(`[ERROR] No config found ${plength}`)
-        return [];
+        return null;
     }
 
     ctx.info(`[getDefaultConfig] ${brand}-default-${length}`)
-    return swconfig[`${brand}-default-${length}`];
+    return `${brand}-default-${length}`;
 }
 
 const getMaxPortLength = (slot) => {
@@ -344,8 +406,8 @@ const getSwitchBrand = (vendors, types, description) => {
 
 
 const checkPorts = (configGroup, ports) => {
-    if (!configGroup) {
-        return 0;
+    if (!configGroup || !ports) {
+        return [];
     }
     const length = configGroup.to;
     const unknown = {
@@ -377,7 +439,8 @@ const readConfigFile = () => {
         const swmodels = data['switch-templates'];
         const swconfig = data['switch-defaults'];
         const swvendors = data['switch-vendors'];
-        return { swmodels, swconfig, swvendors };
+        const swsizes = data['switch-sizes'];
+        return { swsizes, swmodels, swconfig, swvendors };
     }
     catch (err) {
         ctx.error(`[readConfigFile] Error reading file from disk: ${err}`);
