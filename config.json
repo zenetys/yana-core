@@ -25,39 +25,49 @@
             "cisco"
     ],
     "switch-defaults":  {
-        "cisco-default-48": [
-            { "from": 1, "to": 12, "numerotation": "up-down" },
-            { "from": 13, "to": 24, "numerotation": "up-down" },
-            { "from": 25, "to": 36, "numerotation": "up-down" },
-            { "from": 37, "to": 48, "numerotation": "up-down" },
-            { "from": 49, "to": 50, "numerotation": "left-right", "type": "dual-ud" }
-        ],
         "huawei-default-48": [
             { "from": 1, "to": 12, "numerotation": "down-up" },
             { "from": 13, "to": 24, "numerotation": "down-up" },
             { "from": 25, "to": 36, "numerotation": "down-up" },
-            { "from": 37, "to": 48, "numerotation": "down-up" },
-            { "from": 49, "to": 50, "numerotation": "left-right", "type": "dual-lr" }
-        ],
-
-        "cisco-default-24": [
-            { "from": 1, "to": 12, "numerotation": "up-down" },
-            { "from": 13, "to": 24, "numerotation": "up-down" },
-            { "from": 25, "to": 26, "numerotation": "left-right", "type": "dual-ud" }
+            { "from": 37, "to": 48, "numerotation": "down-up" }
         ],
         "huawei-default-24": [
             { "from": 1, "to": 12, "numerotation": "down-up" },
-            { "from": 13, "to": 24, "numerotation": "down-up" },
-            { "from": 25, "to": 26, "numerotation": "left-right", "type": "dual-lr" }
+            { "from": 13, "to": 24, "numerotation": "down-up" }
+        ],
+        "huawei-default-4": [
+            { "from": 1, "to": 4, "numerotation": "down-up", "sfp": true }
         ],
 
-        "cisco-default-12": [
-            { "from": 1, "to": 12, "numerotation": "left-right" },
-            { "from": 13, "to": 14, "numerotation": "left-right", "type": "dual-ud" }
+
+        "cisco-default-52": [
+            { "from": 1, "to": 12, "numerotation": "up-down" },
+            { "from": 13, "to": 24, "numerotation": "up-down" },
+            { "from": 25, "to": 36, "numerotation": "up-down" },
+            { "from": 37, "to": 48, "numerotation": "up-down" },
+            { "from": 49, "to": 52, "numerotation": "up-down", "sfp": true }
         ],
-        "huawei-default-12": [
-            { "from": 1, "to": 12, "numerotation": "down-up" },
-            { "from": 13, "to": 14, "numerotation": "left-right", "type": "dual-lr" }
+        "cisco-default-48": [
+            { "from": 1, "to": 12, "numerotation": "up-down" },
+            { "from": 13, "to": 24, "numerotation": "up-down" },
+            { "from": 25, "to": 36, "numerotation": "up-down" },
+            { "from": 37, "to": 48, "numerotation": "up-down" }
+        ],
+        "cisco-default-24": [
+            { "from": 1, "to": 12, "numerotation": "up-down" },
+            { "from": 13, "to": 24, "numerotation": "up-down" }
+        ],
+        "cisco-default-12": [
+            { "from": 1, "to": 12, "numerotation": "left-right" }
+        ],
+        "cisco-default-8": [
+            { "from": 1, "to": 8, "numerotation": "down-up", "oneline": true }
+        ],
+        "cisco-default-4": [
+            { "from": 1, "to": 4, "numerotation": "up-down", "sfp": true }
+        ],
+        "cisco-default-2": [
+            { "from": 1, "to": 2, "numerotation": "left-right", "type": "dual-ud" }
         ]
     },
     "switch-templates": {

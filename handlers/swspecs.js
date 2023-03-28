@@ -42,49 +42,152 @@ const OPTIONS = {
 
 
 const createConfig = (device) => {
-    const switches = {};
+    const groups = {};
 
-    Object.keys(device.iface).forEach((iface, i) => {
+    for(const iface in device.iface) {
+        if (iface === "GigabitEthernet0/0") {
+            continue;
+        }
         const { prefix, suffix } = getPrefixNSuffix(iface, iface.length);
         const { port, mod, nswitch } = getPortModSwitch(suffix);
 
         const { operStatus, name } = device.iface[iface];
 
-        if (!switches[prefix]) {
-            switches[prefix] = [];
+        if (!groups[prefix]) {
+            groups[prefix] = [];
         }
-        if (!switches[prefix][nswitch]) {
-            switches[prefix][nswitch] = [];
+        if (!groups[prefix][nswitch]) {
+            groups[prefix][nswitch] = [];
         }
-        if (!switches[prefix][nswitch][mod]) {
-            switches[prefix][nswitch][mod] = [];
+        if (!groups[prefix][nswitch][mod]) {
+            groups[prefix][nswitch][mod] = [];
         }
-        if(switches[prefix][nswitch][mod]) {
+        if(groups[prefix][nswitch][mod]) {
             const index = Number(port);
-            switches[prefix][nswitch][mod].push({ index, operStatus, name: name[0] });
+            groups[prefix][nswitch][mod][index - 1] = ({ index, operStatus, name: name[0] });
         }
-    })
-    const types = Array.isArray(device.type) ? device.type : [ device.type ];
-    const description = device.description[0] ? device.description[0] : device.description;
-    const { swmodels, swconfig, swvendors } = readConfigFile();
+    }
 
-    const swbrand = getSwitchBrand(swvendors, types, description);
-    const swmodel = getSwitchModel(types, description);
+    const SIZES = [ 2, 4, 8, 12, 24, 48, 52 ];
+
+    const switches = discoverSwitches(groups);
+    const identified = identifySwitches(switches, SIZES);
+
+
+    const { swmodels, swconfig, swvendors } = readConfigFile();
+    const { swbrand, swmodel } = getModelNBrand(device, swvendors);
 
     const res = [];
 
-    const maxLength = getMaxPortLength(switches);
-    const defaultConfig = getDefaultConfig(swconfig, swbrand, maxLength);
-    const knownConfig = swmodels[swmodel] || null;
-    const config = knownConfig || defaultConfig;
-    const isDefault = knownConfig ? false : true;
-    if (config && config.length > 0) {
-        const ports = getPorts(config, switches);
-        //checkPorts(config, ports);
-        res.push({ config, ports, isDefault });
-    }
+    switches.forEach((slot, nswitch) => {
+        //const maxLength = getMaxPortLength(slot);
+
+        //const defaultConfig = getDefaultConfig(swconfig, swbrand, maxLength);
+        const defaultConfig = guessDefaultConfig(swconfig, swbrand, identified[nswitch], SIZES);
+
+        const knownConfig = swmodels[swmodel] || null;
+
+        const config = knownConfig || defaultConfig;
+
+        const isDefault = knownConfig ? false : true;
+        if (config && config.length > 0) {
+            const groups = getGroups(config, slot);
+
+            //checkPorts(config, groups);
+            res.push({ groups, isDefault });
+        }
+    })
 
     return res;
+}
+
+const getGroups = (config, slot) => {
+    const groups = [];
+
+    config.forEach((config, i) => {
+        if (config.prefix && slot[config.prefix]) {
+            const mod = config.mod || 0;
+
+            const ports = checkPorts(config, slot[config.prefix][mod]).slice(config.from - 1, config.to);
+            const numerotation = config.numerotation;
+            const oneline = config.oneline;
+            const type = config.type;
+            const sfp = config.sfp;
+
+            groups.push({ numerotation, type, ports, sfp, oneline });
+        }
+    })
+
+
+    return groups;
+}
+
+const discoverSwitches = (groups) => {
+    const res = [];
+
+    for (const prefix in groups) {
+        if (prefix.toLowerCase().includes('bluetooth') || prefix.toLowerCase().includes('vlan') || prefix.toLowerCase().includes('stack') || prefix.toLowerCase() === "port-channel") {
+            continue;
+        }
+        const sw = groups[prefix];
+        sw.forEach((group, nswitch) => {
+            group.forEach((ports, mod) => {
+                if (ports.length > 1) {
+                    if (!res[nswitch]) res[nswitch] = {};
+                    if (!res[nswitch][prefix]) res[nswitch][prefix] = [];
+                    res[nswitch][prefix][mod] = ports;
+
+                }
+            })
+        })
+    }
+
+
+    return res;
+}
+
+const identifySwitches = (switches, sizes) => {
+    const identified = {};
+
+    switches.forEach((slot, nswitch) => {
+        Object.keys(slot).forEach((prefix) => {
+            if (!identified[nswitch]) {
+                identified[nswitch] = [];
+            }
+            const group = slot[prefix];
+
+            group.forEach((ports, mod) => {
+                const length = max(ports.map(port => port.index));
+                const defaultSize = sizes.reduce((prev, curr) => {
+                    const res = (Math.abs(curr - length) < Math.abs(prev - length) ? curr : prev);
+                    return length < res ? res : 0;
+                });
+                if (sizes.includes(defaultSize)) {
+
+                    identified[nswitch].push({ prefix, mod, length: defaultSize });
+                }
+            });
+        });
+    });
+
+    return identified;
+}
+
+const guessDefaultConfig = (swconfig, swbrand, identified, sizes) => {
+    const groups = [];
+
+    identified.forEach(group => {
+        const config = getDefaultConfig(swconfig, swbrand, group.length, sizes);
+
+        const prefix = group.prefix;
+        const mod = group.mod;
+
+        config.forEach(el => {
+            groups.push({ ...el, prefix, mod });
+        })
+    });
+
+    return groups;
 }
 
 const getPrefixNSuffix = (str, length) => {
@@ -105,59 +208,49 @@ const getPortModSwitch = (suffix) => {
     let mod = 0;
     let nswitch = 0;
     switch (range.length) {
-            case 1:
-                port = range[0];
-                break;
-            case 2:
-                mod = range[0];
-                port = range[1];
-                break;
-            case 3:
-                nswitch = range[0];
-                mod = range[1]
-                port = range[2];
-                break;
+        case 1:
+        port = range[0];
+        break;
+        case 2:
+        mod = range[0];
+        port = range[1];
+        break;
+        case 3:
+        nswitch = range[0];
+        mod = range[1]
+        port = range[2];
+        break;
     }
 
     return { port, mod, nswitch };
 }
 
-const getPorts = (config, groups) => {
-    const ports = {};
-    config.forEach((el) => {
-        if (!ports[el.prefix]) {
-            ports[el.prefix] = [];
-            groups[el.prefix].forEach(group => {
-                ports[el.prefix].push(group);
-            })
-        }
-    })
-
-    return ports;
-}
-
-const getDefaultConfig = (swconfig, swbrand, plength) => {
-
+const getDefaultConfig = (swconfig, swbrand, plength, sizes) => {
     const brand = swbrand === 'unknown' ? 'cisco' : swbrand;
-    /* DEFAULT CASE */
-    if (plength > 28) {
-        const config = swconfig[`${brand}-default-48`];
-        return config ? config : [];
+
+    let i = sizes.findIndex(el => el === plength);
+    let length = sizes[i];
+    let item = swconfig[`${brand}-default-${length}`];
+    while (!item && i < sizes.length - 1) {
+        length = sizes[i++];
+        item = swconfig[`${brand}-default-${length}`];
     }
-    if (plength > 16) {
-        const config = swconfig[`${brand}-default-24`];
-        return config ? config : [];
+
+    if (i > sizes.length - 1) {
+        ctx.error(`[ERROR] No config found ${plength}`)
+        return [];
     }
-    else {
-        const config = swconfig[`${brand}-default-12`];
-        return config ? config : [];
-    }
+
+    ctx.info(`[getDefaultConfig] ${brand}-default-${length}`)
+    return swconfig[`${brand}-default-${length}`];
 }
 
-const getMaxPortLength = (switches) => {
+const getMaxPortLength = (slot) => {
     let length = 0;
-    Object.keys(switches).forEach((iface) => {
-        switches[iface].forEach((ports) => {
+
+
+    Object.keys(slot).forEach((prefix, i) => {
+        slot[prefix].forEach((ports, mod) => {
             if (ports.length > 0) {
                 const maxLength = max(ports.map(port => port.index));
                 if (maxLength > length) {
@@ -165,24 +258,35 @@ const getMaxPortLength = (switches) => {
                 }
             }
         })
-    });
+    })
+
     return length;
 }
 
 const max = (ports) => {
-        let i = 0;
-        let max = 0;
-        while (i < ports.length) {
-            if (!isNaN(ports[i])) {
-                if (ports[i] > max) {
-                    max = ports[i];
-                }
+    let i = 0;
+    let max = 0;
+    while (i < ports.length) {
+        if (!isNaN(ports[i])) {
+            if (ports[i] > max) {
+                max = ports[i];
             }
-            i++;
         }
-
-        return max;
+        i++;
     }
+
+    return max;
+}
+
+const getModelNBrand = (device, swvendors) => {
+    const types = Array.isArray(device.type) ? device.type : [ device.type ];
+    const description = device.description[0] ? device.description[0] : device.description;
+
+    const swbrand = getSwitchBrand(swvendors, types, description);
+    const swmodel = getSwitchModel(types, description);
+
+    return { swbrand, swmodel };
+}
 
 const getSwitchModel = (types, description) => {
     if(!types) {
@@ -227,11 +331,11 @@ const getSwitchBrand = (vendors, types, description) => {
 }
 
 
-const checkPorts = (config, ports) => {
-    if (!config) {
+const checkPorts = (configGroup, ports) => {
+    if (!configGroup) {
         return 0;
     }
-    const length = config[config.length - 1].to;
+    const length = configGroup.to;
     const unknown = {
         name: 'Unknown',
         operStatus: -1,
@@ -248,6 +352,8 @@ const checkPorts = (config, ports) => {
         }
         i++;
     }
+
+    return ports;
 }
 
 const readConfigFile = () => {
