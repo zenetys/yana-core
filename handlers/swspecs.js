@@ -46,9 +46,17 @@ const ctx = OPTIONS.log;
 const createConfig = (device) => {
     const groups = {};
 
-    const { swsizes, swmodels, swconfig, swvendors } = readConfigFile();
+    const { swsizes, swmodels, swconfig, swvendors, vlancolors } = readConfigFile();
     const { swbrand, swmodel } = getModelNBrand(device, swvendors);
     ctx.info(`[getModelNBrand] { swbrand: ${swbrand}, swmodel: ${swmodel} }`)
+
+    const vlans = [];
+
+    let i = 0;
+    for (const vlan in device.vlan) {
+        vlans.push({ vlan, color: vlancolors[i] });
+        i++;
+    }
 
     for (const iface in device.iface) {
         if (iface === "GigabitEthernet0/0") {
@@ -57,7 +65,10 @@ const createConfig = (device) => {
         const { prefix, suffix } = getPrefixNSuffix(iface, iface.length);
         const { port, mod, nswitch } = getPortModSwitch(suffix);
 
-        const { operStatus, name } = device.iface[iface];
+        const { operStatus, name, pvlan } = device.iface[iface];
+        const color = pvlan ?
+            vlans.find(({ vlan }) => { if(pvlan == vlan) return true } ).color
+            : '';
 
         if (!groups[prefix]) {
             groups[prefix] = [];
@@ -70,7 +81,7 @@ const createConfig = (device) => {
         }
         if(groups[prefix][nswitch][mod]) {
             const index = Number(port);
-            groups[prefix][nswitch][mod][index - 1] = ({ index, operStatus, name: name[0] });
+            groups[prefix][nswitch][mod][index - 1] = ({ index, operStatus, name: name[0], color, pvlan });
         }
     }
 
@@ -440,7 +451,8 @@ const readConfigFile = () => {
         const swconfig = data['switch-defaults'];
         const swvendors = data['switch-vendors'];
         const swsizes = data['switch-sizes'];
-        return { swsizes, swmodels, swconfig, swvendors };
+        const vlancolors = data['vlan-colors'];
+        return { swsizes, swmodels, swconfig, swvendors, vlancolors };
     }
     catch (err) {
         ctx.error(`[readConfigFile] Error reading file from disk: ${err}`);
