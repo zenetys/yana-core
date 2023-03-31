@@ -201,7 +201,7 @@ const getPorts = (groups, slot) => {
     })
 
 
-    ctx.info(`[getGroups] res:\n${log.join('\n')}\n`);
+    ctx.info(`[getPorts] res:\n${log.join('\n')}\n`);
     return res;
 }
 
