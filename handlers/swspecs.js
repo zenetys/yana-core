@@ -247,7 +247,7 @@ const identifySwitches = (switches, sizes) => {
                 const length = max(ports.map(port => port.index));
                 const defaultSize = sizes.reduce((prev, curr) => {
                     const res = (Math.abs(curr - length) < Math.abs(prev - length) ? curr : prev);
-                    return length < res ? res : 0;
+                    return length < res + 1 ? res : 0;
                 });
 
                 log.push(`${nswitch}: { prefix: ${prefix}, length: ${length}, defaultSize: ${defaultSize} }`);
