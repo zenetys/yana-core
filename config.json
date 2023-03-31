@@ -89,6 +89,14 @@
         ],
         "cisco-default-2": [
             { "from": 1, "to": 2, "numerotation": "up-down" }
+        ],
+        "cisco-c9300-48uxm-36": [
+            { "from": 1, "to": 12, "numerotation": "up-down" },
+            { "from": 13, "to": 24, "numerotation": "up-down" },
+            { "from": 25, "to": 36, "numerotation": "up-down" }
+        ],
+        "cisco-c9300-48uxm-48": [
+            { "from": 37, "to": 48, "numerotation": "up-down" }
         ]
     },
     "switch-templates": {
@@ -122,6 +130,14 @@
         "ws-c2960c-8pc-l": [
             { "prefix": "FastEthernet", "mod": 0, "template": "cisco-default-8" },
             { "prefix": "GigabitEthernet", "mod": 0, "template": "cisco-default-2" }
+        ],
+        "c9300-48uxm": [
+            { "prefix": "TwoGigabitEthernet", "mod": 0, "template": "cisco-c9300-48uxm-36" },
+            { "prefix": "TenGigabitEthernet", "mod": 0, "template": "cisco-c9300-48uxm-48" },
+            { "prefix": "TenGigabitEthernet", "mod": 1, "template": "cisco-default-8" },
+            { "prefix": "GigabitEthernet", "mod": 1, "template": "cisco-default-4" },
+            { "prefix": "FortyGigabitEthernet", "mod": 1, "template": "cisco-default-2" },
+            { "prefix": "TwentyFiveGigE", "mod": 1, "template": "cisco-default-2" }
         ]
     },
     "vlan-colors": [
