@@ -366,29 +366,29 @@ const max = (ports) => {
 const getModelNBrand = (device, swvendors) => {
     const types = Array.isArray(device.type) ? device.type : [ device.type ];
     const description = device.description[0] ? device.description[0] : device.description;
+    const name = device.name[0];
 
-    const swbrand = getSwitchBrand(swvendors, types, description);
-    const swmodel = getSwitchModel(types, description);
+    const swbrand = getSwitchBrand(swvendors || [], types || [], description);
+    const swmodel = getSwitchModel(types || [], description, name);
 
     return { swbrand, swmodel };
 }
 
-const getSwitchModel = (types, description) => {
+const getSwitchModel = (types, description, name) => {
     if(!types) {
         return "";
     }
 
-    const desc = description.split(' ');
-
     const myRe = new RegExp("[A-Z0-9]+(?:-[A-Z0-9]*)+");
     let result = "";
-    desc.forEach((word) => {
-        const match = myRe.exec(word);
 
-        if (match && result === '') {
-            result = match[0];
-        }
-    });
+    result = name;
+
+    const matchDesc = myRe.exec(description);
+
+    if (matchDesc) {
+        result = matchDesc[0];
+    }
 
     types.forEach(type => {
         const match = myRe.exec(type);
