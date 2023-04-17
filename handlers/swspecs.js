@@ -378,8 +378,18 @@ const getSwitchModel = (types, description) => {
         return "";
     }
 
+    const desc = description.split(' ');
+
     const myRe = new RegExp("[A-Z0-9]+(?:-[A-Z0-9]*)+");
     let result = "";
+    desc.forEach((word) => {
+        const match = myRe.exec(word);
+
+        if (match && result === '') {
+            result = match[0];
+        }
+    });
+
     types.forEach(type => {
         const match = myRe.exec(type);
 
