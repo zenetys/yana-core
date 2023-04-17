@@ -143,8 +143,7 @@
             { "prefix": "GigabitEthernet", "mod": 1, "template": "cisco-default-4" }
         ],
         "ws-c2960g-24tc-l": [
-            { "prefix": "FastEthernet", "mod": 0, "template": "cisco-default-24" },
-            { "prefix": "GigabitEthernet", "mod": 0, "template": "cisco-default-4" }
+            { "prefix": "GigabitEthernet", "mod": 0, "template": "cisco-default-24" }
         ],
         "ws-c2960-24tc-l": [
             { "prefix": "FastEthernet", "mod": 0, "template": "cisco-default-24" },
