@@ -20,7 +20,7 @@
             ".1.3.6.1.4.1.18334.1.1.1": "_konicaMinoltaPrinter"
         }
     },
-    "switch-sizes": [ 2, 4, 8, 12, 24, 28, 48, 52 ],
+    "switch-sizes": [ 2, 4, 8, 10, 12, 24, 28, 48, 52 ],
     "switch-vendors": [
             "huawei",
             "cisco",
@@ -37,12 +37,21 @@
             { "from": 1, "to": 12, "numerotation": "down-up" },
             { "from": 13, "to": 24, "numerotation": "down-up" }
         ],
+        "huawei-default-8": [
+            { "from": 1, "to": 8, "numerotation": "down-up" }
+        ],
         "huawei-default-4": [
             { "from": 1, "to": 4, "numerotation": "down-up", "sfp": true }
+        ],
+        "huawei-oneline-sfp-4": [
+            { "from": 1, "to": 4, "numerotation": "down-up", "oneline": true, "sfp": true }
         ],
 
         "ciscosb-default-28": [
             { "from": 1, "to": 28, "numerotation": "left-right" }
+        ],
+        "ciscosb-default-10": [
+            { "from": 1, "to": 10, "numerotation": "up-down" }
         ],
 
         "cisco-default-52": [
@@ -97,9 +106,23 @@
         ],
         "cisco-c9300-48uxm-48": [
             { "from": 37, "to": 48, "numerotation": "up-down" }
+        ],
+        "cisco-c9500-24y4c-24": [
+            { "from": 1, "to": 12, "numerotation": "up-down" },
+            { "from": 13, "to": 24, "numerotation": "up-down" }
+        ],
+        "cisco-c9500-24y4c-28": [
+            { "from": 25, "to": 28, "numerotation": "up-down" }
         ]
     },
     "switch-templates": {
+        "s5732-h24um2cc": [
+            { "prefix": "MultiGE", "mod": 0, "template": "huawei-default-24" },
+            { "prefix": "XGigabitEthernet", "mod": 1, "template": "huawei-default-8" }
+        ],
+        "sg350-10": [
+            { "prefix": "GigabitEthernet", "mod": 0, "template": "ciscosb-default-10" }
+        ],
         "ws-c2960x-48ts-l": [
             { "prefix": "GigabitEthernet", "mod": 0, "template": "cisco-default-52" }
         ],
@@ -138,6 +161,14 @@
             { "prefix": "GigabitEthernet", "mod": 1, "template": "cisco-default-4" },
             { "prefix": "FortyGigabitEthernet", "mod": 1, "template": "cisco-default-2" },
             { "prefix": "TwentyFiveGigE", "mod": 1, "template": "cisco-default-2" }
+        ],
+        "c9500-24y4c": [
+            { "prefix": "TwentyFiveGigE", "mod": 0, "template": "cisco-c9500-24y4c-24" },
+            { "prefix": "HundredGigE", "mod": 0, "template": "cisco-c9500-24y4c-28" }
+        ],
+        "s5735-l24p4x-a1": [
+            { "prefix": "GigabitEthernet", "mod": 0, "template": "huawei-default-24" },
+            { "prefix": "XGigabitEthernet", "mod": 0, "template": "huawei-oneline-sfp-4" }
         ]
     },
     "vlan-colors": [
