@@ -66,8 +66,8 @@ const createConfig = (device) => {
         const { port, mod, nswitch } = getPortModSwitch(suffix);
 
         const { operStatus, name, pvlan } = device.iface[iface];
-        const color = pvlan ?
-            vlans.find(({ vlan }) => { if(pvlan == vlan) return true } ).color
+        const obj = pvlan ?
+            vlans.find(({ vlan }) => { if(pvlan == vlan) return true } )
             : '';
 
         if (!groups[prefix]) {
@@ -81,7 +81,7 @@ const createConfig = (device) => {
         }
         if(groups[prefix][nswitch][mod]) {
             const index = Number(port);
-            groups[prefix][nswitch][mod][index - 1] = ({ index, operStatus, name: name[0], color, pvlan });
+            groups[prefix][nswitch][mod][index - 1] = ({ index, operStatus, name: name[0], color: obj ? obj.color : '', pvlan });
         }
     }
 
