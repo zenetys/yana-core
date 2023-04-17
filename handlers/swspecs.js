@@ -210,7 +210,7 @@ const discoverSwitches = (groups) => {
     const log = [];
 
     for (const prefix in groups) {
-        if (prefix.toLowerCase().includes('bluetooth') || prefix.toLowerCase().includes('vlan') || prefix.toLowerCase().includes('stack') || prefix.toLowerCase() === "port-channel") {
+        if (prefix.toLowerCase().includes('bluetooth') || prefix.toLowerCase().includes('vlan') || prefix.toLowerCase().includes('stack') || prefix.toLowerCase() === "port-channel" || prefix.toLowerCase() === "po") {
             continue;
         }
         const sw = groups[prefix];
