@@ -101,6 +101,8 @@ const createConfig = (device) => {
 
         const knownConfig = swmodels[swmodel] || null;
 
+        sortConfigs(defaultConfig, knownConfig);
+
         const config = getConfig(knownConfig, defaultConfig);
 
         const isDefault = knownConfig ? false : true;
@@ -146,6 +148,13 @@ const getConfig = (knownConfig, defConfig) => {
     }
 
     return config;
+}
+
+const sortConfigs = (defaultConfig, knownConfig) => {
+    if (defaultConfig && knownConfig) {
+        defaultConfig.sort((a, b) => a.template[a.template.length - 1] - b.template[b.template.length - 1]);
+        knownConfig.sort((a, b) => a.template[a.template.length - 1] - b.template[b.template.length - 1]);
+    }
 }
 
 
