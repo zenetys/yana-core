@@ -219,7 +219,7 @@ const discoverSwitches = (groups) => {
     const log = [];
 
     for (const prefix in groups) {
-        if (prefix.toLowerCase().includes('bluetooth') || prefix.toLowerCase().includes('vlan') || prefix.toLowerCase().includes('stack') || prefix.toLowerCase() === "port-channel" || prefix.toLowerCase() === "po") {
+        if (prefix === "" || prefix.toLowerCase().includes('bluetooth') || prefix.toLowerCase().includes('vlan') || prefix.toLowerCase().includes('stack') || prefix.toLowerCase() === "port-channel" || prefix.toLowerCase() === "po" || prefix.toLowerCase() === "eth-trunk" || prefix.toLowerCase() === "25ge" || prefix.toLowerCase() === "40ge") {
             continue;
         }
         const sw = groups[prefix];
