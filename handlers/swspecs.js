@@ -410,6 +410,7 @@ const getSwitchModel = (types, description, name) => {
 
 const getSwitchBrand = (vendors, types, description) => {
     let brand = 'unknown';
+
     vendors.forEach((vendor) => {
         if (description && description.toLowerCase().includes(vendor)) {
             brand = vendor;
