@@ -23,6 +23,12 @@ Options:
   -h, --help        Display this help"
 }
 
+function download_oui() {
+    local curl_opts=( -R -o "$OUI_DIR/oui.txt" )
+    [[ -s $OUI_DIR/oui.txt ]] && curl_opts+=( -z "$OUI_DIR/oui.txt" )
+    curl -fL "${curl_opts[@]}" "$OUI_URL"
+}
+
 snmpopts=()
 
 while (( $# > 0 )); do
@@ -36,13 +42,13 @@ while (( $# > 0 )); do
 done
 
 if [[ -n $DOWNLOAD ]]; then
-    if ! wget -N -P "$OUI_DIR" "$OUI_URL"; then
-        echo "$PROGNAME: failed to download ${OUI_URL##*/}" >&2
+    if ! download_oui; then
+        echo "$PROGNAME: failed to download oui.txt" >&2
         exit 2
     fi
 fi
-if [[ ! -f $OUI_DIR/${OUI_URL##*/} ]]; then
-    echo "$PROGNAME: cannot find ${OUI_URL##*/}" >&2
+if [[ ! -f $OUI_DIR/oui.txt ]]; then
+    echo "$PROGNAME: cannot find oui.txt" >&2
     exit 2
 fi
 
@@ -54,7 +60,7 @@ re='^[0-9A-F][0-9A-F]-[0-9A-F][0-9A-F]-[0-9A-F][0-9A-F]'
         hex=${hex//-/:}
         descr=${descr%$'\r'*}
         printf '  "%s": "%s",\n' "$hex" "${descr//\"/\\\"}"
-    done < "$OUI_DIR/${OUI_URL##*/}"
+    done < "$OUI_DIR/oui.txt"
     printf '  "%s": "%s",\n' '52:54:00' 'QEMU KVM'
 } |
     sort |
