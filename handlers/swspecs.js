@@ -46,7 +46,7 @@ const ctx = OPTIONS.log;
 const createConfig = (device) => {
     const groups = {};
 
-    const { swsizes, swmodels, swconfig, swvendors, vlancolors } = readConfigFile();
+    const { swsizes, swmodels, swconfig, swvendors, vlancolors } = getConfigFileOptions();
     const { swbrand, swmodel } = getModelNBrand(device, swvendors);
     ctx.info(`[getModelNBrand] { swbrand: ${swbrand}, swmodel: ${swmodel} }`)
 
@@ -461,24 +461,13 @@ const checkPorts = (configGroup, ports) => {
     return ports;
 }
 
-const readConfigFile = () => {
-    try {
-        const filePath = path.join(__dirname, '..', 'config.json')
-        const file = fs.readFileSync(filePath, 'utf8')
-        // parse JSON string to JSON object
-        const data = JSON.parse(file);
-        const swmodels = data['switch-templates'];
-        const swconfig = data['switch-defaults'];
-        const swvendors = data['switch-vendors'];
-        const swsizes = data['switch-sizes'];
-        const vlancolors = data['vlan-colors'];
-        return { swsizes, swmodels, swconfig, swvendors, vlancolors };
-    }
-    catch (err) {
-        ctx.error(`[readConfigFile] Error reading file from disk: ${err}`);
-    }
-
-    return {};
+const getConfigFileOptions = () => {
+    const swmodels = config.options['switch-templates'];
+    const swconfig = config.options['switch-defaults'];
+    const swvendors = config.options['switch-vendors'];
+    const swsizes = config.options['switch-sizes'];
+    const vlancolors = config.options['vlan-colors'];
+    return { swsizes, swmodels, swconfig, swvendors, vlancolors };
 }
 
 class HandlerSwspecs extends handler.Handler {
