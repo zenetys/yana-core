@@ -16,10 +16,10 @@ const CACHE = {};
 const WATCHES = {};
 const DB_BUILDING = {};
 
-const DB_SOURCES = {
-    'nscan': async (f, ...rest) => await getDbFromNscanFile(f, false, ...rest),
-    'nscan.gz': async (f, ...rest) => await getDbFromNscanFile(f, true, ...rest),
-};
+const DB_SOURCES = [
+    { ext: 'nscan', fn: async (f, ...rest) => await getDbFromNscanFile(f, false, ...rest) },
+    { ext: 'nscan.gz', fn: async (f, ...rest) => await getDbFromNscanFile(f, true, ...rest) },
+];
 
 /* core */
 
@@ -148,14 +148,14 @@ function getDbList(entity) {
         if (!stat.isFile())
             return;
 
-        for (let ext of Object.keys(DB_SOURCES))  {
-            if (name.substr((ext.length + 1) * -1) != '.' + ext)
+        for (let dbs of DB_SOURCES)  {
+            if (name.substr((dbs.ext.length + 1) * -1) != '.' + dbs.ext)
                 continue;
 
             /* Return an object per database with two properties: id and timestamp.
              * The timestamp is taken from the filename when possible, otherwise
              * the mtime is used. */
-            var db = { id: name.substr(0, name.length - ext.length - 1) };
+            var db = { id: name.substr(0, name.length - dbs.ext.length - 1) };
             db.ts = (new Date(db.id)).getTime();
             if (isNaN(db.ts))
                 db.ts = (new Date(stat.mtimeMs)).getTime();
@@ -256,7 +256,7 @@ function initLsDirWatches() {
     /* listeners */
     function onEntityDirChange(ev, fname, entity) {
         if (ev == 'rename' &&
-            Object.keys(DB_SOURCES).some((x) => fname.endsWith('.' + x))) {
+            DB_SOURCES.some((x) => fname.endsWith('.' + x.ext))) {
             log.debug2(`Data watch event: entity ${entity}, child ${fname}`);
             flushLsDirCache(entity);
         }
@@ -367,11 +367,11 @@ async function getDbFromFile(entity, dbId, /* optional */ buildOpts) {
     var base = `${config.options.dataDir}/${entity}/${dbId}`;
     var err, st;
 
-    for (let ext in DB_SOURCES) {
-        let file = `${base}.${ext}`;
+    for (let dbs of DB_SOURCES) {
+        let file = `${base}.${dbs.ext}`;
         try {
             fs.statSync(file);
-            return await DB_SOURCES[ext](file, buildOpts);
+            return await dbs.fn(file, buildOpts);
         }
         catch (e) {}
     }
