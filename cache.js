@@ -14,6 +14,7 @@ const zlib = require('zlib');
 
 const CACHE = {};
 const WATCHES = {};
+const DB_BUILDING = {};
 
 const DB_SOURCES = {
     'nscan': async (f, ...rest) => await getDbFromNscanFile(f, false, ...rest),
@@ -316,7 +317,19 @@ async function getDb(entity, dbId, force = false) {
     if (db && !force) {
         log.info(`${entity}/${dbId}: Use database from cache`);
     }
+    else if (util.oget(DB_BUILDING, [entity, dbId])) {
+        log.info(`${entity}/${dbId}: Database load already in progress, wait...`);
+        db = await new Promise((resolve, reject) => {
+            const timer = setInterval(async () => {
+                if (!util.oget(DB_BUILDING, [entity, dbId])) {
+                    clearInterval(timer);
+                    resolve(await getDb(entity, dbId, force));
+                }
+            }, 1000);
+        });
+    }
     else {
+        util.oset(DB_BUILDING, [entity, dbId], true);
         maybeFreeDbCache();
         log.prefix = `${entity}/${dbId}`;
         log.info('Database not in cache, need to load from file');
@@ -331,6 +344,7 @@ async function getDb(entity, dbId, force = false) {
             saveGenIdDb(entity);
             logStats();
         }
+        util.orm(DB_BUILDING, [entity, dbId]);
     }
 
     if (db)
