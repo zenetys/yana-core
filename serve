@@ -82,7 +82,7 @@ function onTermSignal(signal) {
 function onHupSignal(signal) {
     log.info(`Caught ${signal}, reloading configuration`);
     log.info('Please note, server socket will not be restarted');
-    config.reload();
+    config.reload(opts);
 }
 
 config.on('reload', reloadModular);
