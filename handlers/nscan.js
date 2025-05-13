@@ -71,7 +71,7 @@ class HandlerNscan extends handler.Handler {
         try { await events.once(writer, 'close'); }
         catch(e) {
             this.log.error('Upload failed for entity %s.', ctx.url.params[0], e);
-            util.tryBool(() => fs.unlinkSync(file));
+            util.tryWrap(() => fs.unlinkSync(file));
             return false;
         }
 
