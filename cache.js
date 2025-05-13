@@ -17,8 +17,8 @@ const WATCHES = {};
 const DB_BUILDING = {};
 
 const DB_SOURCES = [
-    { ext: 'nscan', fn: async (f, ...rest) => await getDbFromNscanFile(f, false, ...rest) },
-    { ext: 'nscan.gz', fn: async (f, ...rest) => await getDbFromNscanFile(f, true, ...rest) },
+    { ext: 'nscan', fn: async (f, b, ...rest) => await getDbFromNscanFile(f, b, false, ...rest) },
+    { ext: 'nscan.gz', fn: async (f, b, ...rest) => await getDbFromNscanFile(f, b, true, ...rest) },
 ];
 
 /* core */
@@ -371,7 +371,7 @@ async function getDbFromFile(entity, dbId, /* optional */ buildOpts) {
         let file = `${base}.${dbs.ext}`;
         try {
             fs.statSync(file);
-            return await dbs.fn(file, buildOpts);
+            return await dbs.fn(file, base, buildOpts);
         }
         catch (e) {}
     }
@@ -381,15 +381,16 @@ async function getDbFromFile(entity, dbId, /* optional */ buildOpts) {
 }
 
 /**
- * async getDbFromNscanFile(file, isGzip, buildOpts)
+ * async getDbFromNscanFile(file, base, isGzip, buildOpts)
  * Build a database from the given nscan <file>. If the nscan <file> is gzip'ed,
- * parameter <isGzip> must be set to true. The optional <buildOpts> object gets
- * passed as second argument to builder.runBuilders(), which is called after
- * nscan parsing to build the database.
+ * parameter <isGzip> must be set to true. Parameter <base> gets passed <file>
+ * without extension. The optional <buildOpts> object gets passed as second
+ * argument to builder.runBuilders(), which is called after nscan parsing to
+ * build the database.
  * @return The database object on success.
  *     false on error.
  */
-async function getDbFromNscanFile(file, isGzip, /* optional */ buildOpts) {
+async function getDbFromNscanFile(file, base, isGzip, /* optional */ buildOpts) {
     log.info('Build database from nscan file %s', file);
 
     var stream = fs.createReadStream(file);
