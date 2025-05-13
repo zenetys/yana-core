@@ -17,6 +17,8 @@ const WATCHES = {};
 const DB_BUILDING = {};
 
 const DB_SOURCES = [
+    { ext: 'yana', fn: async (f, b, ...rest) => await getDbFromYanaFile(f, b, false, ...rest) },
+    { ext: 'yana.gz', fn: async (f, b, ...rest) => await getDbFromYanaFile(f, b, true, ...rest) },
     { ext: 'nscan', fn: async (f, b, ...rest) => await getDbFromNscanFile(f, b, false, ...rest) },
     { ext: 'nscan.gz', fn: async (f, b, ...rest) => await getDbFromNscanFile(f, b, true, ...rest) },
 ];
@@ -381,6 +383,45 @@ async function getDbFromFile(entity, dbId, /* optional */ buildOpts) {
 }
 
 /**
+ * async getDbFromYanaFile(file, base, isGzip)
+ * Load a prebuilt database from the given yana <file>. If the yana <file>
+ * is gzip'ed, parameter <isGzip> must be set to true. Parameter <base> gets
+ * passed <file> without extension and is not used in this handler.
+ * @return The database object on success.
+ *     false on error.
+ */
+async function getDbFromYanaFile(file, base /* unused */, isGzip, /* optional */ buildOpts) {
+    log.info('Load prebuilt database from yana file %s', file);
+
+    var stream = fs.createReadStream(file);
+    if (isGzip)
+        stream = stream.pipe(zlib.createGunzip());
+
+    var db = undefined;
+    try {
+        /* It loads the whole raw JSON data into memory but since it is
+         * a single large object can we do better? */
+        let data = '';
+        for await (const chunk of stream)
+            data += chunk;
+        db = JSON.parse(data);
+    }
+    catch (e) {
+        log.error('Failed to parse yana file %s.', file);
+        return false;
+    }
+    finally {
+        stream.destroy();
+    }
+
+    if (!util.isObject(db)) {
+        log.error('Invalid yana file %s, not an object.', file);
+        return false;
+    }
+    return db;
+}
+
+/**
  * async getDbFromNscanFile(file, base, isGzip, buildOpts)
  * Build a database from the given nscan <file>. If the nscan <file> is gzip'ed,
  * parameter <isGzip> must be set to true. Parameter <base> gets passed <file>
@@ -410,7 +451,45 @@ async function getDbFromNscanFile(file, base, isGzip, /* optional */ buildOpts) 
         return false;
     }
 
-    return getDbFromNscanDb(np.db, buildOpts);
+    var db = getDbFromNscanDb(np.db, buildOpts);
+    if (db) {
+        /* best effort to cache as <base>.yana.gz in background */
+        let yfile = base + '.yana.gz';
+        writeJsonFile(yfile, true, db)
+            .then(() => log.info('Stored prebuilt yana file %s', yfile))
+            .catch((e) => log.error('Failed to store yana file %s.', yfile, e));
+    }
+    return db;
+}
+
+/**
+ * writeJsonFile(file, withGzip, data)
+ * @return Promise
+ */
+function writeJsonFile(file, withGzip, data) {
+    var json = JSON.stringify(data);
+    var tmpFile = file + '.tmp' + util.ranstr(4);
+    var streamInto = fs.createWriteStream(tmpFile);
+
+    if (withGzip) {
+        let gzipStream = zlib.createGzip();
+        gzipStream.pipe(streamInto);
+        streamInto = gzipStream;
+    }
+
+    return new Promise((resolve, reject) => {
+        const onError = (e) => {
+            util.tryWrap(() => fs.unlinkSync(tmpFile));
+            reject(e);
+        };
+        streamInto.on('error', onError);
+        streamInto.on('close', () => {
+            try { fs.renameSync(tmpFile, file); resolve(); }
+            catch (e) { onError(e) }
+        });
+        streamInto.write(json);
+        streamInto.end();
+    })
 }
 
 /**
